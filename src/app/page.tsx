@@ -1,6 +1,9 @@
 import Link from 'next/link';
+import { prisma } from '@/lib/prisma';
 
-export default function Home() {
+export default async function Home() {
+  const products = await prisma.product.findMany({ take: 3 });
+
   return (
     <div>
       <section className="bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 text-white">
@@ -61,22 +64,21 @@ export default function Home() {
 
       <section className="bg-white py-12">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-xl font-semibold text-neutral-800 mb-6">重点推荐产品</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { name: '智能粉末静电喷枪', model: 'BOSTAR-PG100' },
-              { name: '自动往复喷涂机', model: 'BOSTAR-AR200' },
-              { name: '快速换色供粉中心', model: 'BOSTAR-QC300' },
-              { name: '液体静电喷枪', model: 'BOSTAR-LG400' },
-            ].map((p) => (
+          <h2 className="text-xl font-semibold text-neutral-800 mb-6">产品列表</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {products.map((p) => (
               <Link
-                key={p.model}
-                href="/products"
+                key={p.id}
+                href={`/products/${p.slug}`}
                 className="group bg-white rounded-xl border border-neutral-100 p-4 hover:border-brand-200 hover:shadow-md transition-all"
               >
-                <div className="w-full h-40 mb-3 bg-neutral-50 rounded-lg flex items-center justify-center text-neutral-300 text-sm">
-                  产品图片
-                </div>
+                {p.coverImage ? (
+                  <img src={p.coverImage} alt={p.name} className="w-full h-40 mb-3 rounded-lg object-cover" />
+                ) : (
+                  <div className="w-full h-40 mb-3 bg-neutral-50 rounded-lg flex items-center justify-center text-neutral-300 text-sm">
+                    产品图片
+                  </div>
+                )}
                 <h3 className="text-sm font-medium text-neutral-800 group-hover:text-brand-600 transition-colors">
                   {p.name}
                 </h3>
