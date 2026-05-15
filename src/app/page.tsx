@@ -1,34 +1,8 @@
 import Link from 'next/link';
-import { prisma } from '@/lib/prisma';
-import { ProductCard } from '@/components/product/ProductCard';
-import { Button } from '@/components/ui/Button';
 
-export const dynamic = 'force-dynamic';
-
-async function getHomeData() {
-  const [featuredProducts, categories] = await Promise.all([
-    prisma.product.findMany({
-      where: { isPublished: true, isFeatured: true },
-      include: { category: true },
-      orderBy: { sortOrder: 'asc' },
-      take: 8,
-    }),
-    prisma.category.findMany({
-      where: { parentId: null, isVisible: true },
-      orderBy: { sortOrder: 'asc' },
-      include: { _count: { select: { products: true } } },
-    }),
-  ]);
-
-  return { featuredProducts, categories };
-}
-
-export default async function HomePage() {
-  const { featuredProducts, categories } = await getHomeData();
-
+export default function Home() {
   return (
     <div>
-      {/* Hero Section */}
       <section className="bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 text-white">
         <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">
           <div className="max-w-2xl">
@@ -42,72 +16,77 @@ export default async function HomePage() {
               专业粉末/液体静电喷涂设备制造商 — 产品资料库 + 电子画册 + AI产品顾问
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link href="/products">
-                <Button size="lg" className="bg-white text-brand-700 hover:bg-brand-50">
-                  浏览产品画册
-                </Button>
+              <Link
+                href="/products"
+                className="inline-flex items-center justify-center rounded-lg bg-white text-brand-700 hover:bg-brand-50 font-medium px-6 py-3 text-sm transition-colors"
+              >
+                浏览产品画册
               </Link>
-              <Link href="/ai">
-                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10">
-                  AI产品顾问
-                </Button>
+              <Link
+                href="/ai"
+                className="inline-flex items-center justify-center rounded-lg border border-white/30 text-white hover:bg-white/10 font-medium px-6 py-3 text-sm transition-colors"
+              >
+                AI产品顾问
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Category Grid */}
       <section className="max-w-7xl mx-auto px-4 py-12">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-neutral-800">产品分类</h2>
-          <Link href="/products" className="text-sm text-brand-600 hover:text-brand-700">
-            查看全部 &rarr;
-          </Link>
-        </div>
-
+        <h2 className="text-xl font-semibold text-neutral-800 mb-6">产品分类</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          {categories.map((cat) => (
+          {[
+            { name: '粉末静电喷涂设备', slug: 'powder-equipment' },
+            { name: '液体静电喷涂设备', slug: 'liquid-equipment' },
+            { name: '自动喷涂系统', slug: 'automatic-system' },
+            { name: '喷涂配件', slug: 'accessories' },
+            { name: '前处理设备', slug: 'pretreatment' },
+          ].map((cat) => (
             <Link
-              key={cat.id}
+              key={cat.slug}
               href={`/categories/${cat.slug}`}
               className="group bg-white rounded-xl border border-neutral-100 p-4 text-center hover:border-brand-200 hover:shadow-sm transition-all"
             >
-              {cat.coverImage ? (
-                <img src={cat.coverImage} alt={cat.name} className="w-12 h-12 mx-auto mb-2 object-cover rounded-lg" />
-              ) : (
-                <div className="w-12 h-12 mx-auto mb-2 bg-brand-50 rounded-lg flex items-center justify-center text-brand-400 text-xl">
-                  {cat.name.charAt(0)}
-                </div>
-              )}
+              <div className="w-12 h-12 mx-auto mb-2 bg-brand-50 rounded-lg flex items-center justify-center text-brand-400 text-xl">
+                {cat.name.charAt(0)}
+              </div>
               <h3 className="text-sm font-medium text-neutral-800 group-hover:text-brand-600 transition-colors">
                 {cat.name}
               </h3>
-              <p className="text-xs text-neutral-400 mt-0.5">{cat._count.products} 个产品</p>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* Featured Products */}
       <section className="bg-white py-12">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-neutral-800">重点推荐产品</h2>
-            <Link href="/products?featured=true" className="text-sm text-brand-600 hover:text-brand-700">
-              查看全部 &rarr;
-            </Link>
-          </div>
-
+          <h2 className="text-xl font-semibold text-neutral-800 mb-6">重点推荐产品</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {[
+              { name: '智能粉末静电喷枪', model: 'BOSTAR-PG100' },
+              { name: '自动往复喷涂机', model: 'BOSTAR-AR200' },
+              { name: '快速换色供粉中心', model: 'BOSTAR-QC300' },
+              { name: '液体静电喷枪', model: 'BOSTAR-LG400' },
+            ].map((p) => (
+              <Link
+                key={p.model}
+                href="/products"
+                className="group bg-white rounded-xl border border-neutral-100 p-4 hover:border-brand-200 hover:shadow-md transition-all"
+              >
+                <div className="w-full h-40 mb-3 bg-neutral-50 rounded-lg flex items-center justify-center text-neutral-300 text-sm">
+                  产品图片
+                </div>
+                <h3 className="text-sm font-medium text-neutral-800 group-hover:text-brand-600 transition-colors">
+                  {p.name}
+                </h3>
+                <p className="text-xs text-neutral-400 mt-1">{p.model}</p>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Quick Actions Section */}
       <section className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Link href="/solutions" className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 hover:shadow-md transition-shadow">
@@ -124,6 +103,12 @@ export default async function HomePage() {
           </Link>
         </div>
       </section>
+
+      <footer className="bg-neutral-50 border-t border-neutral-100 py-8">
+        <div className="max-w-7xl mx-auto px-4 text-center text-sm text-neutral-400">
+          <p>BOSTAR 博士达 — 静电喷涂设备智能电子画册</p>
+        </div>
+      </footer>
     </div>
   );
 }
