@@ -1,0 +1,296 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============ AUTH & USERS ============
+
+model Role {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  permissions Json     @default("[]")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users User[]
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  avatar       String?
+  roleId       String
+  role         Role      @relation(fields: [roleId], references: [id])
+  language     String    @default("zh")
+  status       String    @default("active")
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  salesperson      Salesperson?
+  handledInquiries Inquiry[]     @relation("HandledBy")
+}
+
+// ============ CATALOG ============
+
+model Category {
+  id            String   @id @default(cuid())
+  name          String
+  nameEn        String?
+  slug          String   @unique
+  description   String?
+  descriptionEn String?
+  coverImage    String?
+  parentId      String?
+  parent        Category? @relation("CategoryTree", fields: [parentId], references: [id])
+  children      Category[] @relation("CategoryTree")
+  sortOrder     Int      @default(0)
+  isVisible     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  products Product[]
+}
+
+model Product {
+  id               String   @id @default(cuid())
+  productCode      String   @unique
+  model            String?
+  name             String
+  nameEn           String?
+  categoryId       String
+  category         Category @relation(fields: [categoryId], references: [id])
+  productType      String   @default("single")
+  tagline          String?
+  taglineEn        String?
+  description      String?
+  descriptionEn    String?
+  sellingPoints    Json     @default("[]")
+  sellingPointsEn  Json     @default("[]")
+  applications     Json     @default("[]")
+  applicationsEn   Json     @default("[]")
+  mainImage        String?
+  isFeatured       Boolean  @default(false)
+  isExportVisible  Boolean  @default(true)
+  isPublished      Boolean  @default(false)
+  completenessLevel String @default("C")
+  slug             String   @unique
+  sortOrder        Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  parameters ProductParameter[]
+  images     ProductImage[]
+  videos     ProductVideo[]
+  documents  ProductDocument[]
+  faqs       ProductFAQ[]
+  events     VisitorEvent[]
+  inquiries  Inquiry[]
+}
+
+model ProductParameter {
+  id          String  @id @default(cuid())
+  productId   String
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  paramName   String
+  paramNameEn String?
+  paramValue  String
+  unit        String?
+  description String?
+  groupName   String  @default("")
+  groupNameEn String?
+  isPublic    Boolean @default(true)
+  isAiEnabled Boolean @default(true)
+  sortOrder   Int     @default(0)
+}
+
+model ProductImage {
+  id             String   @id @default(cuid())
+  productId      String
+  product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  imageType      String   @default("real_shot")
+  title          String?
+  url            String
+  thumbnailUrl   String?
+  altText        String?
+  isMain         Boolean  @default(false)
+  isPublic       Boolean  @default(true)
+  isDownloadable Boolean  @default(false)
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+}
+
+model ProductVideo {
+  id               String   @id @default(cuid())
+  productId        String
+  product          Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  title            String
+  titleEn          String?
+  videoType        String   @default("spray_effect")
+  videoUrl         String
+  coverImage       String?
+  duration         Int?
+  language         String   @default("zh")
+  isPublic         Boolean  @default(true)
+  isAiRecommendable Boolean @default(true)
+  sortOrder        Int      @default(0)
+  createdAt        DateTime @default(now())
+}
+
+model ProductDocument {
+  id              String   @id @default(cuid())
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  title           String
+  titleEn         String?
+  documentType    String   @default("product_manual")
+  fileUrl         String
+  fileSize        Int?
+  fileType        String?
+  language        String   @default("zh")
+  version         String?
+  isDownloadable  Boolean  @default(true)
+  isAiEnabled     Boolean  @default(true)
+  permissionLevel String   @default("public")
+  sortOrder       Int      @default(0)
+  updatedAt       DateTime @updatedAt
+}
+
+model ProductFAQ {
+  id           String   @id @default(cuid())
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  question     String
+  answer       String
+  questionEn   String?
+  answerEn     String?
+  questionType String   @default("selection")
+  isPublic     Boolean  @default(true)
+  isAiEnabled  Boolean  @default(true)
+  riskLevel    String   @default("normal")
+  reviewStatus String   @default("pending")
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// ============ SALES & TRACKING ============
+
+model Salesperson {
+  id           String   @id @default(cuid())
+  userId       String?  @unique
+  user         User?    @relation(fields: [userId], references: [id])
+  name         String
+  department   String   @default("domestic")
+  title        String?
+  phone        String?
+  wechatQr     String?
+  whatsapp     String?
+  email        String?
+  region       String?
+  productLines Json     @default("[]")
+  slug         String   @unique
+  exclusiveUrl String
+  qrCodeUrl    String?
+  isActive     Boolean  @default(true)
+  roleLevel    String   @default("sales")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  events    VisitorEvent[]
+  inquiries Inquiry[]     @relation("AssignedTo")
+}
+
+model VisitorEvent {
+  id             String   @id @default(cuid())
+  visitorId      String
+  sessionId      String
+  salespersonId  String?
+  salesperson    Salesperson? @relation(fields: [salespersonId], references: [id])
+  eventType      String
+  pageUrl        String
+  pageTitle      String?
+  productId      String?
+  product        Product?  @relation(fields: [productId], references: [id])
+  documentId     String?
+  videoId        String?
+  keyword        String?
+  duration       Int?
+  deviceType     String?
+  region         String?
+  userAgent      String?
+  referrer       String?
+  intentLevel    String   @default("L1")
+  isPushed       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  @@index([visitorId])
+  @@index([salespersonId])
+  @@index([productId])
+  @@index([eventType])
+  @@index([createdAt])
+}
+
+model Inquiry {
+  id             String    @id @default(cuid())
+  customerName   String
+  company        String?
+  phone          String?
+  whatsapp       String?
+  email          String?
+  region         String?
+  productId      String?
+  product        Product?  @relation(fields: [productId], references: [id])
+  requirement    String
+  sourcePage     String?
+  salespersonId  String?
+  salesperson    Salesperson? @relation("AssignedTo", fields: [salespersonId], references: [id])
+  sourceType     String    @default("public")
+  intentLevel    String    @default("normal")
+  followStatus   String    @default("new")
+  nextFollowTime DateTime?
+  remark         String?
+  handledById    String?
+  handledBy      User?     @relation("HandledBy", fields: [handledById], references: [id])
+  needQuote      Boolean   @default(false)
+  needSample     Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([followStatus])
+  @@index([salespersonId])
+  @@index([createdAt])
+}
+
+// ============ AI KNOWLEDGE ============
+
+model AiKnowledgeItem {
+  id         String   @id @default(cuid())
+  sourceType String
+  sourceId   String
+  title      String
+  titleEn    String?
+  content    String
+  contentEn  String?
+  embedding  String?
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ============ SYSTEM ============
+
+model SystemSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+}
