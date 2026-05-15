@@ -1,50 +1,24 @@
-import { notFound } from 'next/navigation';
-import { prisma } from '@/lib/prisma';
-import { ProductCard } from '@/components/product/ProductCard';
-
-export const dynamic = 'force-dynamic';
-
-export default async function CategoryPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const category = await prisma.category.findUnique({
-    where: { slug },
-    include: {
-      products: {
-        where: { isPublished: true },
-        orderBy: { sortOrder: 'asc' },
-        include: { category: true },
-      },
-    },
-  });
-
-  if (!category) notFound();
-
+export default function CategoryPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <a href="/products" className="text-sm text-brand-600 hover:text-brand-700">&larr; 返回产品中心</a>
-        <h1 className="text-2xl font-bold text-neutral-800 mt-2">{category.name}</h1>
-        {category.description && (
-          <p className="text-sm text-neutral-500 mt-1">{category.description}</p>
-        )}
-      </div>
-
+      <a href="/products" className="text-sm text-brand-600 hover:text-brand-700">&larr; 返回产品中心</a>
+      <h1 className="text-2xl font-bold text-neutral-800 mt-2 mb-6">产品分类</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {category.products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+        {[
+          { name: '智能粉末静电喷枪', model: 'BOSTAR-PG100' },
+          { name: '自动往复喷涂机', model: 'BOSTAR-AR200' },
+          { name: '快速换色供粉中心', model: 'BOSTAR-QC300' },
+          { name: '液体静电喷枪', model: 'BOSTAR-LG400' },
+        ].map((p) => (
+          <div key={p.model} className="border rounded-lg p-4">
+            <div className="w-full h-40 mb-3 bg-neutral-50 rounded-lg flex items-center justify-center text-neutral-300 text-sm">
+              产品图片
+            </div>
+            <h3 className="text-sm font-medium text-neutral-800">{p.name}</h3>
+            <p className="text-xs text-neutral-400 mt-1">{p.model}</p>
+          </div>
         ))}
       </div>
-
-      {category.products.length === 0 && (
-        <div className="text-center py-12 text-neutral-400">
-          <p className="text-lg">该分类暂无产品</p>
-          <p className="text-sm mt-1">产品正在上架中，请稍后再来</p>
-        </div>
-      )}
     </div>
   );
 }
