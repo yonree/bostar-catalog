@@ -9,11 +9,14 @@
 - `planning/gate1a/qa-release/gate1b-engineering-readiness-plan.md`
 - `GATE3_LEGACY_URL_GAP_REPORT.md`
 - `GATE4_ENTRY_BASELINE.md`
+- `GATE4_RELEASE_PREP.md`
+- `GATE5_HANDOFF_DRAFT.md`
 
 ## Command evidence
 
 - `npm install`: restored missing local binaries in `node_modules/.bin`
 - `npx prisma generate`: generated Prisma Client v6.19.3 successfully
+- `git commit -m "feat(gate4): checkpoint localized route parity baseline"`: created checkpoint commit `22d4d24`
 - `npm run typecheck`: pass
 - `npm run lint`: pass with warnings only
 - `npm run build`: pass with warnings only
@@ -42,6 +45,14 @@
   - `npm run typecheck`: pass after structured-data fact-hardening on product/video schema
   - `npm run lint`: pass with the same 4 pre-existing warnings after the structured-data slice
   - `npm run build`: pass with the same 4 pre-existing warnings after the structured-data slice
+  - 2026-06-17 Gate 4 metadata parity validation:
+    - `npm run typecheck`: pass after page-level Open Graph and Twitter metadata alignment
+    - `npm run lint`: pass with the same 4 pre-existing warnings after the metadata slice
+    - `npm run build`: pass with the same 4 pre-existing warnings after the metadata slice
+  - 2026-06-17 legacy-route restoration and lead-form locale parity validation:
+    - `npm run typecheck`: pass after audited liquid-route restoration and server-locale propagation into public lead forms
+    - `npm run lint`: pass with the same 4 pre-existing warnings after the legacy-route and lead-form slice
+    - `npm run build`: pass with the same 4 pre-existing warnings after the legacy-route and lead-form slice
 
 ## Smoke evidence
 
@@ -196,6 +207,25 @@
       - local audit snapshot `audit/04-production-url-inventory.csv:88` records a production detail page title and summary for the same URL
   - Gate 4 entry baseline:
     - `GATE4_ENTRY_BASELINE.md` records the consolidated smoke sweep for zh/en index pages, representative detail pages, reserved routes, system 404s, sitemap, and robots
+  - Gate 4 metadata parity re-audit on refreshed preview PID `43888`:
+    - `/`, `/en`, seeded zh/en product detail, zh/en case detail, zh/en knowledge detail, zh/en news placeholder, and zh/en search
+    - verified page-level `og:title`, `og:description`, `twitter:title`, canonical, hreflang, and robots output on each sampled route
+  - Gate 4 DOM and response-time baseline:
+    - `/en` runtime DOM metrics confirm visible hero content, `h1`, translation notice, and downstream sections despite browser screenshot timeouts
+    - response-time sample on `http://127.0.0.1:3011`: `/` 4651 ms, `/en` 4284 ms, `/en/products/manual-powder-coating-gun/manual-powder-spray-gun` 4174 ms, `/en/news/release-placeholder` 4143 ms
+  - legacy liquid-product route restoration on refreshed preview PID `32624`:
+    - `/products/Manual-Electrostatic-Liquid-Spray-Gun`, `/en/products/Manual-Electrostatic-Liquid-Spray-Gun`
+    - `/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`, `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`
+    - `/products/Manual-Electrostatic-Liquid-Spray-Gun/manual-liquid-electrostatic-spray-gun`, `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/manual-liquid-electrostatic-spray-gun`
+    - `/products/Automatic-Electrostatic-Liquid-Spray-Gun`, `/en/products/Automatic-Electrostatic-Liquid-Spray-Gun`
+    - `/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun`, `/en/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun`
+    - all sampled routes return `200`, retain canonical/hreflang, and remain `index, follow`
+    - `/sitemap.xml` contains the restored zh/en route family entries above
+  - lead-form locale parity:
+    - `/en/contact` server HTML contains English labels and hidden `sourcePage=/en/contact`
+    - browser DOM on `/en/contact` confirms English labels/options and hidden `sourcePage=/en/contact`
+    - `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` server HTML contains English lead-form shell and localized hidden `sourcePage`
+    - stale in-app browser dev-log entry still shows React 418 from `2026-06-16T17:33:40.110Z`, but refreshed server HTML and hydrated DOM no longer show locale-form divergence
 
 ## Remaining evidence to collect in later gates
 

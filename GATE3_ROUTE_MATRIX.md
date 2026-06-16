@@ -4,7 +4,7 @@
 
 - Date: 2026-06-16
 - Branch: `feat/gate2-implementation`
-- HEAD baseline for this matrix: `05cb501dbf63f94076c548ace74088a6508bbef7`
+- HEAD baseline for this matrix: `22d4d24`
 - Preview target: `http://127.0.0.1:3011`
 
 ## Status buckets
@@ -33,6 +33,13 @@
 - `/en`
 - `/en/about`
 - `/en/search`
+- legacy liquid-product family sample:
+  - `/products/Manual-Electrostatic-Liquid-Spray-Gun`
+  - `/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`
+  - `/products/Manual-Electrostatic-Liquid-Spray-Gun/manual-liquid-electrostatic-spray-gun`
+  - `/products/Automatic-Electrostatic-Liquid-Spray-Gun`
+  - `/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun`
+  - matching `/en/**` route pairs above
 
 ### SAFE_TO_IMPLEMENT
 
@@ -46,10 +53,10 @@
 - `/news/[slug]` placeholder detail kept as `noindex,nofollow` until verified news content exists
 - `/_not-found` localized and verified as a 404/noindex system route
 
-### LEGACY_URL_PENDING
+### LEGACY_URL_RESTORED
 
-- sampled legacy product URL gaps recorded in `GATE3_LEGACY_URL_GAP_REPORT.md`
-- redirect and old-URL reconciliation still pending against Gate 4 audit
+- sampled legacy liquid-product route family restored from audited production inventory; see `GATE3_LEGACY_URL_GAP_REPORT.md`
+- zh/en detail/category pairs now return `200`, retain canonical/hreflang, and reappear in `sitemap.xml`
 
 ### BUSINESS_DECISION_REQUIRED
 
@@ -79,11 +86,11 @@
 
 ## Current active slice
 
-- Slice: Gate 4 visual and performance sampling with legacy URL blocker tracking
+- Slice: Gate 4 release-prep and handoff evidence close-out after legacy URL restoration
 - Scope:
   - route-validation evidence on already verified surfaces
   - visual/performance sampling inputs
-  - legacy URL blocker tracking from `GATE3_LEGACY_URL_GAP_REPORT.md`
+  - release-candidate blocker reduction after `R-005` closure
   - Gate 4 entry-condition evidence gaps
 
 ## Deferred slices

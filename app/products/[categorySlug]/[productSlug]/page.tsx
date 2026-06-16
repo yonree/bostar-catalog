@@ -262,7 +262,7 @@ export default async function ProductDetailPage({
           ) : null}
           <div>
             <SectionHeader title={copy.inquiryTitle} description={copy.inquiryDescription} />
-            <LeadForm sourcePage={sourcePage} interestedProduct={product.name} />
+            <LeadForm locale={locale} sourcePage={sourcePage} interestedProduct={product.name} />
           </div>
         </div>
       </section>

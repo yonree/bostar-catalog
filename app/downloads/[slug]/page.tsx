@@ -6,7 +6,7 @@ import { LeadForm } from '@/components/lead/LeadForm';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getDownload, getProducts } from '@/lib/cms-data';
-import { isEnglishLocale } from '@/lib/i18n';
+import { isEnglishLocale, localizeHref } from '@/lib/i18n';
 import { createResolvedPageMetadata } from '@/lib/page-metadata';
 import { getRequestContext } from '@/lib/request-context';
 
@@ -107,7 +107,10 @@ export default async function DownloadDetailPage({
           {download.requireLeadForm ? (
             <>
               <SectionHeader title={isEnglish ? 'Submit Information to Access This File' : '填写信息获取资料'} />
-              <LeadForm sourcePage={`/downloads/${download.slug}`} />
+              <LeadForm
+                locale={locale}
+                sourcePage={localizeHref(`/downloads/${download.slug}`, locale)}
+              />
             </>
           ) : (
             <a

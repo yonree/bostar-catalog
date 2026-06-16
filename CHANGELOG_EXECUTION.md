@@ -40,3 +40,16 @@
 - Revalidated structured-data runtime output on `http://127.0.0.1:3011` (listener PID `27160`) for seeded zh/en product and video detail routes
 - Added `GATE3_LEGACY_URL_GAP_REPORT.md` to record sampled legacy product URLs that still expect `200` in Gate 1A planning assets but currently lack local source entities
 - Added `GATE4_ENTRY_BASELINE.md` to capture the first consolidated Gate 4 smoke baseline over zh/en index pages, representative detail pages, reserved routes, system 404s, sitemap, and robots
+
+## 2026-06-17
+
+- Extended `lib/page-metadata.ts` so localized page metadata also populates page-level Open Graph and Twitter summary tags
+- Switched custom detail-route `generateMetadata` functions for products, cases, downloads, videos, solutions, knowledge, and news placeholders to the shared resolved metadata helper
+- Rebuilt the project, refreshed the authoritative preview on `http://127.0.0.1:3011` (listener PID `43888`), and re-audited page-level `og:*`, canonical, hreflang, and robots output on representative zh/en routes
+- Recorded a lightweight response-time baseline for `/`, `/en`, `/en/products/manual-powder-coating-gun/manual-powder-spray-gun`, and `/en/news/release-placeholder`
+- Created checkpoint commit `22d4d24 feat(gate4): checkpoint localized route parity baseline` while keeping root live control-plane files uncommitted for continued execution
+- Added `GATE4_RELEASE_PREP.md` and `GATE5_HANDOFF_DRAFT.md` as the first release-prep and handoff deliverables for the remaining Gate 4 / Gate 5 close-out work
+- Restored sampled legacy liquid-product category/detail route families in `lib/data.ts` from audited production inventory so Gate 1A-approved URLs regain local `200` coverage without fabricating new product parameters
+- Revalidated the restored legacy-route family on `http://127.0.0.1:3011`, including zh/en canonical, hreflang, `index, follow`, and sitemap coverage
+- Reworked `components/lead/LeadForm.tsx` and all public lead-form entry points to use server-resolved `locale` plus localized `sourcePage`, removing the client-pathname locale derivation that conflicted with middleware-based `/en` rewrites
+- Rebuilt the project, refreshed the authoritative preview on `http://127.0.0.1:3011` (listener PID `32624`), and revalidated `/en/contact`, `/en`, and restored `/en/products/...` server HTML plus hydrated DOM parity for English lead-form output

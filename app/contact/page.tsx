@@ -70,7 +70,7 @@ export default async function ContactPage() {
               <p><span className="mr-2 text-primary">&#9873;</span>{isEnglish ? 'Address' : '地址'}: {site.address}</p>
             </div>
           </div>
-          <LeadForm sourcePage={localizeHref('/contact', locale)} />
+          <LeadForm locale={locale} sourcePage={localizeHref('/contact', locale)} />
         </div>
       </section>
     </>

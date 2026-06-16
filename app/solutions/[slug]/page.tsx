@@ -10,7 +10,7 @@ import { Markdown } from '@/components/ui/Markdown';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getFaqs, getSolution } from '@/lib/cms-data';
-import { isEnglishLocale } from '@/lib/i18n';
+import { isEnglishLocale, localizeHref } from '@/lib/i18n';
 import { createResolvedPageMetadata } from '@/lib/page-metadata';
 import { getRequestContext } from '@/lib/request-context';
 
@@ -151,7 +151,10 @@ export default async function SolutionDetailPage({
                     : '提交现场工件、节拍、质量问题和现有设备配置。'
                 }
               />
-              <LeadForm sourcePage={`/solutions/${solution.slug}`} />
+              <LeadForm
+                locale={locale}
+                sourcePage={localizeHref(`/solutions/${solution.slug}`, locale)}
+              />
             </div>
           </div>
         </div>

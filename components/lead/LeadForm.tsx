@@ -1,21 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { usePathname } from 'next/navigation';
 import { getLocaleCopy } from '@/lib/locale-copy';
-import { getLocaleFromPathname } from '@/lib/i18n';
+import type { Locale } from '@/lib/i18n';
 
 type LeadState = 'idle' | 'submitting' | 'success' | 'error';
 
 export function LeadForm({
+  locale,
   sourcePage = '',
   interestedProduct = '',
 }: {
+  locale: Locale;
   sourcePage?: string;
   interestedProduct?: string;
 }) {
-  const pathname = usePathname() || '/';
-  const locale = getLocaleFromPathname(pathname);
   const copy = getLocaleCopy(locale).leadForm;
   const [state, setState] = useState<LeadState>('idle');
   const [message, setMessage] = useState('');
@@ -39,7 +38,7 @@ export function LeadForm({
       className="grid gap-4 rounded border border-line bg-dark-soft p-6 shadow-card"
     >
       <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" />
-      <input type="hidden" name="sourcePage" value={sourcePage || pathname} />
+      <input type="hidden" name="sourcePage" value={sourcePage} />
       <input type="hidden" name="interestedProduct" value={interestedProduct} />
 
       <div className="grid gap-4 md:grid-cols-2">

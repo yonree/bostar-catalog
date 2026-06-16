@@ -105,6 +105,16 @@ export const productCategories: ProductCategory[] = [
     name: '检测仪器与配件',
     summary: '用于电阻、接地、高压与喷涂质量检测。',
   },
+  {
+    slug: 'Manual-Electrostatic-Liquid-Spray-Gun',
+    name: '手动液体静电喷枪',
+    summary: '手动液体静电喷枪产品目录。',
+  },
+  {
+    slug: 'Automatic-Electrostatic-Liquid-Spray-Gun',
+    name: '自动液体静电喷枪',
+    summary: '自动液体静电喷枪产品目录。',
+  },
 ];
 
 const productNames = [
@@ -180,7 +190,63 @@ const productNames = [
   ],
 ] as const;
 
-export const products: Product[] = productNames.map(
+const legacyAuditProducts: Product[] = [
+  {
+    categorySlug: 'Manual-Electrostatic-Liquid-Spray-Gun',
+    slug: 'bsd-3009a-manual-liquid-electrostatic-spray-gun',
+    name: '手动液体静电喷枪 (水油通用系列)',
+    model: 'BSD-3009A',
+    summary:
+      'BSD-3009A 是一款专为高效表面涂装设计的手动液体静电喷枪。枪身仅重 396 克，搭载内置高压发生器，静电利用率高达 98%，相比传统空气喷枪可节省油漆 30% 至 45%。',
+    aiSummary:
+      '基于已审计的生产快照，BSD-3009A 面向工业机械、五金家具和 3C 电子等液体静电喷涂场景，强调高静电利用率、良好包覆效果与节漆能力。',
+    image: '/images/product-set.png',
+    specs: {
+      设备型号: 'BSD-3009A',
+      适用工艺: '液体静电喷涂',
+      审计来源: 'audit/04-production-url-inventory.csv:96',
+    },
+    sellingPoints: ['静电利用率高达 98%', '相比传统空气喷枪节省油漆 30% 至 45%', '适用于工业机械、五金家具与 3C 电子'],
+    applications: ['工业机械', '五金家具', '3C电子'],
+  },
+  {
+    categorySlug: 'Manual-Electrostatic-Liquid-Spray-Gun',
+    slug: 'manual-liquid-electrostatic-spray-gun',
+    name: '手动液体静电喷枪',
+    model: '',
+    summary: '基于已审计生产快照恢复的手动液体静电喷枪详情路由。',
+    aiSummary: '当前本地仓库仅保留经审计确认的标题与路由，用于恢复旧 URL 的可访问性与 SEO 合约。',
+    image: '/images/product-set.png',
+    specs: {
+      适用工艺: '液体静电喷涂',
+      审计来源: 'audit/04-production-url-inventory.csv:97',
+    },
+    sellingPoints: [],
+    applications: [],
+  },
+  {
+    categorySlug: 'Automatic-Electrostatic-Liquid-Spray-Gun',
+    slug: 'bsd-3029-automatic-liquid-electrostatic-spray-gun',
+    name: '高性能液体自动静电喷枪控制系统',
+    model: 'BSD-3029',
+    summary:
+      'BSD-3029 高性能静电自动喷枪面向自动化涂装场景，内置高压串级发生器，支持高达 100 组数字化工艺配方存储与高精度闭环气流参数调节。',
+    aiSummary:
+      '基于已审计的生产快照，BSD-3029 用于往复机与机器人联动的液体自动静电喷涂，强调包覆效果、传递效率、节漆和自动化参数管理。',
+    image: '/images/product-set.png',
+    specs: {
+      设备型号: 'BSD-3029',
+      适用工艺: '液体自动静电喷涂',
+      工艺配方存储: '100 组',
+      审计来源: 'audit/04-production-url-inventory.csv:88',
+    },
+    sellingPoints: ['内置高压串级发生器', '支持 100 组数字化工艺配方存储', '适用于往复机与机器人联动自动化涂装'],
+    applications: ['自动化涂装', '往复机联动', '机器人联动'],
+  },
+];
+
+export const products: Product[] = [
+  ...productNames.map(
   ([categorySlug, slug, name, model, image], index) => ({
     categorySlug,
     slug,
@@ -199,7 +265,9 @@ export const products: Product[] = productNames.map(
     sellingPoints: ['高压输出稳定', '出粉调节清晰', '喷嘴维护方便', '适合多行业工件'],
     applications: ['五金件', '铝型材', '机箱机柜', '家具五金', '汽车零部件'],
   })
-);
+  ),
+  ...legacyAuditProducts,
+];
 
 export const articleCategories: ArticleCategory[] = [
   { slug: 'selection-guide', name: '选型指南' },

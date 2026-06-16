@@ -7,7 +7,7 @@ import { LeadForm } from '@/components/lead/LeadForm';
 import { Markdown } from '@/components/ui/Markdown';
 import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getCase } from '@/lib/cms-data';
-import { isEnglishLocale } from '@/lib/i18n';
+import { isEnglishLocale, localizeHref } from '@/lib/i18n';
 import { createResolvedPageMetadata } from '@/lib/page-metadata';
 import { getRequestContext } from '@/lib/request-context';
 
@@ -76,7 +76,7 @@ export default async function CaseDetailPage({ params }: { params: Promise<{ slu
         </div>
         <div>
           <div className="rounded-[24px] border border-line bg-white p-6 shadow-card">
-            <LeadForm sourcePage={`/cases/${item.slug}`} />
+            <LeadForm locale={locale} sourcePage={localizeHref(`/cases/${item.slug}`, locale)} />
           </div>
         </div>
       </div>

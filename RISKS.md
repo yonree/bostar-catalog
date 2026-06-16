@@ -26,6 +26,6 @@
 
 ## R-005 Legacy product URLs lack local source entities
 
-- Impact: several Gate 1A legacy product URLs that should remain `200` still return `404` in local preview, which would block Gate 4 URL-parity acceptance.
-- Current mitigation: recorded sampled gaps in `GATE3_LEGACY_URL_GAP_REPORT.md`; no fabricated fallback content has been introduced.
-- Trigger to escalate: before any release-candidate decision or if approved source content for the missing product families becomes available.
+- Impact: sampled Gate 1A legacy liquid-product families previously blocked Gate 4 because required `200` routes returned `404`.
+- Current mitigation: resolved locally on 2026-06-17 by restoring audited seed-backed category/detail entities in `lib/data.ts`; zh/en route, metadata, and sitemap parity revalidated on `http://127.0.0.1:3011`.
+- Trigger to escalate: only if broader legacy URL audit finds additional uncovered families beyond the restored sampled routes.

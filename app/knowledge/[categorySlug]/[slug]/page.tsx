@@ -10,7 +10,7 @@ import { FAQJsonLd } from '@/components/schema/FAQJsonLd';
 import { FaqSection } from '@/components/ui/FaqSection';
 import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getArticle, getArticlesByCategory, getFaqs, getProducts } from '@/lib/cms-data';
-import { isEnglishLocale } from '@/lib/i18n';
+import { isEnglishLocale, localizeHref } from '@/lib/i18n';
 import { createResolvedPageMetadata } from '@/lib/page-metadata';
 import { getRequestContext } from '@/lib/request-context';
 
@@ -115,7 +115,10 @@ export default async function ArticleDetailPage({
           <h2 className="mb-6 text-2xl font-black text-ink">
             {isEnglish ? 'Discuss a Related Process Question' : '咨询相关工艺问题'}
           </h2>
-          <LeadForm sourcePage={`/knowledge/${article.categorySlug}/${article.slug}`} />
+          <LeadForm
+            locale={locale}
+            sourcePage={localizeHref(`/knowledge/${article.categorySlug}/${article.slug}`, locale)}
+          />
         </div>
       </section>
     </>

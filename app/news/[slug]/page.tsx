@@ -3,7 +3,7 @@ import { Breadcrumb } from '@/components/layout/Breadcrumb';
 import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
 import { LeadForm } from '@/components/lead/LeadForm';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { isEnglishLocale, pickLocaleValue } from '@/lib/i18n';
+import { isEnglishLocale, localizeHref, pickLocaleValue } from '@/lib/i18n';
 import { createResolvedPageMetadata } from '@/lib/page-metadata';
 import { getRequestContext } from '@/lib/request-context';
 
@@ -117,7 +117,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
         <div>
           <div className="rounded-[24px] border border-line bg-white p-6 shadow-card">
             <SectionHeader title={ctaTitle} description={ctaDescription} />
-            <LeadForm sourcePage={`/news/${slug}`} />
+            <LeadForm locale={locale} sourcePage={localizeHref(`/news/${slug}`, locale)} />
           </div>
         </div>
       </div>

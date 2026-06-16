@@ -21,7 +21,7 @@ import {
   getSolutions,
 } from '@/lib/cms-data';
 import { getRequestContext } from '@/lib/request-context';
-import { isEnglishLocale } from '@/lib/i18n';
+import { isEnglishLocale, localizeHref } from '@/lib/i18n';
 import { getSiteSettings } from '@/lib/site-settings';
 
 export const dynamic = 'force-dynamic';
@@ -480,7 +480,7 @@ export default async function HomePage() {
               title={sectionCopy.contactTitle}
               description={sectionCopy.contactDescription}
             />
-            <LeadForm sourcePage="/" />
+            <LeadForm locale={locale} sourcePage={localizeHref('/', locale)} />
           </div>
         </div>
       </section>

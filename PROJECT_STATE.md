@@ -2,14 +2,14 @@
 
 ## Snapshot
 
-- Date: 2026-06-16
+- Date: 2026-06-17
 - Branch: `feat/gate2-implementation`
-- HEAD: `67fd8b9da0cad755f1f26e27a6d1a03a2905cfcf`
+- HEAD: `22d4d24`
 - Previous planning branch retained: `plan/gate1a`
 - Authoritative preview server: `http://127.0.0.1:3011`
 - Non-authoritative stale preview servers observed during recovery: `http://127.0.0.1:3008`, `http://127.0.0.1:3009`, `http://127.0.0.1:3010`
-- Current gate: `GATE_3_IN_PROGRESS`
-- Working tree: dirty by design; interrupted Gate 2 / Gate 3 implementation changes preserved for continuation
+- Current gate: `GATE_4_IN_PROGRESS`
+- Working tree: dirty by design; pending legacy-route restoration, lead-form locale parity fix, and live control-plane updates are intentionally preserved after checkpoint commit `22d4d24`
 
 ## Completed in this execution
 
@@ -31,6 +31,14 @@
 - Localized English metadata and shell copy for `cases/[slug]`, `downloads/[slug]`, `videos/[slug]`, `solutions/[slug]`, and `knowledge/[categorySlug]/[slug]`
 - Restored seeded fallback reads in `lib/cms-data.ts` for articles, article categories, solutions, downloads, videos, cases, and FAQs so representative Gate 3 detail routes stay testable without local Prisma/PostgreSQL content
 - Reworked `app/news/[slug]/page.tsx` from a raw placeholder into a locale-aware detail shell with breadcrumb, noindex metadata, slug reference, and inquiry CTA while keeping the route non-factual until a verified news source exists
+- Extended `lib/page-metadata.ts` so page-level localized metadata also drives `og:title`, `og:description`, and Twitter summary tags instead of inheriting the site-wide default
+- Revalidated page-level metadata parity on localized product, case, knowledge, news placeholder, and search routes while preserving canonical, hreflang, and robots output
+- Created checkpoint commit `22d4d24 feat(gate4): checkpoint localized route parity baseline`
+- Added `GATE4_RELEASE_PREP.md` and `GATE5_HANDOFF_DRAFT.md` to carry release-prep facts, rollback notes, and handoff scope without crossing the Gate 6 production boundary
+- Restored sampled legacy liquid-product category/detail routes in `lib/data.ts` from audited production inventory so Gate 1A-approved URL families regain local `200` coverage without inventing new parameters
+- Revalidated the restored legacy routes for zh/en canonical, hreflang, robots, and sitemap inclusion on the refreshed `3011` preview
+- Fixed locale hydration risk in `components/lead/LeadForm.tsx` by passing server-resolved `locale` and localized `sourcePage` into all public lead-form entry points instead of deriving locale from client pathname after middleware rewrites
+- Revalidated `/en/contact`, `/en`, and restored `/en/products/...` server HTML plus hydrated DOM parity for English lead-form labels and localized hidden `sourcePage` values
 
 ## Active blockers
 
@@ -42,20 +50,24 @@
 - Static public-surface verification is now complete for `/faq`, `/service`, `/contact`, `/about`, and `/`
 - Reserved news routes now use `noindex,nofollow`, are excluded from `sitemap.xml`, and remain online without losing the URL contract
 - Product and video JSON-LD now emit only repository-backed facts; hardcoded offer price, stock, and upload-date placeholders are removed
-- Legacy URL parity remains incomplete for sampled product families that still exist in Gate 1A planning assets but have no local source entities
-- Broader Gate 3 parity across remaining SEO audit items is still pending
+- Sampled Gate 1A legacy liquid-product URL families are now restored locally and no longer block Gate 4 parity acceptance
+- Remaining Gate 4 release blockers are limited to incomplete approved English body copy parity and missing Lighthouse evidence
 
 ## Latest verification
 
 - `npm run typecheck`: pass
 - `npm run build`: pass with warnings
 - `npm run lint`: pass with warnings only
+- 2026-06-17 Gate 4 metadata parity slice:
+  - `npm run typecheck`: pass after page-level Open Graph and Twitter metadata alignment
+  - `npm run lint`: pass with the same 4 pre-existing warnings after the metadata slice
+  - `npm run build`: pass with the same 4 pre-existing warnings after the metadata slice
 - Local smoke on `http://127.0.0.1:3011`:
   - `/en`: 200, `lang=en`, canonical `http://localhost:3000/en`, English hero copy and translation notice present
   - `/en/about`: 200, canonical `http://localhost:3000/en/about`, English breadcrumb and capability cards present
   - `/en/search?q=spray`: 200, canonical `http://localhost:3000/en/search`, `noindex,nofollow`, English empty-state and translation notice present
   - `/en/about`: `OrganizationJsonLd` description and footer summary now use English fallback copy
-- Preview restart sequence completed on `http://127.0.0.1:3011`; current authoritative listener is `next start --hostname 127.0.0.1 --port 3011` with Node PID `27160` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `44952`)
+- Preview restart sequence completed on `http://127.0.0.1:3011`; current authoritative listener is `next start --hostname 127.0.0.1 --port 3011` with Node PID `32624` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `47892`)
 - Representative seeded product-detail smoke:
   - zh: `/products/manual-powder-coating-gun/manual-powder-spray-gun` -> 200, title `鎵嬪姩绮夋湯闈欑數鍠锋灙 | BOSTAR GEO`, canonical `http://localhost:3000/products/manual-powder-coating-gun/manual-powder-spray-gun`, hreflang zh/en pair present, breadcrumb JSON-LD present, `BS-PM100` and `0.4-0.7 MPa` unchanged, `index, follow`, no runtime error
   - en: `/en/products/manual-powder-coating-gun/manual-powder-spray-gun` -> 200, `html lang=en`, title `鎵嬪姩绮夋湯闈欑數鍠锋灙 Product Details | BOSTAR GEO`, canonical `http://localhost:3000/en/products/manual-powder-coating-gun/manual-powder-spray-gun`, hreflang zh/en pair present, English shell headings and translation notice present, no Chinese shell leakage, `BS-PM100` and `0.4-0.7 MPa` unchanged, `index, follow`, no runtime error
@@ -87,7 +99,31 @@
     - reserved routes `/news`, `/en/news`, `/search?q=spray`, `/en/search?q=spray` -> reachable with `noindex,nofollow`
     - missing-route checks `/missing-route-check`, `/en/missing-route-check` -> 404 with `noindex`
     - `/sitemap.xml` and `/robots.txt` -> 200 with non-empty bodies; summary captured in `GATE4_ENTRY_BASELINE.md`
+  - Gate 4 metadata parity re-audit on latest build:
+    - `/`, `/en`, seeded zh/en product detail, zh/en case detail, zh/en knowledge detail, zh/en news placeholder, and zh/en search all emit page-level `og:title`, `og:description`, `twitter:title`, canonical, and hreflang values consistent with route locale and indexing policy
+    - `/en` DOM layout metrics confirm the hero, h1, translation notice, and subsequent sections are present in runtime despite repeated in-app screenshot timeouts on the browser capture channel
+  - lightweight response-time baseline on the refreshed `3011` preview:
+    - `/` -> 200 in 4651 ms, body 114278 chars
+    - `/en` -> 200 in 4284 ms, body 120262 chars
+    - `/en/products/manual-powder-coating-gun/manual-powder-spray-gun` -> 200 in 4174 ms, body 57563 chars
+    - `/en/news/release-placeholder` -> 200 in 4143 ms, body 43451 chars
+  - post-restoration and locale-parity slice:
+    - `npm run typecheck`: pass after lead-form locale propagation and legacy liquid-route restoration
+    - `npm run lint`: pass with the same 4 pre-existing warnings after the lead-form and legacy-route slice
+    - `npm run build`: pass with the same 4 pre-existing warnings after the lead-form and legacy-route slice
+    - restored legacy-route parity:
+      - `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` -> 200, canonical/hreflang present, `index, follow`
+      - `/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` -> 200, titles match audited route family, `BSD-3009A` present, canonical/hreflang present, `index, follow`
+      - `/products/Manual-Electrostatic-Liquid-Spray-Gun/manual-liquid-electrostatic-spray-gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/manual-liquid-electrostatic-spray-gun` -> 200, canonical/hreflang present, `index, follow`
+      - `/products/Automatic-Electrostatic-Liquid-Spray-Gun` and `/en/products/Automatic-Electrostatic-Liquid-Spray-Gun` -> 200, canonical/hreflang present, `index, follow`
+      - `/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun` and `/en/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun` -> 200, titles match audited route family, `BSD-3029` present, canonical/hreflang present, `index, follow`
+      - `/sitemap.xml` includes the restored zh/en category/detail routes above
+    - lead-form locale parity:
+      - `/en/contact` server HTML contains English field labels, English request-type options, and hidden `sourcePage=/en/contact`
+      - browser DOM on `/en/contact` confirms English labels/options and hidden `sourcePage=/en/contact`
+      - `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` server HTML contains English lead-form shell and hidden localized product detail `sourcePage`
+      - in-app browser dev logs still surface an older React 418 entry with timestamp `2026-06-16T17:33:40.110Z`; treated as stale session history because refreshed server HTML and hydrated DOM now agree on localized lead-form output
 
 ## Next task
 
-- Continue Gate 4 visual and performance sampling on already-verified routes while carrying `R-005` as a release-prep blocker for unresolved legacy product URLs
+- Freeze the current Gate 4 delta into a new checkpoint commit, then continue release-candidate close-out on remaining Lighthouse evidence and English body-copy parity review without reopening already-passed URL slices
