@@ -29,3 +29,6 @@
 - Revalidated `http://127.0.0.1:3011` on `next start` (listener PID `43916`) with zh/en news placeholder route smoke, confirming canonical, hreflang, and `noindex,nofollow` behavior
 - Verified remaining public list/category routes on `/en` for canonical, hreflang, indexability, and runtime stability without reopening already-passed detail-route smoke
 - Reworked `app/not-found.tsx` into a locale-aware 404 shell and revalidated zh/en missing-route responses on `http://127.0.0.1:3011` (listener PID `21336`)
+- Hardened `app/faq/page.tsx` for locale-aware metadata, breadcrumb copy, English translation-notice behavior, and suppression of Chinese-only FAQ schema on `/en`
+- Updated `components/ui/TechFaqSection.tsx` to accept locale context and suppress its FAQ JSON-LD outside the Chinese route branch
+- Refreshed `http://127.0.0.1:3011` to the latest production build (listener PID `44896`) and verified the remaining static public surfaces on `/en`: `/faq`, `/service`, `/contact`, `/about`, and `/`

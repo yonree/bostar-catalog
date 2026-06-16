@@ -1,5 +1,6 @@
 import { JsonLd } from '@/components/schema/JsonLd';
 import { Markdown, markdownToPlainText } from '@/components/ui/Markdown';
+import type { Locale } from '@/lib/i18n';
 
 interface TechFaq {
   question: string;
@@ -186,23 +187,26 @@ const TECH_FAQS: TechFaq[] = [
   },
 ];
 
-export function TechFaqSection() {
+export function TechFaqSection({ locale = 'zh-CN' }: { locale?: Locale }) {
+  const isEnglish = locale === 'en';
   return (
     <>
-      <JsonLd
-        data={{
-          '@context': 'https://schema.org',
-          '@type': 'FAQPage',
-          mainEntity: TECH_FAQS.map((faq) => ({
-            '@type': 'Question',
-            name: faq.question,
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: markdownToPlainText(faq.answer).substring(0, 300),
-            },
-          })),
-        }}
-      />
+      {!isEnglish && (
+        <JsonLd
+          data={{
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: TECH_FAQS.map((faq) => ({
+              '@type': 'Question',
+              name: faq.question,
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: markdownToPlainText(faq.answer).substring(0, 300),
+              },
+            })),
+          }}
+        />
+      )}
       <section className="section bg-industrial" aria-labelledby="tech-faq-heading">
         <div className="container max-w-4xl">
           <p className="text-sm font-bold uppercase tracking-widest text-primary">

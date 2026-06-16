@@ -4,7 +4,7 @@
 
 - Date: 2026-06-16
 - Branch: `feat/gate2-implementation`
-- HEAD baseline for this matrix: `d0fb7356ba342bab7212700576c0de55d1386d35`
+- HEAD baseline for this matrix: `3f47ca4d6305bb065ebd6247beec715d36ec4184`
 - Preview target: `http://127.0.0.1:3011`
 
 ## Status buckets
@@ -27,21 +27,19 @@
 - `/knowledge/[categorySlug]/[slug]`
 - `/news`
 - `/news/[slug]` placeholder route
-- `/en`
-- `/en/about`
-- `/en/search`
-
-### IMPLEMENTED_NOT_VERIFIED
-
 - `/faq`
 - `/service`
 - `/contact`
 - `/about`
 - `/`
+- `/en`
+- `/en/about`
+- `/en/search`
 
 ### SAFE_TO_IMPLEMENT
 
-- static public surface verification for `/faq`, `/service`, `/contact`, `/about`, and `/`
+- sitemap coverage and canonical/hreflang parity audit against current public-route inventory
+- remaining system placeholder and reserved-route verification beyond `/_not-found`
 - page-level empty-state wording on list pages backed by seed fallback
 
 ### SYSTEM_PLACEHOLDER
@@ -82,16 +80,12 @@
 
 ## Current active slice
 
-- Slice: system route repair plus static public surfaces
+- Slice: URL, sitemap, and remaining system-route parity audit
 - Scope:
-  - `/_not-found`
-  - `/faq`
-  - `/service`
-  - `/contact`
-  - `/about`
-  - `/`
+  - `app/sitemap.ts`
+  - public-route coverage against current route matrix
+  - placeholder/reserved routes beyond `/_not-found`
 
 ## Deferred slices
 
 - empty/error/loading placeholders beyond `/_not-found`
-- legacy URL and sitemap parity audit

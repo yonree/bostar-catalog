@@ -31,6 +31,9 @@
   - `npm run typecheck`: pass after not-found route repair
   - `npm run lint`: pass with the same 4 pre-existing warnings after the not-found slice
   - `npm run build`: pass with the same 4 pre-existing warnings after the not-found slice
+  - `npm run typecheck`: pass after FAQ English-shell hardening and static public-surface verification
+  - `npm run lint`: pass with the same 4 pre-existing warnings after the FAQ/static public-surface slice
+  - `npm run build`: pass with the same 4 pre-existing warnings after the FAQ/static public-surface slice
 
 ## Smoke evidence
 
@@ -38,6 +41,7 @@
   - stale resumed instances observed on `http://127.0.0.1:3008` and `http://127.0.0.1:3009`
   - authoritative post-build instances rotated through `http://127.0.0.1:3010` to `http://127.0.0.1:3011` after subsequent rebuilds
   - final authoritative preview restarted as `next start --hostname 127.0.0.1 --port 3011`, listener PID `21336` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `47348`)
+  - preview refreshed again after the FAQ/static public-surface slice as `next start --hostname 127.0.0.1 --port 3011`, listener PID `44896` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `39504`)
 - Browser checks performed against:
   - `/`
   - `/en`
@@ -132,10 +136,24 @@
     - `/missing-route-check` -> 404, `lang=zh-CN`, canonical `http://localhost:3000/missing-route-check`, hreflang zh/en pair present, `noindex`, heading `页面未找到`, no runtime error
     - `/en/missing-route-check` -> 404, `lang=en`, canonical `http://localhost:3000/en/missing-route-check`, hreflang zh/en pair present, `noindex`, `Page Not Found` plus `Back to Home` copy present, no runtime error
 
+  - static public-surface sweep on `/en`:
+    - `/en/faq`
+      - 200 response, `html lang=en`
+      - title `FAQ | BOSTAR GEO`
+      - canonical `http://localhost:3000/en/faq`
+      - hreflang zh/en pair present
+      - translation notice present
+      - technical FAQ section hidden on English output
+      - FAQ JSON-LD suppressed on English output
+      - `index, follow`, no runtime error
+    - `/en/service`, `/en/contact`, `/en/about`, `/en`
+      - 200 response on all routes
+      - locale-aware titles, canonical, and hreflang present
+      - `index, follow`, no runtime error
+
 ## Remaining evidence to collect in later gates
 
 - Lighthouse samples for zh/en template pages
 - structured-data URL verification on localized detail pages
 - Gate 3 review of remaining CMS/seed-backed content parity where approved English source copy is still absent
-- static public surface verification for `/faq`, `/service`, `/contact`, `/about`, and `/`
 - URL manifest loader or redirect audit if non-host redirects are activated
