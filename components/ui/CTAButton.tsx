@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { LocalizedLink } from '@/components/routing/LocalizedLink';
 
 type CTAVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
 type CTASize = 'sm' | 'md' | 'lg';
@@ -34,11 +34,11 @@ export function CTAButton({
   className?: string;
 }) {
   return (
-    <Link
+    <LocalizedLink
       href={href}
       className={`inline-flex items-center justify-center rounded-full font-semibold tracking-[0.08em] transition-all duration-200 hover:-translate-y-0.5 ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
     >
       {children}
-    </Link>
+    </LocalizedLink>
   );
 }

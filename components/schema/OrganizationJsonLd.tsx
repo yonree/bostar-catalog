@@ -1,8 +1,10 @@
 import { JsonLd } from '@/components/schema/JsonLd';
+import { getRequestContext } from '@/lib/request-context';
+import { getLocalizedSiteDescription } from '@/lib/site-copy';
 import { getSiteSettings } from '@/lib/site-settings';
 
 export async function OrganizationJsonLd() {
-  const site = await getSiteSettings();
+  const [site, { locale }] = await Promise.all([getSiteSettings(), getRequestContext()]);
   return (
     <JsonLd
       data={{
@@ -20,7 +22,7 @@ export async function OrganizationJsonLd() {
           'Bostar Intelligent Coating Systems',
           '博士达智能涂装',
         ],
-        description: site.description,
+        description: getLocalizedSiteDescription(locale, site),
         url: site.url,
         logo: `${site.url}/images/product-set.png`,
         email: site.email,

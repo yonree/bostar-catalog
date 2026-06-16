@@ -11,6 +11,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getFaqs, getSolution } from '@/lib/cms-data';
 import { isEnglishLocale } from '@/lib/i18n';
+import { createResolvedPageMetadata } from '@/lib/page-metadata';
 import { getRequestContext } from '@/lib/request-context';
 
 export const dynamic = 'force-dynamic';
@@ -27,7 +28,7 @@ export async function generateMetadata({
   const isEnglish = isEnglishLocale(locale);
   const solutionLabel = solution?.title || 'BOSTAR';
 
-  return {
+  return createResolvedPageMetadata({
     title:
       solution?.title && isEnglish
         ? `${solution.title} Solution`
@@ -37,7 +38,7 @@ export async function generateMetadata({
         ? `${solutionLabel} solution detail, source-language summary, and inquiry entry point.`
         : solution?.aiSummary) ||
       (isEnglish ? 'Industrial coating solution detail and inquiry entry point.' : '解决方案详情。'),
-  };
+  });
 }
 
 export default async function SolutionDetailPage({

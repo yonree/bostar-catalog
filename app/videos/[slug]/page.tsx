@@ -8,6 +8,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getVideo } from '@/lib/cms-data';
 import { isEnglishLocale } from '@/lib/i18n';
+import { createResolvedPageMetadata } from '@/lib/page-metadata';
 import { getRequestContext } from '@/lib/request-context';
 
 export const dynamic = 'force-dynamic';
@@ -22,7 +23,7 @@ export async function generateMetadata({
   const isEnglish = isEnglishLocale(locale);
   const videoLabel = video?.title || 'BOSTAR';
 
-  return {
+  return createResolvedPageMetadata({
     title:
       video?.title && isEnglish
         ? `${video.title} Video`
@@ -32,7 +33,7 @@ export async function generateMetadata({
         ? `${videoLabel} video summary, source-language technical context, and related viewing reference.`
         : video?.summary) ||
       (isEnglish ? 'Video summary and related technical context.' : '视频摘要。'),
-  };
+  });
 }
 
 export default async function VideoDetailPage({ params }: { params: Promise<{ slug: string }> }) {

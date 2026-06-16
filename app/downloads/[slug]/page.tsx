@@ -7,6 +7,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getDownload, getProducts } from '@/lib/cms-data';
 import { isEnglishLocale } from '@/lib/i18n';
+import { createResolvedPageMetadata } from '@/lib/page-metadata';
 import { getRequestContext } from '@/lib/request-context';
 
 export const dynamic = 'force-dynamic';
@@ -21,7 +22,7 @@ export async function generateMetadata({
   const isEnglish = isEnglishLocale(locale);
   const downloadLabel = download?.title || 'BOSTAR';
 
-  return {
+  return createResolvedPageMetadata({
     title:
       download?.title && isEnglish
         ? `${download.title} Download`
@@ -31,7 +32,7 @@ export async function generateMetadata({
         ? `${downloadLabel} download detail, source-language resource summary, and access method.`
         : download?.summary) ||
       (isEnglish ? 'Technical download detail and acquisition method.' : '下载资料详情。'),
-  };
+  });
 }
 
 export default async function DownloadDetailPage({

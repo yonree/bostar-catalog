@@ -4,6 +4,7 @@ import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
 import { LeadForm } from '@/components/lead/LeadForm';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { isEnglishLocale, pickLocaleValue } from '@/lib/i18n';
+import { createResolvedPageMetadata } from '@/lib/page-metadata';
 import { getRequestContext } from '@/lib/request-context';
 
 const zhCopy = {
@@ -38,7 +39,7 @@ export async function generateMetadata({
   const [{ slug }, { locale }] = await Promise.all([params, getRequestContext()]);
   const isEnglish = isEnglishLocale(locale);
 
-  return {
+  return createResolvedPageMetadata({
     title: isEnglish ? `${slug} News Placeholder` : `${zhCopy.titlePrefix}${slug}`,
     description: isEnglish
       ? 'Reserved news detail route. Verified source article content is not published in the current local data source.'
@@ -47,7 +48,7 @@ export async function generateMetadata({
       index: false,
       follow: false,
     },
-  };
+  });
 }
 
 export default async function NewsDetailPage({ params }: { params: Promise<{ slug: string }> }) {

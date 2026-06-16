@@ -1,12 +1,12 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import type { ProductView } from '@/lib/cms-data';
+import { LocalizedLink } from '@/components/routing/LocalizedLink';
 import { Badge } from '@/components/ui/Badge';
 
 export function ProductCard({ product }: { product: ProductView }) {
   return (
     <article className="card-hover group overflow-hidden rounded-[28px] border border-line bg-white shadow-card">
-      <Link href={`/products/${product.categorySlug}/${product.slug}`} className="block">
+      <LocalizedLink href={`/products/${product.categorySlug}/${product.slug}`} className="block">
         <div className="relative aspect-[4/3] overflow-hidden bg-[linear-gradient(180deg,#FFFFFF,#F8F9FA)]">
           <Image
             src={product.image}
@@ -22,9 +22,9 @@ export function ProductCard({ product }: { product: ProductView }) {
             <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-steel">Precision Unit</span>
           </div>
           <h3 className="text-2xl font-black text-ink">{product.name}</h3>
-          <p className="text-sm leading-7 text-steel line-clamp-3">{product.summary || product.aiSummary}</p>
+          <p className="line-clamp-3 text-sm leading-7 text-steel">{product.summary || product.aiSummary}</p>
         </div>
-      </Link>
+      </LocalizedLink>
     </article>
   );
 }

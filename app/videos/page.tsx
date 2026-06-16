@@ -1,34 +1,51 @@
 import Image from 'next/image';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { Breadcrumb } from '@/components/layout/Breadcrumb';
+import { LocalizedLink } from '@/components/routing/LocalizedLink';
 import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getVideos } from '@/lib/cms-data';
+import { pickLocaleValue } from '@/lib/i18n';
+import { createLocalizedPageMetadata } from '@/lib/page-metadata';
+import { getRequestContext } from '@/lib/request-context';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
-  title: '视频中心',
-  description: '粉末静电喷枪操作、控制器参数设置和喷枪维护视频内容。',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return createLocalizedPageMetadata({
+    title: { 'zh-CN': '视频中心', en: 'Video Center' },
+    description: {
+      'zh-CN': '粉末静电喷枪操作、控制器参数设置和喷枪维护视频内容。',
+      en: 'Video entries for spray-gun operation, controller setup, and maintenance topics.',
+    },
+  });
+}
 
 export default async function VideosPage() {
-  const videos = await getVideos();
+  const [videos, { locale }] = await Promise.all([getVideos(), getRequestContext()]);
   return (
     <section className="section">
       <div className="container">
-        <Breadcrumb items={[{ label: '视频中心' }]} />
+        <Breadcrumb items={[{ label: pickLocaleValue(locale, { 'zh-CN': '视频中心', en: 'Video Center' }) }]} />
         <BreadcrumbJsonLd
           items={[
-            { name: '首页', path: '/' },
-            { name: '视频中心', path: '/videos' },
+            { name: pickLocaleValue(locale, { 'zh-CN': '首页', en: 'Home' }), path: '/' },
+            { name: pickLocaleValue(locale, { 'zh-CN': '视频中心', en: 'Video Center' }), path: '/videos' },
           ]}
         />
-        <SectionHeader headingLevel="h1" title="视频中心" description="喷枪操作教程、控制器参数设置、维护保养与故障排查视频内容。" />
+        <SectionHeader
+          headingLevel="h1"
+          title={pickLocaleValue(locale, { 'zh-CN': '视频中心', en: 'Video Center' })}
+          description={pickLocaleValue(locale, {
+            'zh-CN': '喷枪操作教程、控制器参数设置、维护保养与故障排查视频内容。',
+            en: 'Video guidance for spray-gun operation, controller parameters, maintenance, and troubleshooting.',
+          })}
+        />
+        {locale === 'en' ? <TranslationNotice className="mb-8" /> : null}
         <div className="grid gap-5 md:grid-cols-3">
           {videos.map((video) => (
-            <Link
+            <LocalizedLink
               key={video.id}
               href={`/videos/${video.slug}`}
               className="overflow-hidden rounded border border-line bg-dark-soft shadow-panel card-hover"
@@ -49,7 +66,7 @@ export default async function VideosPage() {
                 <h2 className="text-lg font-black">{video.title}</h2>
                 <p className="mt-2 text-sm leading-6 text-white-soft/50">{video.summary}</p>
               </div>
-            </Link>
+            </LocalizedLink>
           ))}
         </div>
       </div>

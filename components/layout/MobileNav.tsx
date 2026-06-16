@@ -2,13 +2,23 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import type { Locale } from '@/lib/i18n';
+import { localizeHref } from '@/lib/i18n';
 
 interface NavItem {
   href: string;
   label: string;
 }
 
-export function MobileNav({ items }: { items: NavItem[] }) {
+export function MobileNav({
+  items,
+  primaryCtaLabel,
+  locale,
+}: {
+  items: NavItem[];
+  primaryCtaLabel: string;
+  locale: Locale;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -17,7 +27,7 @@ export function MobileNav({ items }: { items: NavItem[] }) {
         type="button"
         onClick={() => setOpen(!open)}
         className="flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-full border border-line bg-white/80"
-        aria-label={open ? '关闭菜单' : '打开菜单'}
+        aria-label={open ? 'Close menu' : 'Open menu'}
       >
         <span
           className={`block h-0.5 w-5 bg-ink transition-transform duration-300 ${open ? 'translate-y-1 -rotate-45' : ''}`}
@@ -32,7 +42,7 @@ export function MobileNav({ items }: { items: NavItem[] }) {
           {items.map((item) => (
             <Link
               key={item.href}
-              href={item.href}
+              href={localizeHref(item.href, locale)}
               onClick={() => setOpen(false)}
               className="rounded-2xl px-4 py-3 text-sm font-medium text-ink transition-colors hover:bg-primary-light"
             >
@@ -40,11 +50,11 @@ export function MobileNav({ items }: { items: NavItem[] }) {
             </Link>
           ))}
           <Link
-            href="/contact"
+            href={localizeHref('/contact', locale)}
             onClick={() => setOpen(false)}
             className="mt-2 rounded-full bg-primary px-5 py-3 text-center text-sm font-semibold tracking-[0.08em] text-white"
           >
-            获取技术方案
+            {primaryCtaLabel}
           </Link>
         </div>
       </nav>

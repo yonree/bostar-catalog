@@ -15,6 +15,7 @@ import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import type { ProductView } from '@/lib/cms-data';
 import { getProduct } from '@/lib/cms-data';
 import { isEnglishLocale, localizeHref } from '@/lib/i18n';
+import { createResolvedPageMetadata } from '@/lib/page-metadata';
 import { getRequestContext } from '@/lib/request-context';
 
 export const dynamic = 'force-dynamic';
@@ -67,7 +68,7 @@ export async function generateMetadata({
   const isEnglish = isEnglishLocale(locale);
   const productLabel = product?.model || product?.name || 'BOSTAR';
 
-  return {
+  return createResolvedPageMetadata({
     title:
       product?.name && isEnglish
         ? `${product.name} Product Details`
@@ -79,7 +80,7 @@ export async function generateMetadata({
       (isEnglish
         ? 'Industrial coating product detail, specification overview, and inquiry entry point.'
         : '工业喷涂产品详情、参数总览与询盘入口。'),
-  };
+  });
 }
 
 export default async function ProductDetailPage({

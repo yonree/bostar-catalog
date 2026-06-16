@@ -1,7 +1,11 @@
 import { JsonLd } from '@/components/schema/JsonLd';
-import { siteConfig } from '@/lib/site';
+import { localizeHref } from '@/lib/i18n';
+import { getRequestContext } from '@/lib/request-context';
+import { getSiteSettings } from '@/lib/site-settings';
 
-export function BreadcrumbJsonLd({ items }: { items: { name: string; path: string }[] }) {
+export async function BreadcrumbJsonLd({ items }: { items: { name: string; path: string }[] }) {
+  const [site, { locale }] = await Promise.all([getSiteSettings(), getRequestContext()]);
+
   return (
     <JsonLd
       data={{
@@ -11,7 +15,7 @@ export function BreadcrumbJsonLd({ items }: { items: { name: string; path: strin
           '@type': 'ListItem',
           position: index + 1,
           name: item.name,
-          item: `${siteConfig.url}${item.path}`,
+          item: `${site.url}${localizeHref(item.path, locale)}`,
         })),
       }}
     />

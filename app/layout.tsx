@@ -4,39 +4,59 @@ import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { OrganizationJsonLd } from '@/components/schema/OrganizationJsonLd';
 import { WebSiteJsonLd } from '@/components/schema/WebSiteJsonLd';
+import { buildLocaleAlternates } from '@/lib/i18n';
+import { getRequestContext } from '@/lib/request-context';
+import { getEnglishSiteDescription } from '@/lib/site-copy';
 import { getSiteSettings } from '@/lib/site-settings';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const site = await getSiteSettings();
+  const [site, requestContext] = await Promise.all([getSiteSettings(), getRequestContext()]);
+  const alternates = buildLocaleAlternates(requestContext.contentPathname);
+  const canonicalPath = requestContext.pathname;
+  const isIndexable =
+    !requestContext.contentPathname.startsWith('/admin') &&
+    !requestContext.contentPathname.startsWith('/search');
+  const defaultTitle =
+    requestContext.locale === 'en'
+      ? `${site.brandEn} Industrial Coating Equipment`
+      : site.defaultTitle;
+  const description =
+    requestContext.locale === 'en'
+      ? getEnglishSiteDescription()
+      : site.description;
+
   return {
     metadataBase: new URL(site.url),
     title: {
-      default: site.defaultTitle,
+      default: defaultTitle,
       template: `%s | ${site.brandEn}`,
     },
-    description: site.description,
-    keywords: ['BOSTAR', '博士达', '静电喷枪', '粉末喷涂设备', 'DISK 静电旋碟', '自动喷涂系统'],
+    description,
+    keywords: ['BOSTAR', '静电喷枪', '粉末喷涂设备', 'DISK 静电旋碟', '自动喷涂系统'],
     alternates: {
-      canonical: '/',
+      canonical: canonicalPath,
+      languages: alternates,
     },
     openGraph: {
-      title: site.defaultTitle,
-      description: site.description,
-      url: site.url,
+      title: defaultTitle,
+      description,
+      url: `${site.url}${canonicalPath}`,
       siteName: site.brandEn,
-      locale: 'zh_CN',
+      locale: requestContext.locale === 'en' ? 'en_US' : 'zh_CN',
       type: 'website',
     },
     robots: {
-      index: true,
-      follow: true,
+      index: isIndexable,
+      follow: isIndexable,
     },
   };
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const { localeConfig } = await getRequestContext();
+
   return (
-    <html lang="zh-CN">
+    <html lang={localeConfig.htmlLang}>
       <body>
         <OrganizationJsonLd />
         <WebSiteJsonLd />

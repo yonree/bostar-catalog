@@ -11,6 +11,7 @@ import { FaqSection } from '@/components/ui/FaqSection';
 import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getArticle, getArticlesByCategory, getFaqs, getProducts } from '@/lib/cms-data';
 import { isEnglishLocale } from '@/lib/i18n';
+import { createResolvedPageMetadata } from '@/lib/page-metadata';
 import { getRequestContext } from '@/lib/request-context';
 
 export const dynamic = 'force-dynamic';
@@ -25,7 +26,7 @@ export async function generateMetadata({
   const isEnglish = isEnglishLocale(locale);
   const articleLabel = article?.title || 'BOSTAR';
 
-  return {
+  return createResolvedPageMetadata({
     title:
       article?.title && isEnglish
         ? `${article.title} Knowledge Article`
@@ -35,7 +36,7 @@ export async function generateMetadata({
         ? `${articleLabel} article detail, source-language technical summary, and related inquiry entry point.`
         : article?.excerpt) ||
       (isEnglish ? 'Technical article detail and related inquiry entry point.' : '知识文章详情。'),
-  };
+  });
 }
 
 export default async function ArticleDetailPage({

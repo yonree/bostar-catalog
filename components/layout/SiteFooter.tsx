@@ -1,10 +1,18 @@
-import Link from 'next/link';
+import { LocalizedLink } from '@/components/routing/LocalizedLink';
 import { getProductCategories } from '@/lib/cms-data';
-import { navItems } from '@/lib/site';
+import { getLocaleCopy } from '@/lib/locale-copy';
+import { getRequestContext } from '@/lib/request-context';
+import { getLocalizedSiteDescription } from '@/lib/site-copy';
 import { getSiteSettings } from '@/lib/site-settings';
 
 export async function SiteFooter() {
-  const [site, productCategories] = await Promise.all([getSiteSettings(), getProductCategories()]);
+  const [site, productCategories, requestContext] = await Promise.all([
+    getSiteSettings(),
+    getProductCategories(),
+    getRequestContext(),
+  ]);
+  const copy = getLocaleCopy(requestContext.locale);
+  const description = getLocalizedSiteDescription(requestContext.locale, site);
 
   return (
     <footer className="border-t border-line bg-white">
@@ -12,38 +20,38 @@ export async function SiteFooter() {
         <div>
           <p className="text-2xl font-black text-ink">{site.brandCn}</p>
           <p className="mt-2 text-[11px] uppercase tracking-[0.22em] text-steel">{site.brandEn}</p>
-          <p className="mt-6 max-w-md text-sm leading-7 text-steel">{site.description}</p>
+          <p className="mt-6 max-w-md text-sm leading-7 text-steel">{description}</p>
           <div className="mt-6 space-y-2 text-sm text-steel">
-            <p>电话：{site.phone}</p>
-            <p>邮箱：{site.email}</p>
-            <p>地址：{site.address}</p>
+            <p>{copy.footerContactLabels.phone}: {site.phone}</p>
+            <p>{copy.footerContactLabels.email}: {site.email}</p>
+            <p>{copy.footerContactLabels.address}: {site.address}</p>
           </div>
         </div>
 
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-ink">网站导航</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-ink">{copy.footerNavTitle}</p>
           <div className="mt-6 grid gap-3 text-sm text-steel">
-            {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className="transition-colors hover:text-ink">
+            {copy.navItems.map((item) => (
+              <LocalizedLink key={item.href} href={item.href} className="transition-colors hover:text-ink">
                 {item.label}
-              </Link>
+              </LocalizedLink>
             ))}
           </div>
         </div>
 
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-ink">核心设备</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-ink">{copy.footerProductsTitle}</p>
           <div className="mt-6 grid gap-3 text-sm text-steel">
             {productCategories.slice(0, 6).map((item) => (
-              <Link key={item.slug} href={`/products/${item.slug}`} className="transition-colors hover:text-ink">
+              <LocalizedLink key={item.slug} href={`/products/${item.slug}`} className="transition-colors hover:text-ink">
                 {item.name}
-              </Link>
+              </LocalizedLink>
             ))}
           </div>
         </div>
       </div>
       <div className="border-t border-line py-5 text-center text-xs text-steel">
-        © {new Date().getFullYear()} {site.company}. All rights reserved.
+        {'©'} {new Date().getFullYear()} {site.company}. {copy.copyrightSuffix}.
       </div>
     </footer>
   );

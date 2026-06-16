@@ -8,6 +8,7 @@ import { Markdown } from '@/components/ui/Markdown';
 import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getCase } from '@/lib/cms-data';
 import { isEnglishLocale } from '@/lib/i18n';
+import { createResolvedPageMetadata } from '@/lib/page-metadata';
 import { getRequestContext } from '@/lib/request-context';
 
 export const dynamic = 'force-dynamic';
@@ -22,7 +23,7 @@ export async function generateMetadata({
   const isEnglish = isEnglishLocale(locale);
   const caseLabel = item?.title || 'BOSTAR';
 
-  return {
+  return createResolvedPageMetadata({
     title:
       item?.title && isEnglish
         ? `${item.title} Case Study`
@@ -32,7 +33,7 @@ export async function generateMetadata({
         ? `${caseLabel} case study, source-language project summary, and inquiry entry point.`
         : item?.summary) ||
       (isEnglish ? 'Industrial coating case study and inquiry entry point.' : '客户案例详情。'),
-  };
+  });
 }
 
 export default async function CaseDetailPage({ params }: { params: Promise<{ slug: string }> }) {
