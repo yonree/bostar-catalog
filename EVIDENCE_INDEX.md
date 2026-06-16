@@ -37,6 +37,9 @@
   - `npm run typecheck`: pass after reserved-news SEO parity and robots-policy updates
   - `npm run lint`: pass with the same 4 pre-existing warnings after the reserved-news SEO slice
   - `npm run build`: pass with the same 4 pre-existing warnings after the reserved-news SEO slice
+  - `npm run typecheck`: pass after structured-data fact-hardening on product/video schema
+  - `npm run lint`: pass with the same 4 pre-existing warnings after the structured-data slice
+  - `npm run build`: pass with the same 4 pre-existing warnings after the structured-data slice
 
 ## Smoke evidence
 
@@ -46,6 +49,7 @@
   - final authoritative preview restarted as `next start --hostname 127.0.0.1 --port 3011`, listener PID `21336` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `47348`)
   - preview refreshed again after the FAQ/static public-surface slice as `next start --hostname 127.0.0.1 --port 3011`, listener PID `44896` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `39504`)
   - preview refreshed again after the reserved-news SEO slice as `next start --hostname 127.0.0.1 --port 3011`, listener PID `33248` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `43488`)
+  - preview refreshed again after the structured-data slice as `next start --hostname 127.0.0.1 --port 3011`, listener PID `27160` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `44952`)
 - Browser checks performed against:
   - `/`
   - `/en`
@@ -167,6 +171,18 @@
     - `/robots.txt`
       - 200 response
       - `Disallow: /api/admin/`, `Disallow: /search`, and `Disallow: /en/search` present
+  - structured-data parity:
+    - zh/en seeded product detail routes
+      - 200 response on both locales
+      - no `Offer` schema output
+      - no fabricated `price: 0.00`
+      - localized product URL remains present in JSON-LD
+      - no runtime error
+    - zh/en seeded video detail routes
+      - 200 response on both locales
+      - no hardcoded `uploadDate: 2026-01-01`
+      - no fabricated thumbnail fallback emitted when source image is absent
+      - no runtime error
 
 ## Remaining evidence to collect in later gates
 

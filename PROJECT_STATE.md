@@ -4,7 +4,7 @@
 
 - Date: 2026-06-16
 - Branch: `feat/gate2-implementation`
-- HEAD: `4c20708cf381877b60304706c0e0ed1c7a08cfa4`
+- HEAD: `05cb501dbf63f94076c548ace74088a6508bbef7`
 - Previous planning branch retained: `plan/gate1a`
 - Authoritative preview server: `http://127.0.0.1:3011`
 - Non-authoritative stale preview servers observed during recovery: `http://127.0.0.1:3008`, `http://127.0.0.1:3009`, `http://127.0.0.1:3010`
@@ -41,7 +41,8 @@
 - Product-detail shell localization plus representative seeded runtime smoke are complete for product, case, download, video, solution, and knowledge detail routes
 - Static public-surface verification is now complete for `/faq`, `/service`, `/contact`, `/about`, and `/`
 - Reserved news routes now use `noindex,nofollow`, are excluded from `sitemap.xml`, and remain online without losing the URL contract
-- Broader Gate 3 parity across legacy URL expectations and remaining structured-data/SEO audit items is still pending
+- Product and video JSON-LD now emit only repository-backed facts; hardcoded offer price, stock, and upload-date placeholders are removed
+- Broader Gate 3 parity across legacy URL expectations and remaining SEO audit items is still pending
 
 ## Latest verification
 
@@ -53,7 +54,7 @@
   - `/en/about`: 200, canonical `http://localhost:3000/en/about`, English breadcrumb and capability cards present
   - `/en/search?q=spray`: 200, canonical `http://localhost:3000/en/search`, `noindex,nofollow`, English empty-state and translation notice present
   - `/en/about`: `OrganizationJsonLd` description and footer summary now use English fallback copy
-- Preview restart sequence completed on `http://127.0.0.1:3011`; current authoritative listener is `next start --hostname 127.0.0.1 --port 3011` with Node PID `33248` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `43488`)
+- Preview restart sequence completed on `http://127.0.0.1:3011`; current authoritative listener is `next start --hostname 127.0.0.1 --port 3011` with Node PID `27160` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `44952`)
 - Representative seeded product-detail smoke:
   - zh: `/products/manual-powder-coating-gun/manual-powder-spray-gun` -> 200, title `鎵嬪姩绮夋湯闈欑數鍠锋灙 | BOSTAR GEO`, canonical `http://localhost:3000/products/manual-powder-coating-gun/manual-powder-spray-gun`, hreflang zh/en pair present, breadcrumb JSON-LD present, `BS-PM100` and `0.4-0.7 MPa` unchanged, `index, follow`, no runtime error
   - en: `/en/products/manual-powder-coating-gun/manual-powder-spray-gun` -> 200, `html lang=en`, title `鎵嬪姩绮夋湯闈欑數鍠锋灙 Product Details | BOSTAR GEO`, canonical `http://localhost:3000/en/products/manual-powder-coating-gun/manual-powder-spray-gun`, hreflang zh/en pair present, English shell headings and translation notice present, no Chinese shell leakage, `BS-PM100` and `0.4-0.7 MPa` unchanged, `index, follow`, no runtime error
@@ -73,7 +74,10 @@
   - sitemap and robots parity:
     - `/sitemap.xml` -> 200, `/news` and `/en/news` absent, `/faq`, `/en/faq`, and seeded localized product detail URLs present
     - `/robots.txt` -> 200, disallow rules present for `/api/admin/`, `/search`, and `/en/search`
+  - structured-data parity:
+    - zh/en seeded product detail routes -> 200, no `Offer` schema and no fabricated `price: 0.00`; localized product URL remains present in JSON-LD
+    - zh/en seeded video detail routes -> 200, no hardcoded `uploadDate: 2026-01-01`; JSON-LD remains runtime-safe and omits unverifiable thumbnail data when absent
 
 ## Next task
 
-- Continue Gate 3 structured-data and legacy URL parity audit against the approved route/redirect planning assets, then prepare Gate 4 validation entry conditions
+- Continue Gate 3 legacy URL parity audit against the approved route/redirect planning assets, then prepare Gate 4 validation entry conditions

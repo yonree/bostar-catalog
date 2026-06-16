@@ -35,3 +35,9 @@
 - Date: 2026-06-16
 - Decision: keep `/news` and `/en/news` online as reserved routes, but mark them `noindex,nofollow` and remove them from `sitemap.xml` until a verified news source exists.
 - Reason: preserves the approved URL surface without presenting placeholder news inventory as indexable content.
+
+## D-007
+
+- Date: 2026-06-16
+- Decision: emit only verified product/video schema facts and remove hardcoded offer or publish placeholders that are not backed by repository data.
+- Reason: avoids publishing fabricated price, stock, or upload-date signals through JSON-LD.

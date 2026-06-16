@@ -4,7 +4,7 @@
 
 - Date: 2026-06-16
 - Branch: `feat/gate2-implementation`
-- HEAD baseline for this matrix: `4c20708cf381877b60304706c0e0ed1c7a08cfa4`
+- HEAD baseline for this matrix: `05cb501dbf63f94076c548ace74088a6508bbef7`
 - Preview target: `http://127.0.0.1:3011`
 
 ## Status buckets
@@ -78,10 +78,10 @@
 
 ## Current active slice
 
-- Slice: structured-data and legacy URL parity audit
+- Slice: legacy URL parity audit and Gate 4 entry preparation
 - Scope:
-  - localized JSON-LD parity on remaining key templates
   - legacy URL expectations against approved planning assets
+  - remaining route-contract verification gaps
   - Gate 4 entry-condition evidence gaps
 
 ## Deferred slices

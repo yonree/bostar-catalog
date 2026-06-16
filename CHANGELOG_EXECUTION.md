@@ -35,3 +35,6 @@
 - Marked `app/news/page.tsx` as a reserved `noindex,nofollow` route until a verified news source exists, while keeping the URL online
 - Removed `/news` from `app/sitemap.ts` static-path coverage so reserved news routes no longer appear in `sitemap.xml`
 - Tightened `public/robots.txt` with explicit disallow rules for `/api/admin/`, `/search`, and `/en/search`, then revalidated runtime outputs on `http://127.0.0.1:3011` (listener PID `33248`)
+- Removed fabricated `Offer` fields from `components/schema/ProductJsonLd.tsx` and kept only repository-backed product facts plus localized URLs
+- Removed the hardcoded placeholder publish date from `components/schema/VideoJsonLd.tsx` and emit `thumbnailUrl` only when a source image exists
+- Revalidated structured-data runtime output on `http://127.0.0.1:3011` (listener PID `27160`) for seeded zh/en product and video detail routes
