@@ -32,3 +32,6 @@
 - Hardened `app/faq/page.tsx` for locale-aware metadata, breadcrumb copy, English translation-notice behavior, and suppression of Chinese-only FAQ schema on `/en`
 - Updated `components/ui/TechFaqSection.tsx` to accept locale context and suppress its FAQ JSON-LD outside the Chinese route branch
 - Refreshed `http://127.0.0.1:3011` to the latest production build (listener PID `44896`) and verified the remaining static public surfaces on `/en`: `/faq`, `/service`, `/contact`, `/about`, and `/`
+- Marked `app/news/page.tsx` as a reserved `noindex,nofollow` route until a verified news source exists, while keeping the URL online
+- Removed `/news` from `app/sitemap.ts` static-path coverage so reserved news routes no longer appear in `sitemap.xml`
+- Tightened `public/robots.txt` with explicit disallow rules for `/api/admin/`, `/search`, and `/en/search`, then revalidated runtime outputs on `http://127.0.0.1:3011` (listener PID `33248`)

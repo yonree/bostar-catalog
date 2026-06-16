@@ -4,7 +4,7 @@
 
 - Date: 2026-06-16
 - Branch: `feat/gate2-implementation`
-- HEAD: `3f47ca4d6305bb065ebd6247beec715d36ec4184`
+- HEAD: `4c20708cf381877b60304706c0e0ed1c7a08cfa4`
 - Previous planning branch retained: `plan/gate1a`
 - Authoritative preview server: `http://127.0.0.1:3011`
 - Non-authoritative stale preview servers observed during recovery: `http://127.0.0.1:3008`, `http://127.0.0.1:3009`, `http://127.0.0.1:3010`
@@ -40,7 +40,8 @@
 - Existing lint warnings remain in legacy admin/FAQ/data modules and are tracked as non-blocking debt
 - Product-detail shell localization plus representative seeded runtime smoke are complete for product, case, download, video, solution, and knowledge detail routes
 - Static public-surface verification is now complete for `/faq`, `/service`, `/contact`, `/about`, and `/`
-- Broader Gate 3 parity across sitemap, legacy URL expectations, and remaining non-detail/system routes is still pending
+- Reserved news routes now use `noindex,nofollow`, are excluded from `sitemap.xml`, and remain online without losing the URL contract
+- Broader Gate 3 parity across legacy URL expectations and remaining structured-data/SEO audit items is still pending
 
 ## Latest verification
 
@@ -52,7 +53,7 @@
   - `/en/about`: 200, canonical `http://localhost:3000/en/about`, English breadcrumb and capability cards present
   - `/en/search?q=spray`: 200, canonical `http://localhost:3000/en/search`, `noindex,nofollow`, English empty-state and translation notice present
   - `/en/about`: `OrganizationJsonLd` description and footer summary now use English fallback copy
-- Preview restart sequence completed on `http://127.0.0.1:3011`; current authoritative listener is `next start --hostname 127.0.0.1 --port 3011` with Node PID `44896` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `39504`)
+- Preview restart sequence completed on `http://127.0.0.1:3011`; current authoritative listener is `next start --hostname 127.0.0.1 --port 3011` with Node PID `33248` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `43488`)
 - Representative seeded product-detail smoke:
   - zh: `/products/manual-powder-coating-gun/manual-powder-spray-gun` -> 200, title `鎵嬪姩绮夋湯闈欑數鍠锋灙 | BOSTAR GEO`, canonical `http://localhost:3000/products/manual-powder-coating-gun/manual-powder-spray-gun`, hreflang zh/en pair present, breadcrumb JSON-LD present, `BS-PM100` and `0.4-0.7 MPa` unchanged, `index, follow`, no runtime error
   - en: `/en/products/manual-powder-coating-gun/manual-powder-spray-gun` -> 200, `html lang=en`, title `鎵嬪姩绮夋湯闈欑數鍠锋灙 Product Details | BOSTAR GEO`, canonical `http://localhost:3000/en/products/manual-powder-coating-gun/manual-powder-spray-gun`, hreflang zh/en pair present, English shell headings and translation notice present, no Chinese shell leakage, `BS-PM100` and `0.4-0.7 MPa` unchanged, `index, follow`, no runtime error
@@ -63,12 +64,16 @@
   - zh/en solution detail: `/solutions/hardware-powder-coating`, `/en/solutions/hardware-powder-coating` -> 200, canonical/hreflang pair present, breadcrumb JSON-LD present, English `Solutions`, `Consult This Solution`, and FAQ shell present, `index, follow`, no runtime error
   - zh/en knowledge detail: `/knowledge/selection-guide/how-to-choose-electrostatic-spray-gun`, `/en/knowledge/selection-guide/how-to-choose-electrostatic-spray-gun` -> 200, canonical/hreflang pair present, breadcrumb JSON-LD present, English `Knowledge Center`, FAQ shell, and inquiry CTA shell present, `index, follow`, no runtime error
   - zh/en news placeholder detail: `/news/release-placeholder`, `/en/news/release-placeholder` -> 200, `noindex,nofollow`, canonical/hreflang pair present, breadcrumb JSON-LD present, English `News Detail Placeholder`, `Current Status`, and inquiry CTA shell present, no runtime error
-  - remaining public list/category pages on `/en`: `/products`, `/products/manual-powder-coating-gun`, `/cases`, `/downloads`, `/videos`, `/solutions`, `/knowledge`, `/knowledge/selection-guide`, `/news` -> 200, `lang=en`, canonical/hreflang present, `index, follow`, no runtime error
+  - zh/en news index routes: `/news`, `/en/news` -> 200, canonical/hreflang pair present, `noindex,nofollow`, reserved placeholder shell retained, no runtime error
+  - remaining public list/category pages on `/en`: `/products`, `/products/manual-powder-coating-gun`, `/cases`, `/downloads`, `/videos`, `/solutions`, `/knowledge`, `/knowledge/selection-guide` -> 200, `lang=en`, canonical/hreflang present, `index, follow`, no runtime error
   - zh/en not-found routes: `/missing-route-check`, `/en/missing-route-check` -> 404, locale-specific `html lang`, canonical/hreflang present, `noindex`, no runtime error; English not-found copy and Chinese not-found heading render correctly
   - static public-surface sweep on `/en`:
     - `/en/faq` -> 200, `lang=en`, title `FAQ | BOSTAR GEO`, canonical `http://localhost:3000/en/faq`, hreflang pair present, `index, follow`, translation notice present, no technical FAQ section leakage, no FAQ JSON-LD, no runtime error
     - `/en/service`, `/en/contact`, `/en/about`, `/en` -> 200, `lang=en`, canonical/hreflang present, `index, follow`, expected English titles render, no runtime error
+  - sitemap and robots parity:
+    - `/sitemap.xml` -> 200, `/news` and `/en/news` absent, `/faq`, `/en/faq`, and seeded localized product detail URLs present
+    - `/robots.txt` -> 200, disallow rules present for `/api/admin/`, `/search`, and `/en/search`
 
 ## Next task
 
-- Continue Gate 3 URL and SEO parity audit for sitemap coverage, legacy URL expectations, and remaining system/placeholder routes beyond `/_not-found`
+- Continue Gate 3 structured-data and legacy URL parity audit against the approved route/redirect planning assets, then prepare Gate 4 validation entry conditions

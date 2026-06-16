@@ -4,7 +4,7 @@
 
 - Date: 2026-06-16
 - Branch: `feat/gate2-implementation`
-- HEAD baseline for this matrix: `3f47ca4d6305bb065ebd6247beec715d36ec4184`
+- HEAD baseline for this matrix: `4c20708cf381877b60304706c0e0ed1c7a08cfa4`
 - Preview target: `http://127.0.0.1:3011`
 
 ## Status buckets
@@ -25,8 +25,6 @@
 - `/knowledge`
 - `/knowledge/[categorySlug]`
 - `/knowledge/[categorySlug]/[slug]`
-- `/news`
-- `/news/[slug]` placeholder route
 - `/faq`
 - `/service`
 - `/contact`
@@ -44,6 +42,7 @@
 
 ### SYSTEM_PLACEHOLDER
 
+- `/news` reserved index kept online as `noindex,nofollow` until verified news inventory exists
 - `/news/[slug]` placeholder detail kept as `noindex,nofollow` until verified news content exists
 - `/_not-found` localized and verified as a 404/noindex system route
 
@@ -54,7 +53,6 @@
 ### BUSINESS_DECISION_REQUIRED
 
 - approved English business-body copy for data-backed Chinese source content
-- whether `/news` should remain a reserved index or be hidden pending a real news source
 
 ## Completed slice
 
@@ -80,11 +78,11 @@
 
 ## Current active slice
 
-- Slice: URL, sitemap, and remaining system-route parity audit
+- Slice: structured-data and legacy URL parity audit
 - Scope:
-  - `app/sitemap.ts`
-  - public-route coverage against current route matrix
-  - placeholder/reserved routes beyond `/_not-found`
+  - localized JSON-LD parity on remaining key templates
+  - legacy URL expectations against approved planning assets
+  - Gate 4 entry-condition evidence gaps
 
 ## Deferred slices
 

@@ -34,6 +34,9 @@
   - `npm run typecheck`: pass after FAQ English-shell hardening and static public-surface verification
   - `npm run lint`: pass with the same 4 pre-existing warnings after the FAQ/static public-surface slice
   - `npm run build`: pass with the same 4 pre-existing warnings after the FAQ/static public-surface slice
+  - `npm run typecheck`: pass after reserved-news SEO parity and robots-policy updates
+  - `npm run lint`: pass with the same 4 pre-existing warnings after the reserved-news SEO slice
+  - `npm run build`: pass with the same 4 pre-existing warnings after the reserved-news SEO slice
 
 ## Smoke evidence
 
@@ -42,6 +45,7 @@
   - authoritative post-build instances rotated through `http://127.0.0.1:3010` to `http://127.0.0.1:3011` after subsequent rebuilds
   - final authoritative preview restarted as `next start --hostname 127.0.0.1 --port 3011`, listener PID `21336` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `47348`)
   - preview refreshed again after the FAQ/static public-surface slice as `next start --hostname 127.0.0.1 --port 3011`, listener PID `44896` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `39504`)
+  - preview refreshed again after the reserved-news SEO slice as `next start --hostname 127.0.0.1 --port 3011`, listener PID `33248` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `43488`)
 - Browser checks performed against:
   - `/`
   - `/en`
@@ -150,6 +154,19 @@
       - 200 response on all routes
       - locale-aware titles, canonical, and hreflang present
       - `index, follow`, no runtime error
+  - reserved-news SEO parity:
+    - `/news` and `/en/news`
+      - 200 response on both locales
+      - canonical and hreflang pair present
+      - `noindex, nofollow` on both locales
+      - reserved placeholder shell retained, no runtime error
+    - `/sitemap.xml`
+      - 200 response
+      - `/news` and `/en/news` absent
+      - `/faq`, `/en/faq`, and seeded localized product detail URLs still present
+    - `/robots.txt`
+      - 200 response
+      - `Disallow: /api/admin/`, `Disallow: /search`, and `Disallow: /en/search` present
 
 ## Remaining evidence to collect in later gates
 
