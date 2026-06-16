@@ -8,6 +8,7 @@
 - `planning/gate1a/seo-geo/metadata-spec.md`
 - `planning/gate1a/qa-release/gate1b-engineering-readiness-plan.md`
 - `GATE3_LEGACY_URL_GAP_REPORT.md`
+- `GATE4_ENTRY_BASELINE.md`
 
 ## Command evidence
 
@@ -193,6 +194,8 @@
       - current preview returns `404`, `noindex`
       - planning row `planning/gate1a/url/url-decision-manifest.csv:88` expects `200`
       - local audit snapshot `audit/04-production-url-inventory.csv:88` records a production detail page title and summary for the same URL
+  - Gate 4 entry baseline:
+    - `GATE4_ENTRY_BASELINE.md` records the consolidated smoke sweep for zh/en index pages, representative detail pages, reserved routes, system 404s, sitemap, and robots
 
 ## Remaining evidence to collect in later gates
 

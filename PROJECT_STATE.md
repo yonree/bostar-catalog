@@ -4,7 +4,7 @@
 
 - Date: 2026-06-16
 - Branch: `feat/gate2-implementation`
-- HEAD: `05cb501dbf63f94076c548ace74088a6508bbef7`
+- HEAD: `67fd8b9da0cad755f1f26e27a6d1a03a2905cfcf`
 - Previous planning branch retained: `plan/gate1a`
 - Authoritative preview server: `http://127.0.0.1:3011`
 - Non-authoritative stale preview servers observed during recovery: `http://127.0.0.1:3008`, `http://127.0.0.1:3009`, `http://127.0.0.1:3010`
@@ -75,14 +75,19 @@
   - sitemap and robots parity:
     - `/sitemap.xml` -> 200, `/news` and `/en/news` absent, `/faq`, `/en/faq`, and seeded localized product detail URLs present
     - `/robots.txt` -> 200, disallow rules present for `/api/admin/`, `/search`, and `/en/search`
-  - structured-data parity:
+- structured-data parity:
     - zh/en seeded product detail routes -> 200, no `Offer` schema and no fabricated `price: 0.00`; localized product URL remains present in JSON-LD
     - zh/en seeded video detail routes -> 200, no hardcoded `uploadDate: 2026-01-01`; JSON-LD remains runtime-safe and omits unverifiable thumbnail data when absent
   - legacy URL parity sampling:
     - `/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` -> 404, `noindex`
     - `/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun` -> 404, `noindex`
     - matching planning rows and production-inventory evidence captured in `GATE3_LEGACY_URL_GAP_REPORT.md`
+  - Gate 4 entry baseline:
+    - core zh/en indexable pages -> 200, locale-aware title/canonical/hreflang present, no runtime error
+    - reserved routes `/news`, `/en/news`, `/search?q=spray`, `/en/search?q=spray` -> reachable with `noindex,nofollow`
+    - missing-route checks `/missing-route-check`, `/en/missing-route-check` -> 404 with `noindex`
+    - `/sitemap.xml` and `/robots.txt` -> 200 with non-empty bodies; summary captured in `GATE4_ENTRY_BASELINE.md`
 
 ## Next task
 
-- Continue Gate 4 entry preparation on already-verified routes while carrying `R-005` as a release-prep blocker for unresolved legacy product URLs
+- Continue Gate 4 visual and performance sampling on already-verified routes while carrying `R-005` as a release-prep blocker for unresolved legacy product URLs

@@ -79,10 +79,10 @@
 
 ## Current active slice
 
-- Slice: Gate 4 entry preparation with legacy URL blocker tracking
+- Slice: Gate 4 visual and performance sampling with legacy URL blocker tracking
 - Scope:
   - route-validation evidence on already verified surfaces
-  - release-prep checklist inputs
+  - visual/performance sampling inputs
   - legacy URL blocker tracking from `GATE3_LEGACY_URL_GAP_REPORT.md`
   - Gate 4 entry-condition evidence gaps
 
