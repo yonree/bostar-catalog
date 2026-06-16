@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { getLocaleFromPathname, stripLocalePrefix } from '@/lib/i18n';
 
 const cookieName = 'bostar_admin_session';
 const adminEmail = process.env.ADMIN_EMAIL || 'admin@bostarcoating.com';
@@ -9,6 +10,8 @@ const passwordHash =
 const sessionSecret =
   process.env.ADMIN_SESSION_SECRET || 'change-this-session-secret-before-production';
 
+const publicFilePattern = /\.[^/]+$/;
+
 async function sha256(value: string) {
   const data = new TextEncoder().encode(value);
   const hash = await crypto.subtle.digest('SHA-256', data);
@@ -17,11 +20,47 @@ async function sha256(value: string) {
     .join('');
 }
 
+function shouldCanonicalizeHost(request: NextRequest) {
+  const host = request.headers.get('host') || '';
+  return request.nextUrl.protocol === 'https:' && host === 'bostarcoating.com';
+}
+
+function withRequestHeaders(request: NextRequest) {
+  const existingHeaders = request.headers;
+  const pathname = existingHeaders.get('x-bostar-pathname') || request.nextUrl.pathname;
+  const locale = getLocaleFromPathname(pathname);
+  const internalPathname = stripLocalePrefix(pathname);
+  const requestHeaders = new Headers(existingHeaders);
+
+  requestHeaders.set('x-bostar-pathname', pathname);
+  requestHeaders.set('x-bostar-locale', locale);
+  requestHeaders.set('x-bostar-internal-pathname', internalPathname);
+
+  return { locale, internalPathname, requestHeaders };
+}
+
+function isPublicFile(pathname: string) {
+  return publicFilePattern.test(pathname) || pathname.startsWith('/_next');
+}
+
 export async function middleware(request: NextRequest) {
+  if (shouldCanonicalizeHost(request)) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.host = 'www.bostarcoating.com';
+    return NextResponse.redirect(redirectUrl, 301);
+  }
+
   const { pathname } = request.nextUrl;
-  const isAdminPage = pathname.startsWith('/admin') && pathname !== '/admin/login';
-  const isAdminApi = pathname.startsWith('/api/admin') && pathname !== '/api/admin/login';
-  const isUploadApi = pathname === '/api/upload';
+  const { internalPathname, requestHeaders } = withRequestHeaders(request);
+
+  if (isPublicFile(pathname) && internalPathname !== '/api/upload') {
+    return NextResponse.next();
+  }
+
+  const isAdminPage = internalPathname.startsWith('/admin') && internalPathname !== '/admin/login';
+  const isAdminApi =
+    internalPathname.startsWith('/api/admin') && internalPathname !== '/api/admin/login';
+  const isUploadApi = internalPathname === '/api/upload';
 
   if (isAdminPage || isAdminApi || isUploadApi) {
     const expected = await sha256(`${adminEmail}:${passwordHash}:${sessionSecret}`);
@@ -31,13 +70,25 @@ export async function middleware(request: NextRequest) {
       if (isAdminApi || isUploadApi) {
         return NextResponse.json({ success: false, message: '未登录。' }, { status: 401 });
       }
-      return NextResponse.redirect(new URL('/admin/login', request.url));
+
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = '/admin/login';
+      loginUrl.search = '';
+      return NextResponse.redirect(loginUrl);
     }
   }
 
-  return NextResponse.next();
+  const response =
+    pathname === internalPathname
+      ? NextResponse.next({ request: { headers: requestHeaders } })
+      : NextResponse.rewrite(
+          new URL(`${internalPathname}${request.nextUrl.search}`, request.url),
+          { request: { headers: requestHeaders } }
+        );
+
+  return response;
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/admin/:path*', '/api/upload'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };

@@ -1,5 +1,11 @@
 ﻿import { prisma } from '@/lib/prisma';
 
+
+import {
+  productCategories as seedProductCategories,
+  products as seedProducts,
+} from '@/lib/data';
+
 export type ProductView = {
   id: string;
   slug: string;
@@ -588,7 +594,7 @@ function mapProduct(
       maintenance: normalizeFaqAnswer(product?.maintenance),
       troubleshooting: normalizeTroubleshootingAnswer(product?.troubleshooting),
       unsuitableScenes: sanitizeUnsuitableScenes(product?.unsuitableScenes),
-      relatedFaqs: (product?.faqs || []).map((faq) => ({
+      relatedFaqs: (product?.faqs || []).map((faq: { id: string; question: string; answer: string; category: string | null }) => ({
         id: faq.id,
         question: faq.question,
         answer: faq.answer,
@@ -596,6 +602,64 @@ function mapProduct(
       })),
     }),
   };
+}
+
+function mapSeedCategory(category: (typeof seedProductCategories)[number]): CategoryView {
+  return {
+    id: `seed-category-${category.slug}`,
+    slug: normalizeSlugPart(category.slug),
+    name: category.name,
+    summary: normalizeFaqAnswer(category.summary),
+  };
+}
+
+function mapSeedProduct(product: (typeof seedProducts)[number]): ProductView {
+  const category = seedProductCategories.find((item) => item.slug === product.categorySlug);
+  const specs = specsObject(product.specs);
+  const applicableCraft =
+    specs['适用工艺'] ||
+    Object.entries(specs).find(([key]) => key.includes('适用工艺'))?.[1] ||
+    '';
+
+  return {
+    id: `seed-product-${product.slug}`,
+    slug: normalizeSlugPart(product.slug),
+    categorySlug: normalizeSlugPart(product.categorySlug),
+    categoryName: category?.name || product.categorySlug,
+    name: product.name,
+    model: product.model,
+    summary: normalizeFaqAnswer(product.summary),
+    aiSummary: normalizeFaqAnswer(product.aiSummary),
+    image: product.image || defaultProductImage,
+    imageCandidates: [product.image || defaultProductImage],
+    specs,
+    sellingPoints: sanitizePlainArray(product.sellingPoints),
+    applications: sanitizePlainArray(product.applications),
+    description: '',
+    structure: '',
+    workingPrinciple: '',
+    operationSteps: [],
+    standardConfig: [],
+    optionalParts: [],
+    maintenance: '',
+    troubleshooting: '',
+    functions: [],
+    applicableCraft,
+    application: '',
+    unsuitableScenes: '',
+    faqs: buildProductFaqs({
+      name: product.name,
+      model: product.model,
+      category: category ? { name: category.name } : null,
+      summary: normalizeFaqAnswer(product.summary),
+      applicableCraft,
+    }),
+  };
+}
+
+function getSeedProducts(limit?: number) {
+  const mapped = seedProducts.map(mapSeedProduct);
+  return typeof limit === 'number' ? mapped.slice(0, limit) : mapped;
 }
 
 function mapArticle(
@@ -636,24 +700,30 @@ function mapSolution(
   };
 }
 
-export async function getProductCategories() {
+export async function getProductCategories(): Promise<CategoryView[]> {
   try {
     const categories = await prisma.productCategory.findMany({
       where: { isPublished: true },
       orderBy: { sortOrder: 'asc' },
     });
-    return categories.map((category) => ({
+    return categories.map((category: {
+      id: string;
+      slug: string;
+      name: string;
+      summary: string | null;
+      description: string | null;
+    }) => ({
       id: category.id,
       slug: normalizeSlugPart(category.slug),
       name: category.name,
       summary: category.summary || category.description || '',
     }));
   } catch {
-    return [];
+    return seedProductCategories.map(mapSeedCategory);
   }
 }
 
-export async function getProducts(limit?: number) {
+export async function getProducts(limit?: number): Promise<ProductView[]> {
   try {
     const products = await prisma.product.findMany({
       where: { isPublished: true },
@@ -663,11 +733,11 @@ export async function getProducts(limit?: number) {
     });
     return products.map(mapProduct);
   } catch {
-    return [];
+    return getSeedProducts(limit);
   }
 }
 
-export async function getFeaturedProducts(limit = 6) {
+export async function getFeaturedProducts(limit = 6): Promise<ProductView[]> {
   try {
     const products = await prisma.product.findMany({
       where: { isPublished: true },
@@ -677,11 +747,13 @@ export async function getFeaturedProducts(limit = 6) {
     });
     return products.map(mapProduct);
   } catch {
-    return [];
+    return getSeedProducts(limit);
   }
 }
 
-export async function getProductsByCategory(categorySlug: string) {
+export async function getProductsByCategory(
+  categorySlug: string
+): Promise<{ category: CategoryView | null; products: ProductView[] }> {
   try {
     const normalizedCategorySlug = categorySlug.replace(/\s+/g, '-');
     const category = await prisma.productCategory.findFirst({
@@ -710,11 +782,30 @@ export async function getProductsByCategory(categorySlug: string) {
       products: products.map(mapProduct),
     };
   } catch {
-    return { category: null, products: [] };
+    const normalizedCategorySlug = normalizeSlugPart(categorySlug).toLowerCase();
+    const category = seedProductCategories.find(
+      (item) => normalizeSlugPart(item.slug).toLowerCase() === normalizedCategorySlug
+    );
+
+    if (!category) {
+      return { category: null, products: [] };
+    }
+
+    return {
+      category: mapSeedCategory(category),
+      products: seedProducts
+        .filter(
+          (item) => normalizeSlugPart(item.categorySlug).toLowerCase() === normalizedCategorySlug
+        )
+        .map(mapSeedProduct),
+    };
   }
 }
 
-export async function getProduct(categorySlug: string, productSlug: string) {
+export async function getProduct(
+  categorySlug: string,
+  productSlug: string
+): Promise<ProductView | null> {
   try {
     const normalizedCategorySlug = normalizeSlugPart(categorySlug);
     const normalizedProductSlug = normalizeSlugPart(productSlug);
@@ -729,28 +820,41 @@ export async function getProduct(categorySlug: string, productSlug: string) {
       include: { category: true, faqs: { where: { isPublished: true }, orderBy: [{ sortOrder: 'asc' }, { updatedAt: 'desc' }] } },
       orderBy: { slug: 'asc' },
     });
-    const categoryMatched = candidates.filter((item) => {
+    const categoryMatched = candidates.filter((item: {
+      slug: string;
+      category: { slug: string | null } | null;
+      faqs?: Array<{ id: string; question: string; answer: string; category: string | null }> | null;
+    }) => {
       if (!item?.category?.slug) return false;
       return normalizeSlugPart(item.category.slug).toLowerCase() === normalizedCategorySlug.toLowerCase();
     });
     const exactMatch = categoryMatched.find(
-      (item) => normalizeSlugPart(item.slug).toLowerCase() === normalizedProductSlug.toLowerCase()
+      (item: { slug: string }) =>
+        normalizeSlugPart(item.slug).toLowerCase() === normalizedProductSlug.toLowerCase()
     );
     if (exactMatch) return mapProduct(exactMatch);
     if (categoryMatched.length === 1) return mapProduct(categoryMatched[0]);
     return null;
   } catch {
-    return null;
+    const normalizedCategorySlug = normalizeSlugPart(categorySlug).toLowerCase();
+    const normalizedProductSlug = normalizeSlugPart(productSlug).toLowerCase();
+    const product = seedProducts.find(
+      (item) =>
+        normalizeSlugPart(item.categorySlug).toLowerCase() === normalizedCategorySlug &&
+        normalizeSlugPart(item.slug).toLowerCase() === normalizedProductSlug
+    );
+
+    return product ? mapSeedProduct(product) : null;
   }
 }
 
-export async function getArticleCategories() {
+export async function getArticleCategories(): Promise<Array<{ id: string; slug: string; name: string }>> {
   try {
     const categories = await prisma.articleCategory.findMany({
       where: { isPublished: true },
       orderBy: { sortOrder: 'asc' },
     });
-    return categories.map((category) => ({
+    return categories.map((category: { id: string; slug: string; name: string }) => ({
       id: category.id,
       slug: category.slug,
       name: category.name,
@@ -760,7 +864,7 @@ export async function getArticleCategories() {
   }
 }
 
-export async function getArticles(limit?: number) {
+export async function getArticles(limit?: number): Promise<ArticleView[]> {
   try {
     const articles = await prisma.article.findMany({
       where: { isPublished: true },
@@ -774,7 +878,9 @@ export async function getArticles(limit?: number) {
   }
 }
 
-export async function getArticlesByCategory(categorySlug: string) {
+export async function getArticlesByCategory(
+  categorySlug: string
+): Promise<{ category: { id: string; slug: string; name: string } | null; articles: ArticleView[] }> {
   try {
     const category = await prisma.articleCategory.findUnique({ where: { slug: categorySlug } });
     const articles = await prisma.article.findMany({
@@ -791,7 +897,7 @@ export async function getArticlesByCategory(categorySlug: string) {
   }
 }
 
-export async function getArticle(categorySlug: string, slug: string) {
+export async function getArticle(categorySlug: string, slug: string): Promise<ArticleView | null> {
   try {
     const article = await prisma.article.findFirst({
       where: { slug, category: { slug: categorySlug }, isPublished: true },
@@ -803,7 +909,7 @@ export async function getArticle(categorySlug: string, slug: string) {
   }
 }
 
-export async function getSolutions(limit?: number) {
+export async function getSolutions(limit?: number): Promise<SolutionView[]> {
   try {
     const solutions = await prisma.solution.findMany({
       where: { isPublished: true },
@@ -816,7 +922,7 @@ export async function getSolutions(limit?: number) {
   }
 }
 
-export async function getSolution(slug: string) {
+export async function getSolution(slug: string): Promise<SolutionView | null> {
   try {
     const solution = await prisma.solution.findFirst({ where: { slug, isPublished: true } });
     return solution ? mapSolution(solution) : null;
@@ -825,14 +931,23 @@ export async function getSolution(slug: string) {
   }
 }
 
-export async function getDownloads() {
+export async function getDownloads(): Promise<DownloadView[]> {
   try {
     const downloads = await prisma.download.findMany({
       where: { isPublished: true },
       orderBy: { updatedAt: 'desc' },
     });
     return downloads.map(
-      (item): DownloadView => ({
+      (item: {
+        id: string;
+        slug: string;
+        title: string;
+        summary: string | null;
+        fileType: string | null;
+        version: string | null;
+        fileUrl: string;
+        requireLeadForm: boolean;
+      }): DownloadView => ({
         id: item.id,
         slug: item.slug,
         title: item.title,
@@ -848,7 +963,7 @@ export async function getDownloads() {
   }
 }
 
-export async function getDownload(slug: string) {
+export async function getDownload(slug: string): Promise<DownloadView | null> {
   try {
     const item = await prisma.download.findFirst({ where: { slug, isPublished: true } });
     return item
@@ -868,14 +983,20 @@ export async function getDownload(slug: string) {
   }
 }
 
-export async function getVideos() {
+export async function getVideos(): Promise<VideoView[]> {
   try {
     const videos = await prisma.video.findMany({
       where: { isPublished: true },
       orderBy: { updatedAt: 'desc' },
     });
     return videos.map(
-      (item): VideoView => ({
+      (item: {
+        id: string;
+        slug: string;
+        title: string;
+        summary: string | null;
+        coverImage: string | null;
+      }): VideoView => ({
         id: item.id,
         slug: item.slug,
         title: item.title,
@@ -889,7 +1010,7 @@ export async function getVideos() {
   }
 }
 
-export async function getVideo(slug: string) {
+export async function getVideo(slug: string): Promise<VideoView | null> {
   try {
     const item = await prisma.video.findFirst({ where: { slug, isPublished: true } });
     return item
@@ -907,7 +1028,7 @@ export async function getVideo(slug: string) {
   }
 }
 
-export async function getFaqs(limit?: number) {
+export async function getFaqs(limit?: number): Promise<FaqView[]> {
   try {
     const faqs = await prisma.fAQ.findMany({
       where: { isPublished: true },
@@ -915,7 +1036,12 @@ export async function getFaqs(limit?: number) {
       take: limit,
     });
     return faqs.map(
-      (faq): FaqView => ({
+      (faq: {
+        id: string;
+        question: string;
+        answer: string;
+        category: string | null;
+      }): FaqView => ({
         id: faq.id,
         question: faq.question,
         answer: faq.answer,
@@ -927,14 +1053,23 @@ export async function getFaqs(limit?: number) {
   }
 }
 
-export async function getCases() {
+export async function getCases(): Promise<CaseView[]> {
   try {
     const cases = await prisma.case.findMany({
       where: { isPublished: true },
       orderBy: { updatedAt: 'desc' },
     });
     return cases.map(
-      (item): CaseView => ({
+      (item: {
+        id: string;
+        slug: string;
+        title: string;
+        background: string | null;
+        result: string | null;
+        content: string | null;
+        industry: string | null;
+        images: unknown;
+      }): CaseView => ({
         id: item.id,
         slug: item.slug,
         title: item.title,
@@ -948,7 +1083,7 @@ export async function getCases() {
   }
 }
 
-export async function getCase(slug: string) {
+export async function getCase(slug: string): Promise<CaseView | null> {
   try {
     const item = await prisma.case.findFirst({ where: { slug, isPublished: true } });
     return item
@@ -966,7 +1101,12 @@ export async function getCase(slug: string) {
   }
 }
 
-export async function getSearchResults(query: string) {
+export async function getSearchResults(query: string): Promise<{
+  products: ProductView[];
+  articles: ArticleView[];
+  solutions: SolutionView[];
+  faqs: FaqView[];
+}> {
   if (!query) {
     return { products: [], articles: [], solutions: [], faqs: [] };
   }
@@ -1020,7 +1160,12 @@ export async function getSearchResults(query: string) {
       articles: articles.map(mapArticle),
       solutions: solutions.map(mapSolution),
       faqs: faqs.map(
-        (faq): FaqView => ({
+        (faq: {
+          id: string;
+          question: string;
+          answer: string;
+          category: string | null;
+        }): FaqView => ({
           id: faq.id,
           question: faq.question,
           answer: faq.answer,
@@ -1032,8 +1177,3 @@ export async function getSearchResults(query: string) {
     return { products: [], articles: [], solutions: [], faqs: [] };
   }
 }
-
-
-
-
-
