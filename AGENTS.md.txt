@@ -1,0 +1,83 @@
+# BOSTAR Website Refactor Rules
+
+## Project objective
+
+Incrementally refactor the BOSTAR website without deleting or losing any
+existing production data, content, media, URLs, leads, products, articles,
+FAQs, resources or database records.
+
+## Absolute prohibitions
+
+- Never delete existing production data.
+- Never execute destructive database migrations.
+- Never use `prisma migrate reset`.
+- Never drop tables, columns or indexes without explicit human approval.
+- Never overwrite production media files.
+- Never modify production credentials.
+- Never deploy directly to production.
+- Never remove an existing route without a tested 301 redirect.
+- Never fabricate technical product parameters or certifications.
+- Never replace verified Chinese content with automatic translations.
+- Never install a production dependency without documenting the reason.
+
+## Required workflow
+
+1. Inspect before editing.
+2. Produce a written impact analysis.
+3. Create or update tests before structural changes.
+4. Work on a dedicated branch or worktree.
+5. Run lint, typecheck, tests and build.
+6. Report all changed files.
+7. Report database impact.
+8. Report URL and SEO impact.
+9. Stop when the requested milestone is complete.
+
+## Data protection
+
+Before any database change:
+
+- Create a backup.
+- Record table counts.
+- Test against a production-like copy.
+- Provide rollback SQL or rollback instructions.
+- Use expand-and-contract migrations.
+- Preserve stable IDs and existing timestamps.
+
+## Internationalization
+
+- Chinese is the default locale without a URL prefix.
+- English uses `/en`.
+- Product model numbers and brand names must not be translated.
+- Missing translations must be marked explicitly.
+- Do not publish machine translations as verified translations.
+
+## UI principles
+
+- Industrial, minimal, precise and technology-oriented.
+- Accessibility and clarity take priority over animation.
+- Prefer Server Components.
+- Add Client Components only when interaction requires them.
+- Reuse design tokens and shared components.
+- Do not duplicate page-level layouts.
+
+## SEO and GEO
+
+- Preserve existing URLs or provide permanent redirects.
+- Every indexable page requires canonical metadata.
+- Localized pages require hreflang.
+- Structured data must match visible page content.
+- Technical claims require a source or verification status.
+- Do not generate thin pages only for keywords.
+
+## Required checks
+
+Run the repository's existing package-manager commands for:
+
+- lint
+- typecheck
+- unit tests
+- end-to-end tests
+- production build
+- dead-code analysis
+
+Do not switch package managers unless explicitly approved.

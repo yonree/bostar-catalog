@@ -1,0 +1,13 @@
+﻿content_type,surface,source_file,verification_status,state,notes
+product,Product model + lib/cms-data.ts,prisma/schema.prisma,DATABASE_CONTENT_STATUS=UNVERIFIED,published flag present,production + DB-backed; actual record count unverified
+product-category,ProductCategory model + lib/cms-data.ts,prisma/schema.prisma,DATABASE_CONTENT_STATUS=UNVERIFIED,published flag present,category pages and sitemap use this source
+article,Article model + knowledge routes,prisma/schema.prisma,DATABASE_CONTENT_STATUS=UNVERIFIED,published flag present,knowledge center content
+article-category,ArticleCategory model,prisma/schema.prisma,DATABASE_CONTENT_STATUS=UNVERIFIED,published flag present,knowledge category routes
+faq,FAQ model + FAQJsonLd,prisma/schema.prisma,DATABASE_CONTENT_STATUS=UNVERIFIED,published flag present,seed contains destructive refresh
+solution,Solution model + solutions routes,prisma/schema.prisma,DATABASE_CONTENT_STATUS=UNVERIFIED,published flag present,some titles currently slug-derived
+case,Case model + cases routes,prisma/schema.prisma,DATABASE_CONTENT_STATUS=UNVERIFIED,published flag present,public case pages exist
+download,Download model + download routes,prisma/schema.prisma,DATABASE_CONTENT_STATUS=UNVERIFIED,published flag present,fileUrl may require lead form or direct download
+video,Video model + video routes,prisma/schema.prisma,DATABASE_CONTENT_STATUS=UNVERIFIED,published flag present,VideoObject schema present
+brand-setting,BrandSetting model + site settings,prisma/schema.prisma,DATABASE_CONTENT_STATUS=UNVERIFIED,singleton-ish,company/SEO/contact/home hero text
+lead-form-copy,LeadForm UI labels and messages,components/lead/LeadForm.tsx,FILE_VERIFIED,client component,PII collection entry point
+contact-info,siteConfig/defaultSiteSettings/footer/header,lib/site.ts; lib/site-settings.ts; components/layout/SiteFooter.tsx,FILE_VERIFIED,hardcoded + DB fallback,contains placeholder contact data

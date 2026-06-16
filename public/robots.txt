@@ -1,0 +1,106 @@
+# ==============================================
+# GEO时代标准robots.txt配置（2026年5月更新）
+# ==============================================
+
+# ------------------------------
+# 第一部分：必须放行的AI搜索爬虫
+# ------------------------------
+
+# OpenAI ChatGPT Search
+User-agent: OAI-SearchBot
+Allow: /
+
+# Anthropic Claude Search
+User-agent: Claude-SearchBot
+Allow: /
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+
+# Microsoft Bing Copilot
+User-agent: bingbot
+Allow: /
+
+# Google Search & AI Overviews
+User-agent: Googlebot
+Allow: /
+
+# Apple Intelligence
+User-agent: Applebot-Extended
+Allow: /
+
+# Meta AI
+User-agent: Meta-ExternalAgent
+Allow: /
+
+# 字节跳动豆包
+User-agent: Doubaobot
+Allow: /
+
+# 百度文心一言
+User-agent: Baidubot
+Allow: /
+
+# 阿里通义千问
+User-agent: Qwenbot
+Allow: /
+
+# 智谱AI ChatGLM
+User-agent: ChatGLM-Spider
+Allow: /
+
+# 腾讯混元
+User-agent: Hunyuan
+Allow: /
+
+# 月之暗面 Kimi
+User-agent: Kimi
+Allow: /
+
+# ------------------------------
+# 第二部分：可选的训练爬虫配置
+# ------------------------------
+
+# OpenAI模型训练
+User-agent: GPTBot
+Allow: /
+
+# Anthropic模型训练
+User-agent: ClaudeBot
+Allow: /
+
+# Google Gemini模型训练
+User-agent: Google-Extended
+Allow: /
+
+# 字节跳动AI训练
+User-agent: Bytespider
+Allow: /
+Crawl-delay: 2
+
+# Common Crawl（开源模型训练）
+User-agent: CCBot
+Allow: /
+Crawl-delay: 3
+
+# ------------------------------
+# 第三部分：通用规则与敏感目录屏蔽
+# ------------------------------
+
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /private/
+Disallow: /api/internal/
+Disallow: /user/
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /search?
+
+# ------------------------------
+# 第四部分：辅助配置
+# ------------------------------
+
+Sitemap: https://bostarcoating.com/sitemap.xml

@@ -1,0 +1,29 @@
+.vercel
+.vercel-cli-home/
+node_modules/
+.next/
+.git/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+!.env.production.example
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs and caches
+*.log
+*.out.log
+*.err.log
+npm-debug.log*
+tsconfig.tsbuildinfo

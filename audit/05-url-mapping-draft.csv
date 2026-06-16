@@ -1,0 +1,127 @@
+﻿old_url,discovered_from,local_route_candidate,mapping_type,status,notes
+https://bostarcoating.com/,homepage-seed,/,KEEP,OK,
+https://bostarcoating.com/about,nav-link,/about,KEEP,OK,homepage-canonical-risk
+https://bostarcoating.com/contact,nav-link,/contact,KEEP,OK,homepage-canonical-risk
+https://bostarcoating.com/downloads,recursive:https://bostarcoating.com/,/downloads,KEEP,OK,homepage-canonical-risk
+https://bostarcoating.com/downloads/controller-manual,recursive:https://bostarcoating.com/,/downloads/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/downloads/disk-system-sheet,recursive:https://bostarcoating.com/,/downloads/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/downloads/maintenance-guide,recursive:https://bostarcoating.com/,/downloads/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/downloads/powder-gun-catalog,recursive:https://bostarcoating.com/downloads,/downloads/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/downloads/troubleshooting-checklist,recursive:https://bostarcoating.com/,/downloads/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/knowledge,nav-link,/knowledge,KEEP,OK,homepage-canonical-risk
+https://bostarcoating.com/knowledge/faq,recursive:https://bostarcoating.com/knowledge,/knowledge/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/knowledge/industry-encyclopedia,recursive:https://bostarcoating.com/knowledge,/knowledge/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/knowledge/operation-maintenance,recursive:https://bostarcoating.com/knowledge,/knowledge/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/knowledge/process-knowledge,recursive:https://bostarcoating.com/knowledge,/knowledge/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/knowledge/process-knowledge/adjust-spray-voltage,recursive:https://bostarcoating.com/,/knowledge/[categorySlug]/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/knowledge/product-comparison,recursive:https://bostarcoating.com/knowledge,/knowledge/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/knowledge/safety-standard,recursive:https://bostarcoating.com/knowledge,/knowledge/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/knowledge/selection-guide,recursive:https://bostarcoating.com/knowledge,/knowledge/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/knowledge/selection-guide/how-to-choose-electrostatic-spray-gun,recursive:https://bostarcoating.com/knowledge,/knowledge/[categorySlug]/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/knowledge/selection-guide/manual-powder-gun-selection-guide,recursive:https://bostarcoating.com/,/knowledge/[categorySlug]/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/knowledge/troubleshooting,recursive:https://bostarcoating.com/knowledge,/knowledge/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/knowledge/troubleshooting/powder-gun-not-picking-powder,recursive:https://bostarcoating.com/,/knowledge/[categorySlug]/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products,nav-link,/products,KEEP,OK,homepage-canonical-risk
+https://bostarcoating.com/products/Automatic-Electrostatic-Liquid-Spray-Gun,recursive:https://bostarcoating.com/,/products/[categorySlug],PATTERN_MATCH,OK,production-404; homepage-canonical-risk
+https://bostarcoating.com/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun,recursive:https://bostarcoating.com/,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/Automatic-Electrostatic-Powder-Rotary-Bell,recursive:https://bostarcoating.com/,/products/[categorySlug],PATTERN_MATCH,OK,production-404; homepage-canonical-risk
+https://bostarcoating.com/products/Automatic-Electrostatic-Powder-Rotary-Bell/bostar-f18-automatic-powder-electrostatic-rotary-bell,recursive:https://bostarcoating.com/,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/Automatic-Electrostatic-Rotary-Bell-Atomizer,recursive:https://bostarcoating.com/,/products/[categorySlug],PATTERN_MATCH,OK,production-404; homepage-canonical-risk
+https://bostarcoating.com/products/Automatic-Electrostatic-Rotary-Bell-Atomizer/automatic-electrostatic-powder-rotary-bell-bsd-cu300,recursive:https://bostarcoating.com/products,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/Automatic-Electrostatic-Rotary-Bell-Atomizer/bell-cup-automatic-electrostatic-coating-system-bsd-3029,recursive:https://bostarcoating.com/,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/High-Pressure-Airless-Spraying-Equipment,recursive:https://bostarcoating.com/,/products/[categorySlug],PATTERN_MATCH,OK,production-404; homepage-canonical-risk
+https://bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun,recursive:https://bostarcoating.com/,/products/[categorySlug],PATTERN_MATCH,OK,production-404; homepage-canonical-risk
+https://bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun,recursive:https://bostarcoating.com/,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun/manual-liquid-electrostatic-spray-gun,recursive:https://bostarcoating.com/products,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/Testing-Instruments,recursive:https://bostarcoating.com/,/products/[categorySlug],PATTERN_MATCH,OK,production-404; homepage-canonical-risk
+https://bostarcoating.com/products/Testing-Instruments/paint-resistance-tester-zk815,recursive:https://bostarcoating.com/products,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/automatic-powder-spray-gun,recursive:https://bostarcoating.com/,/products/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/automatic-powder-spray-gun/automatic-powder-spray-gun,recursive:https://bostarcoating.com/products,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/automation-equipment,recursive:https://bostarcoating.com/,/products/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/electrostatic-flocking-machine,recursive:https://bostarcoating.com/,/products/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/electrostatic-flocking-machine/manual-electrostatic-flocking-velvet-spraying-machine,recursive:https://bostarcoating.com/products,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/electrostatic-rotary-bell-system,recursive:https://bostarcoating.com/,/products/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/electrostatic-rotary-bell-system/disk-automatic-electrostatic-coating-system,recursive:https://bostarcoating.com/,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/manual-powder-coating-gun,recursive:https://bostarcoating.com/,/products/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/manual-powder-coating-gun/manual-electrostatic-powder-spray-gun,recursive:https://bostarcoating.com/products,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/manual-powder-coating-gun/manual-electrostatic-powder-spray-gun-bsd-f22,recursive:https://bostarcoating.com/products,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/manual-powder-coating-gun/manual-powder-spray-gun,recursive:https://bostarcoating.com/products,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/manual-powder-coating-gun/powder-coating-gun,recursive:https://bostarcoating.com/products,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/spray-gun-accessories,recursive:https://bostarcoating.com/,/products/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/products/spray-gun-accessories/manual-powder-electrostatic-spray-gun-led-light-kit,recursive:https://bostarcoating.com/,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/sample-download.pdf,recursive:https://bostarcoating.com/downloads/maintenance-guide,,REVIEW_REQUIRED,UNMAPPED,production-404; homepage-canonical-risk
+https://bostarcoating.com/solutions,nav-link,/solutions,KEEP,OK,homepage-canonical-risk
+https://bostarcoating.com/solutions/aluminum-profile-powder-coating,recursive:https://bostarcoating.com/,/solutions/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/solutions/auto-parts-coating,recursive:https://bostarcoating.com/,/solutions/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/solutions/automatic-coating-line,recursive:https://bostarcoating.com/,/solutions/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/solutions/cabinet-powder-coating,recursive:https://bostarcoating.com/,/solutions/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/solutions/furniture-hardware-coating,recursive:https://bostarcoating.com/,/solutions/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/solutions/hardware-powder-coating,recursive:https://bostarcoating.com/solutions,/solutions/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://bostarcoating.com/solutions/lab-sample-coating,recursive:https://bostarcoating.com/,/solutions/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/,www-homepage-seed,/,KEEP,OK,
+https://www.bostarcoating.com/about,sitemap,/about,KEEP,OK,homepage-canonical-risk
+https://www.bostarcoating.com/cases,sitemap,/cases,KEEP,OK,homepage-canonical-risk
+https://www.bostarcoating.com/contact,sitemap,/contact,KEEP,OK,homepage-canonical-risk
+https://www.bostarcoating.com/downloads,sitemap,/downloads,KEEP,OK,homepage-canonical-risk
+https://www.bostarcoating.com/downloads/controller-manual,sitemap,/downloads/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/downloads/disk-system-sheet,sitemap,/downloads/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/downloads/maintenance-guide,sitemap,/downloads/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/downloads/powder-gun-catalog,sitemap,/downloads/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/downloads/troubleshooting-checklist,sitemap,/downloads/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/faq,sitemap,/faq,KEEP,OK,homepage-canonical-risk
+https://www.bostarcoating.com/knowledge,sitemap,/knowledge,KEEP,OK,homepage-canonical-risk
+https://www.bostarcoating.com/knowledge/faq,sitemap,/knowledge/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/knowledge/industry-encyclopedia,sitemap,/knowledge/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/knowledge/operation-maintenance,sitemap,/knowledge/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/knowledge/process-knowledge,sitemap,/knowledge/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/knowledge/process-knowledge/adjust-spray-voltage,sitemap,/knowledge/[categorySlug]/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/knowledge/product-comparison,sitemap,/knowledge/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/knowledge/safety-standard,sitemap,/knowledge/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/knowledge/selection-guide,sitemap,/knowledge/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/knowledge/selection-guide/how-to-choose-electrostatic-spray-gun,sitemap,/knowledge/[categorySlug]/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/knowledge/selection-guide/manual-powder-gun-selection-guide,sitemap,/knowledge/[categorySlug]/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/knowledge/troubleshooting,sitemap,/knowledge/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/knowledge/troubleshooting/powder-gun-not-picking-powder,sitemap,/knowledge/[categorySlug]/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/news,sitemap,/news,KEEP,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products,sitemap,/products,KEEP,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/Automatic-Electrostatic-Liquid-Spray-Gun,sitemap,/products/[categorySlug],PATTERN_MATCH,OK,production-404; homepage-canonical-risk
+https://www.bostarcoating.com/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun,sitemap,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/Automatic-Electrostatic-Powder-Rotary-Bell,sitemap,/products/[categorySlug],PATTERN_MATCH,OK,production-404; homepage-canonical-risk
+https://www.bostarcoating.com/products/Automatic-Electrostatic-Powder-Rotary-Bell/bostar-f18-automatic-powder-electrostatic-rotary-bell,sitemap,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/Automatic-Electrostatic-Rotary-Bell-Atomizer,sitemap,/products/[categorySlug],PATTERN_MATCH,OK,production-404; homepage-canonical-risk
+https://www.bostarcoating.com/products/Automatic-Electrostatic-Rotary-Bell-Atomizer/automatic-electrostatic-powder-rotary-bell-bsd-cu300,sitemap,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/Automatic-Electrostatic-Rotary-Bell-Atomizer/bell-cup-automatic-electrostatic-coating-system-bsd-3029,sitemap,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/High-Pressure-Airless-Spraying-Equipment,sitemap,/products/[categorySlug],PATTERN_MATCH,OK,production-404; homepage-canonical-risk
+https://www.bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun,sitemap,/products/[categorySlug],PATTERN_MATCH,OK,production-404; homepage-canonical-risk
+https://www.bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun,sitemap,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun/manual-liquid-electrostatic-spray-gun,sitemap,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/Testing-Instruments,sitemap,/products/[categorySlug],PATTERN_MATCH,OK,production-404; homepage-canonical-risk
+https://www.bostarcoating.com/products/Testing-Instruments/paint-resistance-tester-zk815,sitemap,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/automatic-powder-spray-gun,sitemap,/products/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/automatic-powder-spray-gun/automatic-powder-spray-gun,sitemap,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/automation-equipment,sitemap,/products/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/electrostatic-flocking-machine,sitemap,/products/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/electrostatic-flocking-machine/manual-electrostatic-flocking-velvet-spraying-machine,sitemap,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/electrostatic-rotary-bell-system,sitemap,/products/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/electrostatic-rotary-bell-system/disk-automatic-electrostatic-coating-system,sitemap,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/manual-powder-coating-gun,sitemap,/products/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/manual-powder-coating-gun/manual-electrostatic-powder-spray-gun,sitemap,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/manual-powder-coating-gun/manual-electrostatic-powder-spray-gun-bsd-f22,sitemap,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/manual-powder-coating-gun/manual-powder-spray-gun,sitemap,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/manual-powder-coating-gun/powder-coating-gun,sitemap,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/spray-gun-accessories,sitemap,/products/[categorySlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/products/spray-gun-accessories/manual-powder-electrostatic-spray-gun-led-light-kit,sitemap,/products/[categorySlug]/[productSlug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/sample-download.pdf,recursive:https://www.bostarcoating.com/downloads/maintenance-guide,,REVIEW_REQUIRED,UNMAPPED,production-404; homepage-canonical-risk
+https://www.bostarcoating.com/service,sitemap,/service,KEEP,OK,homepage-canonical-risk
+https://www.bostarcoating.com/solutions,sitemap,/solutions,KEEP,OK,homepage-canonical-risk
+https://www.bostarcoating.com/solutions/aluminum-profile-powder-coating,sitemap,/solutions/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/solutions/auto-parts-coating,sitemap,/solutions/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/solutions/automatic-coating-line,sitemap,/solutions/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/solutions/cabinet-powder-coating,sitemap,/solutions/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/solutions/furniture-hardware-coating,sitemap,/solutions/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/solutions/hardware-powder-coating,sitemap,/solutions/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/solutions/lab-sample-coating,sitemap,/solutions/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/videos,sitemap,/videos,KEEP,OK,homepage-canonical-risk
+https://www.bostarcoating.com/videos/controller-setup,sitemap,/videos/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/videos/maintenance-cleaning,sitemap,/videos/[slug],PATTERN_MATCH,OK,homepage-canonical-risk
+https://www.bostarcoating.com/videos/powder-gun-operation,sitemap,/videos/[slug],PATTERN_MATCH,OK,homepage-canonical-risk

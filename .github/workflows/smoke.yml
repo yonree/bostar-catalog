@@ -1,0 +1,36 @@
+name: Post-Deploy Smoke
+
+on:
+  deployment_status:
+    types: [success]
+
+jobs:
+  smoke:
+    if: github.event.deployment_status.environment == 'Production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Wait for deployment stabilization
+        run: sleep 15
+
+      - name: Run smoke regression
+        run: node scripts/smoke-regression.mjs https://www.bostarcoating.com --ci
+
+      - name: Report failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const run_url = `https://github.com/${owner}/${repo}/actions/runs/${context.runId}`;
+            await github.rest.issues.create({
+              owner,
+              repo,
+              title: '⚠️ Smoke 测试失败 — 部署后自动检测',
+              body: `部署完成后的自动化冒烟测试未通过。\n\n- 部署环境: Production\n- Actions 运行: ${run_url}\n- 请检查具体失败项，必要时执行回滚。`,
+              labels: ['bug', 'deployment'],
+            });

@@ -1,0 +1,12 @@
+﻿asset_path_or_url,asset_type,source,referenced_by,local_or_remote,size,sha256_if_local,status,alt_text,duplicate_group,orphan_status,notes
+public/images/controller-front.png,static-file,public,public/images/controller-front.png,local,8361389,775330ae3b771d74f6ae002254f28faaf490973a0bdfb6c50820ef46f6409fe1,PRESENT,,,NOT_ORPHAN_CHECKED,
+public/images/controller-interface.png,static-file,public,public/images/controller-interface.png,local,6124580,21128dc3150efe1bad7f237c4abb61d7de46cdd92e429e46eabaaecf540bbfa9,PRESENT,,,NOT_ORPHAN_CHECKED,
+public/images/controller-side.png,static-file,public,public/images/controller-side.png,local,10977982,7d743ca0439d314ec456d0132e67ba4afdc6a401020c04fd1b4cc0f032615448,PRESENT,,,NOT_ORPHAN_CHECKED,
+public/images/gear-pump.png,static-file,public,public/images/gear-pump.png,local,9084392,8a5b872da9e4b8761bec05157cd32e233aef53db4868d200dc60bb748d5bd286,PRESENT,,,NOT_ORPHAN_CHECKED,
+public/images/product-gun-nozzle.png,static-file,public,public/images/product-gun-nozzle.png,local,12262396,7e460c8b5888a33a32768dd06c2ce3247726b95497f08cc04a72de66ff31ee5b,PRESENT,,,NOT_ORPHAN_CHECKED,
+public/images/product-gun-render.png,static-file,public,public/images/product-gun-render.png,local,689315,cbfb6571f96290d86545b381641461aa8d8c74275a29a997ad44e1202cae8898,PRESENT,,,NOT_ORPHAN_CHECKED,
+public/images/product-gun-side.png,static-file,public,public/images/product-gun-side.png,local,15478971,34c7db47c70476f947716b7b4e8ad75112e92bb75faa2bab38ba73a36c822f54,PRESENT,,,NOT_ORPHAN_CHECKED,
+public/images/product-render-explode.png,static-file,public,public/images/product-render-explode.png,local,203658,b3587128562f2af5b3dd52d5a38eff09a9af0b57d536b9e4e6ebb460670eeb62,PRESENT,,,NOT_ORPHAN_CHECKED,
+public/images/product-set.png,static-file,public,public/images/product-set.png,local,407390,17716a22f35d17aa6283b0c7947933e873d551dd40e7b8e38a449372f6cae8c5,PRESENT,,,NOT_ORPHAN_CHECKED,
+public/images/round-nozzle.png,static-file,public,public/images/round-nozzle.png,local,10401292,9ecad994cbc7ec213f1227c291c631d2ea3271dbee4be9c83deba6afcfc6d920,PRESENT,,,NOT_ORPHAN_CHECKED,
+public/robots.txt,static-file,public,public/robots.txt,local,1842,567c71da90c49c6cd3f3d33e1752e0ca9d24cac0970097e5c53e36ece1b8b69b,PRESENT,,,NOT_ORPHAN_CHECKED,
