@@ -4,7 +4,7 @@
 
 - Date: 2026-06-16
 - Branch: `feat/gate2-implementation`
-- HEAD: `7c779d0128198a38f2cacd3b30b343aca1a64140`
+- HEAD: `d0fb7356ba342bab7212700576c0de55d1386d35`
 - Previous planning branch retained: `plan/gate1a`
 - Authoritative preview server: `http://127.0.0.1:3011`
 - Non-authoritative stale preview servers observed during recovery: `http://127.0.0.1:3008`, `http://127.0.0.1:3009`, `http://127.0.0.1:3010`
@@ -30,6 +30,7 @@
 - Fixed locale header preservation in `middleware.ts` so rewritten `/en/**` requests keep English SSR metadata, `html lang`, canonical, and hreflang output
 - Localized English metadata and shell copy for `cases/[slug]`, `downloads/[slug]`, `videos/[slug]`, `solutions/[slug]`, and `knowledge/[categorySlug]/[slug]`
 - Restored seeded fallback reads in `lib/cms-data.ts` for articles, article categories, solutions, downloads, videos, cases, and FAQs so representative Gate 3 detail routes stay testable without local Prisma/PostgreSQL content
+- Reworked `app/news/[slug]/page.tsx` from a raw placeholder into a locale-aware detail shell with breadcrumb, noindex metadata, slug reference, and inquiry CTA while keeping the route non-factual until a verified news source exists
 
 ## Active blockers
 
@@ -49,7 +50,7 @@
   - `/en/about`: 200, canonical `http://localhost:3000/en/about`, English breadcrumb and capability cards present
   - `/en/search?q=spray`: 200, canonical `http://localhost:3000/en/search`, `noindex,nofollow`, English empty-state and translation notice present
   - `/en/about`: `OrganizationJsonLd` description and footer summary now use English fallback copy
-- Preview restart sequence completed on `http://127.0.0.1:3011`; current authoritative listener is `next start --hostname 127.0.0.1 --port 3011` with Node PID `24972` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `16760`)
+- Preview restart sequence completed on `http://127.0.0.1:3011`; current authoritative listener is `next start --hostname 127.0.0.1 --port 3011` with Node PID `21336` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `47348`)
 - Representative seeded product-detail smoke:
   - zh: `/products/manual-powder-coating-gun/manual-powder-spray-gun` -> 200, title `鎵嬪姩绮夋湯闈欑數鍠锋灙 | BOSTAR GEO`, canonical `http://localhost:3000/products/manual-powder-coating-gun/manual-powder-spray-gun`, hreflang zh/en pair present, breadcrumb JSON-LD present, `BS-PM100` and `0.4-0.7 MPa` unchanged, `index, follow`, no runtime error
   - en: `/en/products/manual-powder-coating-gun/manual-powder-spray-gun` -> 200, `html lang=en`, title `鎵嬪姩绮夋湯闈欑數鍠锋灙 Product Details | BOSTAR GEO`, canonical `http://localhost:3000/en/products/manual-powder-coating-gun/manual-powder-spray-gun`, hreflang zh/en pair present, English shell headings and translation notice present, no Chinese shell leakage, `BS-PM100` and `0.4-0.7 MPa` unchanged, `index, follow`, no runtime error
@@ -59,7 +60,10 @@
   - zh/en video detail: `/videos/powder-gun-operation`, `/en/videos/powder-gun-operation` -> 200, canonical/hreflang pair present, breadcrumb JSON-LD present, English `Video Center` and `Video Summary` shell present, `index, follow`, no runtime error
   - zh/en solution detail: `/solutions/hardware-powder-coating`, `/en/solutions/hardware-powder-coating` -> 200, canonical/hreflang pair present, breadcrumb JSON-LD present, English `Solutions`, `Consult This Solution`, and FAQ shell present, `index, follow`, no runtime error
   - zh/en knowledge detail: `/knowledge/selection-guide/how-to-choose-electrostatic-spray-gun`, `/en/knowledge/selection-guide/how-to-choose-electrostatic-spray-gun` -> 200, canonical/hreflang pair present, breadcrumb JSON-LD present, English `Knowledge Center`, FAQ shell, and inquiry CTA shell present, `index, follow`, no runtime error
+  - zh/en news placeholder detail: `/news/release-placeholder`, `/en/news/release-placeholder` -> 200, `noindex,nofollow`, canonical/hreflang pair present, breadcrumb JSON-LD present, English `News Detail Placeholder`, `Current Status`, and inquiry CTA shell present, no runtime error
+  - remaining public list/category pages on `/en`: `/products`, `/products/manual-powder-coating-gun`, `/cases`, `/downloads`, `/videos`, `/solutions`, `/knowledge`, `/knowledge/selection-guide`, `/news` -> 200, `lang=en`, canonical/hreflang present, `index, follow`, no runtime error
+  - zh/en not-found routes: `/missing-route-check`, `/en/missing-route-check` -> 404, locale-specific `html lang`, canonical/hreflang present, `noindex`, no runtime error; English not-found copy and Chinese not-found heading render correctly
 
 ## Next task
 
-- Create a checkpoint commit for the completed remaining-detail-shell slice, then continue Gate 3 with the next uncompleted data-backed route slice and localized metadata/content parity audit without repeating the completed smoke set
+- Continue Gate 3 localized metadata/content parity audit on the remaining static public surfaces: `/faq`, `/service`, `/contact`, `/about`, and `/`

@@ -25,3 +25,7 @@
 - Localized English metadata and shell copy for `app/cases/[slug]/page.tsx`, `app/downloads/[slug]/page.tsx`, `app/videos/[slug]/page.tsx`, `app/solutions/[slug]/page.tsx`, and `app/knowledge/[categorySlug]/[slug]/page.tsx`
 - Expanded seeded fallback reads in `lib/cms-data.ts` to cover article categories/articles, solutions, downloads, videos, cases, and FAQs when local Prisma/PostgreSQL content is unavailable
 - Revalidated `http://127.0.0.1:3011` on `next start` (listener PID `24972`) with representative zh/en smoke for case, download, video, solution, and knowledge detail route pairs
+- Reworked `app/news/[slug]/page.tsx` into a locale-aware, non-indexed placeholder detail shell with breadcrumb, slug reference, and inquiry CTA instead of a raw placeholder block
+- Revalidated `http://127.0.0.1:3011` on `next start` (listener PID `43916`) with zh/en news placeholder route smoke, confirming canonical, hreflang, and `noindex,nofollow` behavior
+- Verified remaining public list/category routes on `/en` for canonical, hreflang, indexability, and runtime stability without reopening already-passed detail-route smoke
+- Reworked `app/not-found.tsx` into a locale-aware 404 shell and revalidated zh/en missing-route responses on `http://127.0.0.1:3011` (listener PID `21336`)

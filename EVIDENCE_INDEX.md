@@ -25,13 +25,19 @@
   - `npm run typecheck`: pass after remaining detail-shell localization and seeded detail fallback restoration
   - `npm run lint`: pass with the same 4 pre-existing warnings after the remaining detail-shell slice
   - `npm run build`: pass with the same 4 pre-existing warnings after the remaining detail-shell slice
+  - `npm run typecheck`: pass after news-detail placeholder localization
+  - `npm run lint`: pass with the same 4 pre-existing warnings after the news-detail placeholder slice
+  - `npm run build`: pass with the same 4 pre-existing warnings after the news-detail placeholder slice
+  - `npm run typecheck`: pass after not-found route repair
+  - `npm run lint`: pass with the same 4 pre-existing warnings after the not-found slice
+  - `npm run build`: pass with the same 4 pre-existing warnings after the not-found slice
 
 ## Smoke evidence
 
 - Local preview during recovery:
   - stale resumed instances observed on `http://127.0.0.1:3008` and `http://127.0.0.1:3009`
   - authoritative post-build instances rotated through `http://127.0.0.1:3010` to `http://127.0.0.1:3011` after subsequent rebuilds
-  - final authoritative preview restarted as `next start --hostname 127.0.0.1 --port 3011`, listener PID `24972` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `16760`)
+  - final authoritative preview restarted as `next start --hostname 127.0.0.1 --port 3011`, listener PID `21336` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `47348`)
 - Browser checks performed against:
   - `/`
   - `/en`
@@ -102,10 +108,34 @@
       - breadcrumb JSON-LD present
       - English `Knowledge Center`, `Frequently Asked Questions`, and inquiry CTA shell present
       - `index, follow`, no runtime error
+  - zh/en news placeholder detail:
+    - `/news/release-placeholder` and `/en/news/release-placeholder`
+      - 200 response on both locales
+      - titles `新闻占位：release-placeholder | BOSTAR GEO` and `release-placeholder News Placeholder | BOSTAR GEO`
+      - canonical and hreflang zh/en pair present
+      - `noindex, nofollow` on both locales
+      - English `News Detail Placeholder`, `Current Status`, and `Clarify This News Route` shell present
+      - slug reference rendered
+      - no runtime error
+  - en public list/category route sweep:
+    - `/en/products`
+    - `/en/products/manual-powder-coating-gun`
+    - `/en/cases`
+    - `/en/downloads`
+    - `/en/videos`
+    - `/en/solutions`
+    - `/en/knowledge`
+    - `/en/knowledge/selection-guide`
+    - `/en/news`
+    - all returned 200 with `lang=en`, canonical, hreflang pair, expected robots, and no runtime error
+  - zh/en not-found route smoke:
+    - `/missing-route-check` -> 404, `lang=zh-CN`, canonical `http://localhost:3000/missing-route-check`, hreflang zh/en pair present, `noindex`, heading `页面未找到`, no runtime error
+    - `/en/missing-route-check` -> 404, `lang=en`, canonical `http://localhost:3000/en/missing-route-check`, hreflang zh/en pair present, `noindex`, `Page Not Found` plus `Back to Home` copy present, no runtime error
 
 ## Remaining evidence to collect in later gates
 
 - Lighthouse samples for zh/en template pages
 - structured-data URL verification on localized detail pages
 - Gate 3 review of remaining CMS/seed-backed content parity where approved English source copy is still absent
+- static public surface verification for `/faq`, `/service`, `/contact`, `/about`, and `/`
 - URL manifest loader or redirect audit if non-host redirects are activated
