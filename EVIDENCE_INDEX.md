@@ -7,6 +7,7 @@
 - `planning/gate1a/i18n/route-pairing-matrix.csv`
 - `planning/gate1a/seo-geo/metadata-spec.md`
 - `planning/gate1a/qa-release/gate1b-engineering-readiness-plan.md`
+- `GATE3_LEGACY_URL_GAP_REPORT.md`
 
 ## Command evidence
 
@@ -183,6 +184,15 @@
       - no hardcoded `uploadDate: 2026-01-01`
       - no fabricated thumbnail fallback emitted when source image is absent
       - no runtime error
+  - legacy URL parity sampling:
+    - `/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`
+      - current preview returns `404`, `noindex`
+      - planning row `planning/gate1a/url/url-decision-manifest.csv:96` expects `200`
+      - local audit snapshot `audit/04-production-url-inventory.csv:96` records a production detail page title and summary for the same URL
+    - `/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun`
+      - current preview returns `404`, `noindex`
+      - planning row `planning/gate1a/url/url-decision-manifest.csv:88` expects `200`
+      - local audit snapshot `audit/04-production-url-inventory.csv:88` records a production detail page title and summary for the same URL
 
 ## Remaining evidence to collect in later gates
 

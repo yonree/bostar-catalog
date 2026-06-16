@@ -23,3 +23,9 @@
 - Impact: clean environments require `prisma generate` before build/start.
 - Current mitigation: preserved `postinstall` and recorded the requirement in evidence and changelog.
 - Trigger to escalate: if CI or clean checkout fails to generate client automatically.
+
+## R-005 Legacy product URLs lack local source entities
+
+- Impact: several Gate 1A legacy product URLs that should remain `200` still return `404` in local preview, which would block Gate 4 URL-parity acceptance.
+- Current mitigation: recorded sampled gaps in `GATE3_LEGACY_URL_GAP_REPORT.md`; no fabricated fallback content has been introduced.
+- Trigger to escalate: before any release-candidate decision or if approved source content for the missing product families becomes available.

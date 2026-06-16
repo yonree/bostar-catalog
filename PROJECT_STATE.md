@@ -42,7 +42,8 @@
 - Static public-surface verification is now complete for `/faq`, `/service`, `/contact`, `/about`, and `/`
 - Reserved news routes now use `noindex,nofollow`, are excluded from `sitemap.xml`, and remain online without losing the URL contract
 - Product and video JSON-LD now emit only repository-backed facts; hardcoded offer price, stock, and upload-date placeholders are removed
-- Broader Gate 3 parity across legacy URL expectations and remaining SEO audit items is still pending
+- Legacy URL parity remains incomplete for sampled product families that still exist in Gate 1A planning assets but have no local source entities
+- Broader Gate 3 parity across remaining SEO audit items is still pending
 
 ## Latest verification
 
@@ -77,7 +78,11 @@
   - structured-data parity:
     - zh/en seeded product detail routes -> 200, no `Offer` schema and no fabricated `price: 0.00`; localized product URL remains present in JSON-LD
     - zh/en seeded video detail routes -> 200, no hardcoded `uploadDate: 2026-01-01`; JSON-LD remains runtime-safe and omits unverifiable thumbnail data when absent
+  - legacy URL parity sampling:
+    - `/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` -> 404, `noindex`
+    - `/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun` -> 404, `noindex`
+    - matching planning rows and production-inventory evidence captured in `GATE3_LEGACY_URL_GAP_REPORT.md`
 
 ## Next task
 
-- Continue Gate 3 legacy URL parity audit against the approved route/redirect planning assets, then prepare Gate 4 validation entry conditions
+- Continue Gate 4 entry preparation on already-verified routes while carrying `R-005` as a release-prep blocker for unresolved legacy product URLs

@@ -38,3 +38,4 @@
 - Removed fabricated `Offer` fields from `components/schema/ProductJsonLd.tsx` and kept only repository-backed product facts plus localized URLs
 - Removed the hardcoded placeholder publish date from `components/schema/VideoJsonLd.tsx` and emit `thumbnailUrl` only when a source image exists
 - Revalidated structured-data runtime output on `http://127.0.0.1:3011` (listener PID `27160`) for seeded zh/en product and video detail routes
+- Added `GATE3_LEGACY_URL_GAP_REPORT.md` to record sampled legacy product URLs that still expect `200` in Gate 1A planning assets but currently lack local source entities

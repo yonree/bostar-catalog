@@ -48,7 +48,8 @@
 
 ### LEGACY_URL_PENDING
 
-- redirect and old-URL reconciliation still pending against Gate 3 / Gate 4 audit
+- sampled legacy product URL gaps recorded in `GATE3_LEGACY_URL_GAP_REPORT.md`
+- redirect and old-URL reconciliation still pending against Gate 4 audit
 
 ### BUSINESS_DECISION_REQUIRED
 
@@ -78,10 +79,11 @@
 
 ## Current active slice
 
-- Slice: legacy URL parity audit and Gate 4 entry preparation
+- Slice: Gate 4 entry preparation with legacy URL blocker tracking
 - Scope:
-  - legacy URL expectations against approved planning assets
-  - remaining route-contract verification gaps
+  - route-validation evidence on already verified surfaces
+  - release-prep checklist inputs
+  - legacy URL blocker tracking from `GATE3_LEGACY_URL_GAP_REPORT.md`
   - Gate 4 entry-condition evidence gaps
 
 ## Deferred slices
