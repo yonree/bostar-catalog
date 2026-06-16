@@ -1,0 +1,23 @@
+zh_term,en_term,category,locked,notes
+博士达,BOSTAR,brand,YES,brand name
+静电喷涂,electrostatic coating,process,YES,core process
+静电喷枪,electrostatic spray gun,product,YES,standard product term
+粉末静电喷枪,powder electrostatic spray gun,product,YES,do not shorten inconsistently
+液体静电喷枪,liquid electrostatic spray gun,product,YES,keep technical meaning
+自动喷枪,automatic spray gun,product,YES,product family
+手动喷枪,manual spray gun,product,YES,product family
+静电旋杯,electrostatic rotary bell,product,YES,preferred over casual variants
+静电旋碟,electrostatic rotary disc system,product,YES,DISK family wording
+涂装解决方案,coating solution,marketing,NO,use consistently in nav
+应用行业,industries,ia,NO,top-level IA label
+知识中心,knowledge center,ia,NO,content hub
+资料下载,downloads,ia,NO,public resource hub
+联系方式,contact,ia,NO,top-level label
+选型指南,selection guide,content,NO,knowledge category
+故障排查,troubleshooting,content,NO,knowledge category
+操作维护,operation and maintenance,content,NO,knowledge category
+工艺知识,process knowledge,content,NO,knowledge category
+安全规范,safety standard,content,NO,knowledge category
+传递效率,transfer efficiency,parameter,YES,do not paraphrase
+包覆效果,wraparound effect,parameter,YES,technical performance term
+高压无气,high-pressure airless,product,YES,product family term
