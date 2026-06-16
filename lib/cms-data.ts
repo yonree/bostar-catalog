@@ -2,8 +2,15 @@
 
 
 import {
+  articleCategories as seedArticleCategories,
+  articles as seedArticles,
+  cases as seedCases,
+  downloads as seedDownloads,
+  faqs as seedFaqs,
   productCategories as seedProductCategories,
   products as seedProducts,
+  solutions as seedSolutions,
+  videos as seedVideos,
 } from '@/lib/data';
 
 export type ProductView = {
@@ -679,6 +686,19 @@ function mapArticle(
   };
 }
 
+function mapSeedArticle(article: (typeof seedArticles)[number]): ArticleView {
+  return {
+    id: `seed-article-${article.slug}`,
+    slug: normalizeSlugPart(article.slug),
+    categorySlug: normalizeSlugPart(article.categorySlug),
+    title: article.title,
+    excerpt: normalizeFaqAnswer(article.excerpt),
+    aiSummary: normalizeFaqAnswer(article.aiSummary) || normalizeFaqAnswer(article.excerpt),
+    coverImage: '',
+    content: article.content.map((item) => normalizeFaqAnswer(item)).filter(Boolean),
+  };
+}
+
 function mapSolution(
   solution: Awaited<ReturnType<typeof prisma.solution.findFirst>>
 ): SolutionView {
@@ -697,6 +717,73 @@ function mapSolution(
     processFlow: stringArray(solution?.processFlow),
     keyControls: stringArray(solution?.keyControls),
     content: solution?.content || '',
+  };
+}
+
+function mapSeedSolution(solution: (typeof seedSolutions)[number]): SolutionView {
+  return {
+    id: `seed-solution-${solution.slug}`,
+    slug: normalizeSlugPart(solution.slug),
+    title: solution.title,
+    industry: solution.industry,
+    scene: solution.scene,
+    aiSummary: normalizeFaqAnswer(solution.aiSummary),
+    coverImage: '',
+    painPoints: sanitizePlainArray(solution.painPoints),
+    equipment: sanitizePlainArray(solution.equipment),
+    advantages: sanitizePlainArray(solution.advantages),
+    recommendedPlan: '',
+    processFlow: [],
+    keyControls: [],
+    content: '',
+  };
+}
+
+function mapSeedDownload(download: (typeof seedDownloads)[number]): DownloadView {
+  return {
+    id: `seed-download-${download.slug}`,
+    slug: normalizeSlugPart(download.slug),
+    title: download.title,
+    summary: normalizeFaqAnswer(download.summary),
+    fileType: download.fileType,
+    version: download.version,
+    fileUrl: '#',
+    requireLeadForm: download.requireLeadForm,
+  };
+}
+
+function mapSeedVideo(video: (typeof seedVideos)[number]): VideoView {
+  return {
+    id: `seed-video-${video.slug}`,
+    slug: normalizeSlugPart(video.slug),
+    title: video.title,
+    summary: normalizeFaqAnswer(video.summary),
+    coverImage: '',
+    duration: video.duration,
+  };
+}
+
+function mapSeedCase(item: (typeof seedCases)[number]): CaseView {
+  const matchedSolution = seedSolutions.find(
+    (solution) => `${normalizeSlugPart(solution.slug)}-case` === normalizeSlugPart(item.slug)
+  );
+
+  return {
+    id: `seed-case-${item.slug}`,
+    slug: normalizeSlugPart(item.slug),
+    title: item.title,
+    summary: normalizeFaqAnswer(item.summary),
+    industry: matchedSolution?.industry || '',
+    coverImage: '',
+  };
+}
+
+function mapSeedFaq(faq: (typeof seedFaqs)[number]): FaqView {
+  return {
+    id: `seed-faq-${normalizeSlugPart(faq.category)}-${seedFaqs.indexOf(faq)}`,
+    question: normalizeFaqAnswer(faq.question),
+    answer: normalizeFaqAnswer(faq.answer),
+    category: normalizeFaqAnswer(faq.category),
   };
 }
 
@@ -860,7 +947,11 @@ export async function getArticleCategories(): Promise<Array<{ id: string; slug: 
       name: category.name,
     }));
   } catch {
-    return [];
+    return seedArticleCategories.map((category) => ({
+      id: `seed-article-category-${category.slug}`,
+      slug: normalizeSlugPart(category.slug),
+      name: category.name,
+    }));
   }
 }
 
@@ -874,7 +965,8 @@ export async function getArticles(limit?: number): Promise<ArticleView[]> {
     });
     return articles.map(mapArticle);
   } catch {
-    return [];
+    const mapped = seedArticles.map(mapSeedArticle);
+    return typeof limit === 'number' ? mapped.slice(0, limit) : mapped;
   }
 }
 
@@ -893,7 +985,23 @@ export async function getArticlesByCategory(
       articles: articles.map(mapArticle),
     };
   } catch {
-    return { category: null, articles: [] };
+    const normalizedCategorySlug = normalizeSlugPart(categorySlug).toLowerCase();
+    const category = seedArticleCategories.find(
+      (item) => normalizeSlugPart(item.slug).toLowerCase() === normalizedCategorySlug
+    );
+
+    return {
+      category: category
+        ? {
+            id: `seed-article-category-${category.slug}`,
+            slug: normalizeSlugPart(category.slug),
+            name: category.name,
+          }
+        : null,
+      articles: seedArticles
+        .filter((item) => normalizeSlugPart(item.categorySlug).toLowerCase() === normalizedCategorySlug)
+        .map(mapSeedArticle),
+    };
   }
 }
 
@@ -905,7 +1013,14 @@ export async function getArticle(categorySlug: string, slug: string): Promise<Ar
     });
     return article ? mapArticle(article) : null;
   } catch {
-    return null;
+    const normalizedCategorySlug = normalizeSlugPart(categorySlug).toLowerCase();
+    const normalizedSlug = normalizeSlugPart(slug).toLowerCase();
+    const article = seedArticles.find(
+      (item) =>
+        normalizeSlugPart(item.categorySlug).toLowerCase() === normalizedCategorySlug &&
+        normalizeSlugPart(item.slug).toLowerCase() === normalizedSlug
+    );
+    return article ? mapSeedArticle(article) : null;
   }
 }
 
@@ -918,7 +1033,8 @@ export async function getSolutions(limit?: number): Promise<SolutionView[]> {
     });
     return solutions.map(mapSolution);
   } catch {
-    return [];
+    const mapped = seedSolutions.map(mapSeedSolution);
+    return typeof limit === 'number' ? mapped.slice(0, limit) : mapped;
   }
 }
 
@@ -927,7 +1043,11 @@ export async function getSolution(slug: string): Promise<SolutionView | null> {
     const solution = await prisma.solution.findFirst({ where: { slug, isPublished: true } });
     return solution ? mapSolution(solution) : null;
   } catch {
-    return null;
+    const normalizedSlug = normalizeSlugPart(slug).toLowerCase();
+    const solution = seedSolutions.find(
+      (item) => normalizeSlugPart(item.slug).toLowerCase() === normalizedSlug
+    );
+    return solution ? mapSeedSolution(solution) : null;
   }
 }
 
@@ -959,7 +1079,7 @@ export async function getDownloads(): Promise<DownloadView[]> {
       })
     );
   } catch {
-    return [];
+    return seedDownloads.map(mapSeedDownload);
   }
 }
 
@@ -979,7 +1099,11 @@ export async function getDownload(slug: string): Promise<DownloadView | null> {
         }
       : null;
   } catch {
-    return null;
+    const normalizedSlug = normalizeSlugPart(slug).toLowerCase();
+    const download = seedDownloads.find(
+      (item) => normalizeSlugPart(item.slug).toLowerCase() === normalizedSlug
+    );
+    return download ? mapSeedDownload(download) : null;
   }
 }
 
@@ -1006,7 +1130,7 @@ export async function getVideos(): Promise<VideoView[]> {
       })
     );
   } catch {
-    return [];
+    return seedVideos.map(mapSeedVideo);
   }
 }
 
@@ -1024,7 +1148,9 @@ export async function getVideo(slug: string): Promise<VideoView | null> {
         }
       : null;
   } catch {
-    return null;
+    const normalizedSlug = normalizeSlugPart(slug).toLowerCase();
+    const video = seedVideos.find((item) => normalizeSlugPart(item.slug).toLowerCase() === normalizedSlug);
+    return video ? mapSeedVideo(video) : null;
   }
 }
 
@@ -1049,7 +1175,8 @@ export async function getFaqs(limit?: number): Promise<FaqView[]> {
       })
     );
   } catch {
-    return [];
+    const mapped = seedFaqs.map(mapSeedFaq);
+    return typeof limit === 'number' ? mapped.slice(0, limit) : mapped;
   }
 }
 
@@ -1079,7 +1206,7 @@ export async function getCases(): Promise<CaseView[]> {
       })
     );
   } catch {
-    return [];
+    return seedCases.map(mapSeedCase);
   }
 }
 
@@ -1097,7 +1224,9 @@ export async function getCase(slug: string): Promise<CaseView | null> {
         }
       : null;
   } catch {
-    return null;
+    const normalizedSlug = normalizeSlugPart(slug).toLowerCase();
+    const item = seedCases.find((entry) => normalizeSlugPart(entry.slug).toLowerCase() === normalizedSlug);
+    return item ? mapSeedCase(item) : null;
   }
 }
 

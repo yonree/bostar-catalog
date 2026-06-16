@@ -22,3 +22,6 @@
 - Restored seeded product/category fallback reads in `lib/cms-data.ts` so product routes remain testable when the local PostgreSQL/Prisma runtime is unavailable
 - Fixed middleware rewrite context preservation so `/en/**` survives internal rewrites with English SSR metadata, `html lang`, canonical, and hreflang output intact
 - Revalidated `http://127.0.0.1:3011` on `next start` (PID `31308`) with seeded product-detail smoke for zh/en route pairs
+- Localized English metadata and shell copy for `app/cases/[slug]/page.tsx`, `app/downloads/[slug]/page.tsx`, `app/videos/[slug]/page.tsx`, `app/solutions/[slug]/page.tsx`, and `app/knowledge/[categorySlug]/[slug]/page.tsx`
+- Expanded seeded fallback reads in `lib/cms-data.ts` to cover article categories/articles, solutions, downloads, videos, cases, and FAQs when local Prisma/PostgreSQL content is unavailable
+- Revalidated `http://127.0.0.1:3011` on `next start` (listener PID `24972`) with representative zh/en smoke for case, download, video, solution, and knowledge detail route pairs

@@ -4,7 +4,7 @@
 
 - Date: 2026-06-16
 - Branch: `feat/gate2-implementation`
-- HEAD: `611a721d1226593921c61f36443a80b210b672b5`
+- HEAD: `7c779d0128198a38f2cacd3b30b343aca1a64140`
 - Previous planning branch retained: `plan/gate1a`
 - Authoritative preview server: `http://127.0.0.1:3011`
 - Non-authoritative stale preview servers observed during recovery: `http://127.0.0.1:3008`, `http://127.0.0.1:3009`, `http://127.0.0.1:3010`
@@ -28,6 +28,8 @@
 - Localized `app/products/[categorySlug]/[productSlug]/page.tsx` for English shell output while preserving source product facts, models, values, and units
 - Restored product/category fallback reads from `lib/data.ts` inside `lib/cms-data.ts` so seeded product routes remain available when local Prisma/PostgreSQL is offline
 - Fixed locale header preservation in `middleware.ts` so rewritten `/en/**` requests keep English SSR metadata, `html lang`, canonical, and hreflang output
+- Localized English metadata and shell copy for `cases/[slug]`, `downloads/[slug]`, `videos/[slug]`, `solutions/[slug]`, and `knowledge/[categorySlug]/[slug]`
+- Restored seeded fallback reads in `lib/cms-data.ts` for articles, article categories, solutions, downloads, videos, cases, and FAQs so representative Gate 3 detail routes stay testable without local Prisma/PostgreSQL content
 
 ## Active blockers
 
@@ -35,7 +37,7 @@
 - English detail content still reuses Chinese source material where no approved English content exists in current CMS/data sources
 - Structured data URL localization is in place, but source-language content strings remain untranslated on data-backed detail pages without approved English copy
 - Existing lint warnings remain in legacy admin/FAQ/data modules and are tracked as non-blocking debt
-- Product-detail shell localization and representative seeded runtime smoke are complete; broader Gate 3 content parity across remaining data-backed detail records is still pending
+- Product-detail shell localization plus representative seeded runtime smoke are complete for product, case, download, video, solution, and knowledge detail routes; broader Gate 3 content parity across remaining data-backed records is still pending
 
 ## Latest verification
 
@@ -47,7 +49,17 @@
   - `/en/about`: 200, canonical `http://localhost:3000/en/about`, English breadcrumb and capability cards present
   - `/en/search?q=spray`: 200, canonical `http://localhost:3000/en/search`, `noindex,nofollow`, English empty-state and translation notice present
   - `/en/about`: `OrganizationJsonLd` description and footer summary now use English fallback copy
-- Preview restart sequence completed on `http://127.0.0.1:3011`; final authoritative process is `next start --hostname 127.0.0.1 --port 3011` with PID `31308`
+- Preview restart sequence completed on `http://127.0.0.1:3011`; current authoritative listener is `next start --hostname 127.0.0.1 --port 3011` with Node PID `24972` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `16760`)
 - Representative seeded product-detail smoke:
-  - zh: `/products/manual-powder-coating-gun/manual-powder-spray-gun` -> 200, title `手动粉末静电喷枪 | BOSTAR GEO`, canonical `http://localhost:3000/products/manual-powder-coating-gun/manual-powder-spray-gun`, hreflang zh/en pair present, breadcrumb JSON-LD present, `BS-PM100` and `0.4-0.7 MPa` unchanged, `index, follow`, no runtime error
-  - en: `/en/products/manual-powder-coating-gun/manual-powder-spray-gun` -> 200, `html lang=en`, title `手动粉末静电喷枪 Product Details | BOSTAR GEO`, canonical `http://localhost:3000/en/products/manual-powder-coating-gun/manual-powder-spray-gun`, hreflang zh/en pair present, English shell headings and translation notice present, no Chinese shell leakage, `BS-PM100` and `0.4-0.7 MPa` unchanged, `index, follow`, no runtime error
+  - zh: `/products/manual-powder-coating-gun/manual-powder-spray-gun` -> 200, title `鎵嬪姩绮夋湯闈欑數鍠锋灙 | BOSTAR GEO`, canonical `http://localhost:3000/products/manual-powder-coating-gun/manual-powder-spray-gun`, hreflang zh/en pair present, breadcrumb JSON-LD present, `BS-PM100` and `0.4-0.7 MPa` unchanged, `index, follow`, no runtime error
+  - en: `/en/products/manual-powder-coating-gun/manual-powder-spray-gun` -> 200, `html lang=en`, title `鎵嬪姩绮夋湯闈欑數鍠锋灙 Product Details | BOSTAR GEO`, canonical `http://localhost:3000/en/products/manual-powder-coating-gun/manual-powder-spray-gun`, hreflang zh/en pair present, English shell headings and translation notice present, no Chinese shell leakage, `BS-PM100` and `0.4-0.7 MPa` unchanged, `index, follow`, no runtime error
+- Remaining seeded detail smoke:
+  - zh/en case detail: `/cases/hardware-powder-coating-case`, `/en/cases/hardware-powder-coating-case` -> 200, canonical/hreflang pair present, breadcrumb JSON-LD present, English `Case Studies` shell present, `index, follow`, no runtime error
+  - zh/en download detail: `/downloads/powder-gun-catalog`, `/en/downloads/powder-gun-catalog` -> 200, canonical/hreflang pair present, breadcrumb JSON-LD present, English `Downloads`, `Resource Type`, and access CTA shell present, `index, follow`, no runtime error
+  - zh/en video detail: `/videos/powder-gun-operation`, `/en/videos/powder-gun-operation` -> 200, canonical/hreflang pair present, breadcrumb JSON-LD present, English `Video Center` and `Video Summary` shell present, `index, follow`, no runtime error
+  - zh/en solution detail: `/solutions/hardware-powder-coating`, `/en/solutions/hardware-powder-coating` -> 200, canonical/hreflang pair present, breadcrumb JSON-LD present, English `Solutions`, `Consult This Solution`, and FAQ shell present, `index, follow`, no runtime error
+  - zh/en knowledge detail: `/knowledge/selection-guide/how-to-choose-electrostatic-spray-gun`, `/en/knowledge/selection-guide/how-to-choose-electrostatic-spray-gun` -> 200, canonical/hreflang pair present, breadcrumb JSON-LD present, English `Knowledge Center`, FAQ shell, and inquiry CTA shell present, `index, follow`, no runtime error
+
+## Next task
+
+- Create a checkpoint commit for the completed remaining-detail-shell slice, then continue Gate 3 with the next uncompleted data-backed route slice and localized metadata/content parity audit without repeating the completed smoke set
