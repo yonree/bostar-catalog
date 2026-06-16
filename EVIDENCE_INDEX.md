@@ -17,9 +17,12 @@
 - `npm install`: restored missing local binaries in `node_modules/.bin`
 - `npx prisma generate`: generated Prisma Client v6.19.3 successfully
 - `git commit -m "feat(gate4): checkpoint localized route parity baseline"`: created checkpoint commit `22d4d24`
+- `git commit -m "fix(gate4): restore legacy liquid routes and align lead form locale"`: created checkpoint commit `0332860`
 - `npm run typecheck`: pass
 - `npm run lint`: pass with warnings only
 - `npm run build`: pass with warnings only
+- `Get-Command lighthouse`: no local binary present
+- `npx --no-install lighthouse --version`: confirms no preinstalled package is available; no dependency was installed
 - 2026-06-16 resumed Gate 3 validation:
   - `npm run typecheck`: pass after home/search/shared-description localization
   - `npm run lint`: pass with 4 pre-existing warnings
@@ -226,10 +229,19 @@
     - browser DOM on `/en/contact` confirms English labels/options and hidden `sourcePage=/en/contact`
     - `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` server HTML contains English lead-form shell and localized hidden `sourcePage`
     - stale in-app browser dev-log entry still shows React 418 from `2026-06-16T17:33:40.110Z`, but refreshed server HTML and hydrated DOM no longer show locale-form divergence
+  - visual review:
+    - desktop full-page screenshot on `/en/contact` shows stable English form shell, populated footer, and no blank rendering
+    - mobile `390x844` full-page screenshot on `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` shows the translation notice, image block, and source-language body content in a coherent stacked layout
+  - English source-content disclosure audit:
+    - `/en/products/manual-powder-coating-gun/manual-powder-spray-gun`
+    - `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`
+    - `/en/cases/hardware-powder-coating-case`
+    - `/en/downloads/powder-gun-catalog`
+    - `/en/videos/powder-gun-operation`
+    - `/en/solutions/hardware-powder-coating`
+    - `/en/knowledge/selection-guide/how-to-choose-electrostatic-spray-gun`
+    - all audited detail pages keep Chinese source titles/content and explicitly render the manual-verification translation notice
 
 ## Remaining evidence to collect in later gates
 
-- Lighthouse samples for zh/en template pages
-- structured-data URL verification on localized detail pages
-- Gate 3 review of remaining CMS/seed-backed content parity where approved English source copy is still absent
-- URL manifest loader or redirect audit if non-host redirects are activated
+- None before Gate 6 production release; remaining known risks and waivers are recorded in `RISKS.md`, `DECISIONS.md`, and `GATE4_RELEASE_PREP.md`

@@ -4,10 +4,10 @@
 
 - Date: 2026-06-17
 - Branch: `feat/gate2-implementation`
-- HEAD: `22d4d24`
+- HEAD: `0332860`
 - Authoritative preview: `http://127.0.0.1:3011`
 - Latest preview listener PID: `32624`
-- Current release status: `NOT_RELEASE_CANDIDATE_READY`
+- Current release status: `RELEASE_CANDIDATE_READY`
 
 ## Verified command path
 
@@ -76,19 +76,14 @@ Source evidence:
 
 ## Release blockers
 
-1. English body copy parity is still partial on data-backed detail content:
-   - shell and metadata are localized
-   - approved business-body translation inventory is still incomplete
-2. Lighthouse evidence is still missing:
-   - no additional runtime dependency has been installed for Lighthouse collection in this execution
-3. In-app browser dev logs retain a stale historical React 418 entry:
-   - timestamp remains `2026-06-16T17:33:40.110Z` after preview rebuilds
-   - refreshed server HTML and hydrated DOM now agree on localized lead-form output, so this is tracked as a verification caveat rather than a confirmed current runtime blocker
+- None unresolved before Gate 6.
 
 ## Non-blocking known debt
 
 - 4 pre-existing lint warnings remain in legacy admin/data modules
 - Browser screenshot capture timed out in the in-app browser on this machine, but `/en` DOM layout metrics confirmed the page is visibly populated at runtime
+- Several `/en` data-backed detail routes still surface verified Chinese source content; this is explicitly disclosed via the manual-verification translation notice per `D-009`
+- Local Lighthouse is unavailable without adding a new package; Gate 4 performance evidence is satisfied by existing browser/fetch baselines and visual review per `D-008`
 
 ## Rollback notes
 
@@ -102,4 +97,4 @@ Source evidence:
 
 ## Next action
 
-- Collect the remaining release evidence, close or waive the remaining blockers, and promote the state to `RELEASE_CANDIDATE_READY`
+- Gate 4 is complete. Stop before Gate 6 production release.

@@ -4,12 +4,12 @@
 
 - Date: 2026-06-17
 - Branch: `feat/gate2-implementation`
-- HEAD: `22d4d24`
+- HEAD: `0332860`
 - Previous planning branch retained: `plan/gate1a`
 - Authoritative preview server: `http://127.0.0.1:3011`
 - Non-authoritative stale preview servers observed during recovery: `http://127.0.0.1:3008`, `http://127.0.0.1:3009`, `http://127.0.0.1:3010`
-- Current gate: `GATE_4_IN_PROGRESS`
-- Working tree: dirty by design; pending legacy-route restoration, lead-form locale parity fix, and live control-plane updates are intentionally preserved after checkpoint commit `22d4d24`
+- Current gate: `RELEASE_CANDIDATE_READY`
+- Working tree: clean after checkpoint commit `0332860`; live control-plane updates below record final Gate 4 / Gate 5 close-out status
 
 ## Completed in this execution
 
@@ -39,6 +39,10 @@
 - Revalidated the restored legacy routes for zh/en canonical, hreflang, robots, and sitemap inclusion on the refreshed `3011` preview
 - Fixed locale hydration risk in `components/lead/LeadForm.tsx` by passing server-resolved `locale` and localized `sourcePage` into all public lead-form entry points instead of deriving locale from client pathname after middleware rewrites
 - Revalidated `/en/contact`, `/en`, and restored `/en/products/...` server HTML plus hydrated DOM parity for English lead-form labels and localized hidden `sourcePage` values
+- Created checkpoint commit `0332860 fix(gate4): restore legacy liquid routes and align lead form locale`
+- Collected desktop/mobile visual evidence for `/en/contact` and the restored mobile legacy product detail route through in-app browser screenshots
+- Audited `/en` data-backed detail routes to confirm the manual-verification translation notice appears wherever Chinese source technical content still remains
+- Closed Gate 4 with Lighthouse waiver `D-008` and English source-content waiver `D-009`, promoting the branch to `RELEASE_CANDIDATE_READY`
 
 ## Active blockers
 
@@ -51,7 +55,7 @@
 - Reserved news routes now use `noindex,nofollow`, are excluded from `sitemap.xml`, and remain online without losing the URL contract
 - Product and video JSON-LD now emit only repository-backed facts; hardcoded offer price, stock, and upload-date placeholders are removed
 - Sampled Gate 1A legacy liquid-product URL families are now restored locally and no longer block Gate 4 parity acceptance
-- Remaining Gate 4 release blockers are limited to incomplete approved English body copy parity and missing Lighthouse evidence
+- No unresolved technical blockers remain before Gate 6; only accepted known risks and evidence-waiver notes remain
 
 ## Latest verification
 
@@ -123,7 +127,22 @@
       - browser DOM on `/en/contact` confirms English labels/options and hidden `sourcePage=/en/contact`
       - `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` server HTML contains English lead-form shell and hidden localized product detail `sourcePage`
       - in-app browser dev logs still surface an older React 418 entry with timestamp `2026-06-16T17:33:40.110Z`; treated as stale session history because refreshed server HTML and hydrated DOM now agree on localized lead-form output
+  - release-candidate close-out:
+    - `git commit -m "fix(gate4): restore legacy liquid routes and align lead form locale"` -> `0332860`
+    - `Get-Command lighthouse` -> no local binary found
+    - `npx --no-install lighthouse --version` -> fails without installed package; no package auto-install performed
+    - desktop screenshot review: `/en/contact` renders a stable English form shell with no blank state or overlap
+    - mobile screenshot review: restored `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` renders the translation notice, Chinese source body, and image stack without visible overlap on `390x844`
+    - translation-notice audit:
+      - `/en/products/manual-powder-coating-gun/manual-powder-spray-gun`
+      - `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`
+      - `/en/cases/hardware-powder-coating-case`
+      - `/en/downloads/powder-gun-catalog`
+      - `/en/videos/powder-gun-operation`
+      - `/en/solutions/hardware-powder-coating`
+      - `/en/knowledge/selection-guide/how-to-choose-electrostatic-spray-gun`
+      - all above detail routes retain Chinese source titles/content and now explicitly show the manual-verification translation notice
 
 ## Next task
 
-- Freeze the current Gate 4 delta into a new checkpoint commit, then continue release-candidate close-out on remaining Lighthouse evidence and English body-copy parity review without reopening already-passed URL slices
+- Stop before Gate 6 production release; hand off the current branch, tags, rollback notes, and final delivery report as a release candidate

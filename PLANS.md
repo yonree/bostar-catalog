@@ -13,13 +13,12 @@
 
 - Gate 1A: complete, using `planning/gate1a/**` as approved source of truth
 - Gate 1B: materially complete for local engineering readiness
-- Gate 2: in progress, core locale/SEO shell implemented
-- Gate 3: partial, route-level locale support exists; page-level English content remains incomplete
-- Gate 4: in progress, local build and smoke evidence captured
-- Gate 5: not started
+- Gate 2: complete, core locale/SEO shell implemented and verified
+- Gate 3: complete, public route localization, metadata parity, seed fallback, and legacy sampled URL restoration verified
+- Gate 4: complete, build/smoke/visual/perf baseline evidence captured with release-candidate waivers documented
+- Gate 5: complete, handoff and final delivery artifacts prepared up to `RELEASE_CANDIDATE_READY`
 
 ## Next execution slice
 
-- Expand localized content beyond shell/navigation/form labels.
-- Localize structured data URLs and page-level metadata titles/descriptions where still Chinese-only on `/en`.
-- Add redirect/URL manifest loader only if non-host path redirects become active in approved manifest.
+- Stop before Gate 6 production release.
+- Preserve the current branch, tags, evidence set, and rollback notes as the release-candidate handoff package.

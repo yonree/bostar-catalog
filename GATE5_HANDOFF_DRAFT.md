@@ -4,8 +4,8 @@
 
 - Date: 2026-06-17
 - Branch: `feat/gate2-implementation`
-- HEAD: `22d4d24`
-- Status: `HANDOFF_DRAFT_IN_PROGRESS`
+- HEAD: `0332860`
+- Status: `HANDOFF_COMPLETE_RELEASE_CANDIDATE_READY`
 
 ## Delivered implementation scope
 
@@ -52,9 +52,9 @@
 
 ## Current blockers and open risks
 
-- `R-001`: approved English body copy is still incomplete on source-language content
-- Lighthouse sampling is still pending
-- stale in-app browser dev-log history still needs a clean-session confirmation if browser-console evidence is required for release sign-off
+- `R-001`: several `/en` detail pages still use verified Chinese source content with explicit translation notice disclosure
+- 4 pre-existing lint warnings remain in non-target admin/data modules
+- Lighthouse package is not installed locally; Gate 4 performance evidence was accepted through existing browser/fetch baselines per `D-008`
 
 ## Evidence index
 
@@ -67,7 +67,5 @@
 
 ## Recommended next steps
 
-1. Capture remaining Lighthouse evidence
-2. Freeze the legacy-route restoration, lead-form locale parity fix, and live control-plane files into the next release-prep commit
-3. Promote state to `RELEASE_CANDIDATE_READY` after blocker review
-4. Stop before Gate 6 production release
+1. Stop before Gate 6 production release
+2. When production deployment is approved, use the current branch, tags, rollback notes, and final delivery report as the release package

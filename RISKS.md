@@ -2,9 +2,9 @@
 
 ## R-001 English body copy incomplete
 
-- Impact: `/en` pages remain structurally available but much entity/body content is still Chinese.
-- Current mitigation: shell, navigation, locale switching, lead form, canonical and hreflang are live.
-- Trigger to escalate: before release approval for public English SEO indexing.
+- Impact: several `/en` data-backed detail pages still surface verified Chinese source titles/body copy.
+- Current mitigation: English shell, navigation, metadata, locale switching, lead form, canonical and hreflang are live; audited detail routes now display the manual-verification translation notice before source-language technical content.
+- Trigger to escalate: if a fully translated English content launch is required rather than a release candidate built on verified source-language facts.
 
 ## R-002 Existing warnings in non-target modules
 

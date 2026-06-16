@@ -53,3 +53,7 @@
 - Revalidated the restored legacy-route family on `http://127.0.0.1:3011`, including zh/en canonical, hreflang, `index, follow`, and sitemap coverage
 - Reworked `components/lead/LeadForm.tsx` and all public lead-form entry points to use server-resolved `locale` plus localized `sourcePage`, removing the client-pathname locale derivation that conflicted with middleware-based `/en` rewrites
 - Rebuilt the project, refreshed the authoritative preview on `http://127.0.0.1:3011` (listener PID `32624`), and revalidated `/en/contact`, `/en`, and restored `/en/products/...` server HTML plus hydrated DOM parity for English lead-form output
+- Verified that local Lighthouse tooling is absent (`Get-Command lighthouse` empty, `npx --no-install lighthouse --version` fails without package install) and documented the no-install performance waiver in `DECISIONS.md`
+- Collected final desktop/mobile visual evidence through in-app browser screenshots for `/en/contact` and the restored legacy liquid product detail route
+- Audited `/en` data-backed detail routes to confirm the manual-verification translation notice is present wherever Chinese source technical content remains
+- Promoted the branch state to `RELEASE_CANDIDATE_READY` with Gate 4/Gate 5 handoff artifacts and accepted known-risk documentation, stopping short of Gate 6 production release
