@@ -11,6 +11,7 @@
 - `GATE4_ENTRY_BASELINE.md`
 - `GATE4_RELEASE_PREP.md`
 - `GATE5_HANDOFF_DRAFT.md`
+- `GATE6_PRODUCTION_RELEASE_REPORT.md`
 
 ## Command evidence
 
@@ -31,6 +32,19 @@
   - `npm run lint`: pass with the same 4 pre-existing warnings and no new warnings
   - `npm run build`: pass with the same 4 pre-existing warnings and no new warnings
   - targeted runtime smoke on `http://127.0.0.1:3011` for `/`, `/en`, `/contact`, `/en/contact`, restored zh/en legacy liquid product detail, `/sitemap.xml`, `/robots.txt`, and `/missing-route-check`: status/canonical/hreflang/robots checks pass
+  - `git commit -m "docs(gate5): synchronize final release candidate evidence"`: created Gate 5 evidence-sync commit `5f731bf`
+  - `git tag gate-5-handoff-2026-06-17 5f731bf`
+  - `git status --porcelain`: clean immediately after Gate 5 evidence-sync commit
+  - `git tag --points-at HEAD`: confirms `gate-5-handoff-2026-06-17`
+  - 2026-06-17 Gate 6 production precheck:
+    - `vercel whoami`: authenticated account available
+    - `vercel inspect www.bostarcoating.com`: production deployment `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`, status `Ready`
+    - `vercel list bostar-geo-website`: existing production deployment history present
+    - `vercel env ls production`: production env-name audit captured without exposing values
+    - `Invoke-WebRequest https://www.bostarcoating.com`: 200
+    - `vercel deploy --help`: existing production deploy CLI path confirmed
+    - `vercel rollback --help`: existing rollback CLI path confirmed
+    - Neon inspection via `_search` and `_list_projects`: multiple candidate `bostar-catalog` projects found, leaving the exact production binding unresolved without secret access
 - 2026-06-16 resumed Gate 3 validation:
   - `npm run typecheck`: pass after home/search/shared-description localization
   - `npm run lint`: pass with 4 pre-existing warnings
@@ -252,4 +266,4 @@
 
 ## Remaining evidence to collect in later gates
 
-- Gate 6 production precheck evidence: platform identity, target/project binding, environment completeness, backup evidence, rollback route, and deployment command path
+- None pending inside the current no-secret boundary; Gate 6 is blocked until the minimal operator inputs listed in `GATE6_PRODUCTION_RELEASE_REPORT.md` are supplied

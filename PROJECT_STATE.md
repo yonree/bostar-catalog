@@ -4,12 +4,12 @@
 
 - Date: 2026-06-17
 - Branch: `feat/gate2-implementation`
-- HEAD: `30f2f63`
+- Release candidate commit: `5f731bf`
 - Previous planning branch retained: `plan/gate1a`
 - Authoritative preview server: `http://127.0.0.1:3011`
 - Non-authoritative stale preview servers observed during recovery: `http://127.0.0.1:3008`, `http://127.0.0.1:3009`, `http://127.0.0.1:3010`
-- Current gate: `GATE_5_CLOSEOUT_SYNC_IN_PROGRESS`
-- Working tree: dirty by design during final control-plane evidence sync after handoff commit `30f2f63` and tags `gate-4-pass` / `gate-5-final`
+- Current gate: `PRODUCTION_RELEASE_BLOCKED_MISSING_INPUT`
+- Release path baseline: clean Gate 5 handoff commit `5f731bf` with tag `gate-5-handoff-2026-06-17`; any later branch movement is Gate 6 evidence-only until the missing production inputs are supplied
 
 ## Completed in this execution
 
@@ -46,6 +46,8 @@
 - Audited `/en` data-backed detail routes to confirm the manual-verification translation notice appears wherever Chinese source technical content still remains
 - Closed Gate 4 with Lighthouse waiver `D-008` and English source-content waiver `D-009`, promoting the branch to `RELEASE_CANDIDATE_READY`
 - Received explicit execution authority to continue from Gate 5 close-out directly into Gate 6 production precheck, and to release only if the existing production path, environment, backups, and rollback route are all verifiable without guessing missing inputs
+- Closed Gate 5 on clean commit `5f731bf docs(gate5): synchronize final release candidate evidence` and tag `gate-5-handoff-2026-06-17`
+- Completed Gate 6 production precheck against the bound Vercel project and blocked release because the exact production Neon target plus DB/media backup evidence could not be verified without reading protected secret values
 
 ## Active blockers
 
@@ -58,7 +60,8 @@
 - Reserved news routes now use `noindex,nofollow`, are excluded from `sitemap.xml`, and remain online without losing the URL contract
 - Product and video JSON-LD now emit only repository-backed facts; hardcoded offer price, stock, and upload-date placeholders are removed
 - Sampled Gate 1A legacy liquid-product URL families are now restored locally and no longer block Gate 4 parity acceptance
-- No unresolved technical blockers remain before Gate 6; only accepted known risks and evidence-waiver notes remain
+- Gate 6 hard blocker: the production Vercel project and active deployment are verifiable, but the exact production Neon project binding behind encrypted `NEON_PROJECT_ID` and the media backup/recovery evidence for the active Blob store are not verifiable from current non-secret local facts
+- Production release is therefore blocked pending minimal operator input; no production deployment, rollback, DNS change, or database write has been executed in this turn
 
 ## Latest verification
 
@@ -72,6 +75,15 @@
   - targeted runtime smoke on `http://127.0.0.1:3011`:
     - `/`, `/en`, `/contact`, `/en/contact`, restored zh/en legacy liquid product detail, `/sitemap.xml`, `/robots.txt`, and `/missing-route-check` all return expected status
     - canonical, hreflang, and robots outputs match the current release-candidate policy on the audited routes
+- 2026-06-17 Gate 6 production precheck:
+  - `git status --porcelain`: clean immediately after Gate 5 handoff commit `5f731bf`
+  - `vercel whoami`: authenticated as `chenshengminng-3236`
+  - `.vercel/project.json`: bound to Vercel project `bostar-geo-website` (`prj_Snv902TWIACH7i5hQc3jeRgv20Z0`) in org `team_wiV97iL3q7MEbe71U8rFU9HC`
+  - `vercel inspect www.bostarcoating.com`: active production deployment `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`, target `production`, status `Ready`, created `2026-05-27 21:51:48 +08:00`
+  - `Invoke-WebRequest https://www.bostarcoating.com`: 200
+  - `vercel env ls production`: core runtime names present for `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `NEXT_PUBLIC_SITE_URL`, `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `ADMIN_SESSION_SECRET`, `BLOB_READ_WRITE_TOKEN`, `BLOB_STORE_ID`, `BLOB_WEBHOOK_PUBLIC_KEY`; `SMTP_*`, `WEBHOOK_*`, and `UPLOAD_PROVIDER` are absent from current production env listing
+  - `vercel deploy --help` and `vercel rollback --help`: existing production deploy/rollback CLI path is available
+  - Neon account inspection shows multiple accessible `bostar-catalog` projects with point-in-time history retention, but the exact production project binding cannot be proven from current non-secret evidence because `NEON_PROJECT_ID` is encrypted in Vercel env output
 - 2026-06-17 Gate 4 metadata parity slice:
   - `npm run typecheck`: pass after page-level Open Graph and Twitter metadata alignment
   - `npm run lint`: pass with the same 4 pre-existing warnings after the metadata slice
@@ -157,6 +169,8 @@
 
 ## Next task
 
-- Finish the final Gate 5 evidence-sync commit and handoff tag on a clean working tree
-- Enter `GATE_6_PRODUCTION_PRECHECK` immediately after the Gate 5 sync commit
-- Release only from the immutable Gate 5 handoff commit if the existing production platform, target, environment completeness, backup evidence, and rollback path can all be verified from current local facts
+- Await the minimal missing production inputs required to unblock Gate 6:
+  - non-secret confirmation of which Neon project is bound to production for this Vercel site
+  - confirmation or evidence of recoverable backup/restore coverage for that production Neon project
+  - confirmation or evidence of recoverable backup/version coverage for the active Vercel Blob store used by production uploads/media
+  - clarification whether missing `SMTP_*`, `WEBHOOK_*`, and `UPLOAD_PROVIDER` values are intentionally absent in production

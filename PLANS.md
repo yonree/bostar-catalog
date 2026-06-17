@@ -20,6 +20,6 @@
 
 ## Next execution slice
 
-- Synchronize the final Gate 5 control-plane evidence to the latest Git state and create the dedicated handoff tag.
-- Enter Gate 6 production precheck immediately after the Gate 5 evidence-sync commit reaches a clean working tree.
-- If the existing production release path, required environment, backup evidence, and rollback path are all verifiable, execute the production release from the immutable Gate 5 handoff commit without waiting for another approval.
+- Gate 5 handoff is closed on commit `5f731bf` with tag `gate-5-handoff-2026-06-17`.
+- Gate 6 production precheck is complete and the release is blocked on missing non-secret production inputs: exact Neon binding, DB backup evidence, Blob backup evidence, and confirmation of currently absent optional production env names.
+- Do not create a production deployment until those inputs are supplied and written into `GATE6_PRODUCTION_RELEASE_REPORT.md`.

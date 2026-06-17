@@ -4,8 +4,8 @@
 
 - Date: 2026-06-17
 - Branch: `feat/gate2-implementation`
-- HEAD: `30f2f63`
-- Final status: `RELEASE_CANDIDATE_READY`
+- Release candidate commit: `5f731bf`
+- Final status: `PRODUCTION_RELEASE_BLOCKED_MISSING_INPUT`
 
 ## Delivered scope
 
@@ -34,7 +34,7 @@
 
 ## Not done
 
-- Gate 6 production release precheck is still pending verification of the existing production platform, target, backup evidence, and rollback route
+- Gate 6 production release was not executed because the exact production Neon target plus DB/media backup evidence are not verifiable from current non-secret local facts
 - No new English business-body translations were authored for source-language detail content
 - No new runtime or QA dependency was installed to collect Lighthouse scores
 
@@ -47,6 +47,6 @@
 
 ## Release recommendation
 
-- Ready to enter Gate 6 production precheck from the immutable Gate 5 handoff commit
-- Keep the previous production deploy available for rollback
-- Block the actual production release if any required production identity, environment completeness, backup evidence, or rollback path cannot be verified from existing local facts
+- Release remains blocked until the production Neon binding and recoverable DB/media backup evidence are explicitly confirmed
+- Keep the current production deployment `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB` available as the rollback target
+- Resume from the immutable Gate 5 handoff commit `5f731bf` once the missing non-secret production inputs are supplied

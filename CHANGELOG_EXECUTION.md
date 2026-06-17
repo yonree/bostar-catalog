@@ -62,3 +62,7 @@
 - Re-ran final Gate 5 close-out validation: `npm run typecheck`, `npm run lint`, and `npm run build` all pass; lint remains at the same 4 pre-existing warnings with no new warnings
 - Revalidated the authoritative `3011` preview on `/`, `/en`, `/contact`, `/en/contact`, restored zh/en legacy liquid product detail, `/sitemap.xml`, `/robots.txt`, and `/missing-route-check`, confirming expected status, canonical, hreflang, and robots behavior before the evidence-sync commit
 - Promoted the Lighthouse waiver to the explicit marker `LIGHTHOUSE_NOT_EXECUTED` across decision, risk, and delivery control-plane artifacts for Gate 6 precheck consumption
+- Created Gate 5 evidence-sync commit `5f731bf docs(gate5): synchronize final release candidate evidence` and tag `gate-5-handoff-2026-06-17`
+- Verified the bound Vercel production project, current production deployment, domain reachability, and existing deploy/rollback CLI paths during Gate 6 precheck without exposing secret values
+- Blocked Gate 6 production release under `D-010` because the exact production Neon binding and recoverable DB/media backup evidence are not provable from current non-secret local facts
+- Added `GATE6_PRODUCTION_RELEASE_REPORT.md` and updated the root control plane to final status `PRODUCTION_RELEASE_BLOCKED_MISSING_INPUT`

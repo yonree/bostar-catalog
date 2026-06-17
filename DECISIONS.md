@@ -54,3 +54,9 @@
 - Date: 2026-06-17
 - Decision: treat source-language English detail pages as release-candidate acceptable when English shell copy, localized metadata, canonical/hreflang, and the manual-verification translation notice are present.
 - Reason: approved English business-body copy is not available in current repository data sources, and publishing fabricated translations would be less correct than shipping verified Chinese source content with explicit disclosure.
+
+## D-010
+
+- Date: 2026-06-17
+- Decision: block Gate 6 production release until the exact production Neon binding and recoverable DB/media backup evidence are verifiable without reading protected secret values.
+- Reason: the Vercel project, domain aliases, current production deployment, and production env names are verifiable, but encrypted `NEON_PROJECT_ID` prevents a non-secret proof of which accessible Neon project is actually bound to production, and no equivalent non-secret backup evidence was available for the active Blob store.
