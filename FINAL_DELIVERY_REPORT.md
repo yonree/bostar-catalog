@@ -34,7 +34,7 @@
 
 ## Not done
 
-- Gate 6 production release was not executed because the exact production Neon target plus DB/media backup evidence are not verifiable from current non-secret local facts
+- Gate 6 production release was not executed because Blob restore coverage for production store `store_bf****7AX` is not verifiable from current non-secret local facts
 - No new English business-body translations were authored for source-language detail content
 - No new runtime or QA dependency was installed to collect Lighthouse scores
 
@@ -47,6 +47,6 @@
 
 ## Release recommendation
 
-- Release remains blocked until the production Neon binding and recoverable DB/media backup evidence are explicitly confirmed
+- Release remains blocked until Blob recovery assurance for `store_bf****7AX` is explicitly confirmed
 - Keep the current production deployment `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB` available as the rollback target
 - Resume from the immutable Gate 5 handoff commit `5f731bf` once the missing non-secret production inputs are supplied

@@ -36,8 +36,8 @@
 - Current mitigation: waiver `LIGHTHOUSE_NOT_EXECUTED` is explicitly accepted under `D-008`; browser/fetch baselines plus desktop/mobile visual review remain the recorded performance evidence set.
 - Trigger to escalate: if Gate 6 or post-release monitoring requires quantified Lighthouse scoring before or immediately after production release.
 
-## R-007 Production target and recovery evidence unresolved
+## R-007 Production Blob recovery assurance unresolved
 
-- Impact: production release cannot be executed safely because the exact Neon project bound to production and the recoverable backup evidence for DB/media are not yet proven from non-secret facts.
-- Current mitigation: Gate 6 is explicitly blocked under `D-010`; the current production Vercel deployment `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB` remains untouched, and the candidate release stays pinned to clean commit `5f731bf`.
-- Trigger to escalate: only after an operator supplies the missing non-secret Neon binding confirmation, DB backup confirmation, Blob backup confirmation, and clarification on currently absent optional production env names.
+- Impact: production release cannot be executed safely because restore coverage for Blob store `store_bf****7AX` is not yet proven from non-secret facts.
+- Current mitigation: Gate 6 remains blocked under `D-011`; the current production Vercel deployment `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB` remains untouched, the candidate release stays pinned to clean commit `5f731bf`, and no production blob mutation is planned in this release path.
+- Trigger to escalate: only after an operator confirms native restore/version coverage or an existing offline/mirrored backup path for the 24 production blobs in `store_bf****7AX`.

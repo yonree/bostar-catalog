@@ -66,3 +66,6 @@
 - Verified the bound Vercel production project, current production deployment, domain reachability, and existing deploy/rollback CLI paths during Gate 6 precheck without exposing secret values
 - Blocked Gate 6 production release under `D-010` because the exact production Neon binding and recoverable DB/media backup evidence are not provable from current non-secret local facts
 - Added `GATE6_PRODUCTION_RELEASE_REPORT.md` and updated the root control plane to final status `PRODUCTION_RELEASE_BLOCKED_MISSING_INPUT`
+- Refined Gate 6 precheck with read-only Vercel integration metadata and Neon project metadata, uniquely verifying the production Neon project/branch/host binding plus a 6-hour PITR window without disclosing secrets
+- Verified by code inspection that `SMTP_*`, `WEBHOOK_*`, and `UPLOAD_PROVIDER` are non-blocking in current runtime paths; `app/api/upload/route.ts` remains Blob-only with no local-filesystem fallback
+- Narrowed the sole remaining Gate 6 blocker to Blob recovery assurance for production store `store_bf****7AX`, because store identity/count/size/binding are proven but restore/version/offline-backup coverage is still not evidenced inside the current no-secret boundary

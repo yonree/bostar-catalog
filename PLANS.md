@@ -21,5 +21,6 @@
 ## Next execution slice
 
 - Gate 5 handoff is closed on commit `5f731bf` with tag `gate-5-handoff-2026-06-17`.
-- Gate 6 production precheck is complete and the release is blocked on missing non-secret production inputs: exact Neon binding, DB backup evidence, Blob backup evidence, and confirmation of currently absent optional production env names.
-- Do not create a production deployment until those inputs are supplied and written into `GATE6_PRODUCTION_RELEASE_REPORT.md`.
+- Gate 6 production precheck is complete. Vercel -> Neon binding, Neon PITR readiness, and SMTP/Webhook/Upload-provider runtime behavior are verified.
+- Gate 6 remains blocked only on Blob recovery evidence for production store `store_bf****7AX`.
+- Do not create a production deployment until that Blob recovery guarantee is supplied and written into `GATE6_PRODUCTION_RELEASE_REPORT.md`.

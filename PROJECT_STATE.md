@@ -47,7 +47,8 @@
 - Closed Gate 4 with Lighthouse waiver `D-008` and English source-content waiver `D-009`, promoting the branch to `RELEASE_CANDIDATE_READY`
 - Received explicit execution authority to continue from Gate 5 close-out directly into Gate 6 production precheck, and to release only if the existing production path, environment, backups, and rollback route are all verifiable without guessing missing inputs
 - Closed Gate 5 on clean commit `5f731bf docs(gate5): synchronize final release candidate evidence` and tag `gate-5-handoff-2026-06-17`
-- Completed Gate 6 production precheck against the bound Vercel project and blocked release because the exact production Neon target plus DB/media backup evidence could not be verified without reading protected secret values
+- Completed Gate 6 production precheck against the bound Vercel project and verified the production Neon target, PITR window, and optional env behavior through read-only metadata plus code inspection
+- Narrowed the remaining Gate 6 blocker to Blob recovery assurance for the active production store after confirming SMTP, Webhook, and `UPLOAD_PROVIDER` are non-blocking in current runtime paths
 
 ## Active blockers
 
@@ -60,7 +61,7 @@
 - Reserved news routes now use `noindex,nofollow`, are excluded from `sitemap.xml`, and remain online without losing the URL contract
 - Product and video JSON-LD now emit only repository-backed facts; hardcoded offer price, stock, and upload-date placeholders are removed
 - Sampled Gate 1A legacy liquid-product URL families are now restored locally and no longer block Gate 4 parity acceptance
-- Gate 6 hard blocker: the production Vercel project and active deployment are verifiable, but the exact production Neon project binding behind encrypted `NEON_PROJECT_ID` and the media backup/recovery evidence for the active Blob store are not verifiable from current non-secret local facts
+- Gate 6 hard blocker: production media backup/recovery evidence for the active Blob store is still not verifiable from current non-secret local facts
 - Production release is therefore blocked pending minimal operator input; no production deployment, rollback, DNS change, or database write has been executed in this turn
 
 ## Latest verification
@@ -83,7 +84,11 @@
   - `Invoke-WebRequest https://www.bostarcoating.com`: 200
   - `vercel env ls production`: core runtime names present for `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `NEXT_PUBLIC_SITE_URL`, `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `ADMIN_SESSION_SECRET`, `BLOB_READ_WRITE_TOKEN`, `BLOB_STORE_ID`, `BLOB_WEBHOOK_PUBLIC_KEY`; `SMTP_*`, `WEBHOOK_*`, and `UPLOAD_PROVIDER` are absent from current production env listing
   - `vercel deploy --help` and `vercel rollback --help`: existing production deploy/rollback CLI path is available
-  - Neon account inspection shows multiple accessible `bostar-catalog` projects with point-in-time history retention, but the exact production project binding cannot be proven from current non-secret evidence because `NEON_PROJECT_ID` is encrypted in Vercel env output
+  - Read-only Vercel integration metadata uniquely binds production DB secrets to Neon resource `neon-fuchsia-jacket` (`odd-****-7926`), branch `main` (`br-p****zgf`), region `aws-us-east-1`, and host `ep-d****ew2.c-8.us-east-1.aws.neon.tech`
+  - Read-only Neon metadata confirms `history_retention_seconds=21600` on the bound production project and a restore-capable default branch `main`
+  - `vercel blob get-store store_bf****7AX` and `vercel blob list-stores` verify the active production Blob store identity, size (`9.9MB`), object count (`24`), region (`iad1`), public access mode, and project binding
+  - Code inspection confirms `SMTP_*`, `WEBHOOK_*`, and `UPLOAD_PROVIDER` are not consumed by current runtime paths; `app/api/upload/route.ts` is hard-wired to Vercel Blob with no local-filesystem fallback
+  - Remaining Gate 6 blocker: no non-secret evidence currently proves versioning, soft delete, mirrored export, or offline backup for Blob store `store_bf****7AX`
 - 2026-06-17 Gate 4 metadata parity slice:
   - `npm run typecheck`: pass after page-level Open Graph and Twitter metadata alignment
   - `npm run lint`: pass with the same 4 pre-existing warnings after the metadata slice
@@ -169,8 +174,5 @@
 
 ## Next task
 
-- Await the minimal missing production inputs required to unblock Gate 6:
-  - non-secret confirmation of which Neon project is bound to production for this Vercel site
-  - confirmation or evidence of recoverable backup/restore coverage for that production Neon project
-  - confirmation or evidence of recoverable backup/version coverage for the active Vercel Blob store used by production uploads/media
-  - clarification whether missing `SMTP_*`, `WEBHOOK_*`, and `UPLOAD_PROVIDER` values are intentionally absent in production
+- Await the minimal missing production input required to unblock Gate 6:
+  - one non-secret confirmation that Blob store `store_bf****7AX` has recoverable native version/restore coverage or an existing offline/mirrored backup path for the current 24 production blobs

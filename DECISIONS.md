@@ -60,3 +60,9 @@
 - Date: 2026-06-17
 - Decision: block Gate 6 production release until the exact production Neon binding and recoverable DB/media backup evidence are verifiable without reading protected secret values.
 - Reason: the Vercel project, domain aliases, current production deployment, and production env names are verifiable, but encrypted `NEON_PROJECT_ID` prevents a non-secret proof of which accessible Neon project is actually bound to production, and no equivalent non-secret backup evidence was available for the active Blob store.
+
+## D-011
+
+- Date: 2026-06-17
+- Decision: treat Vercel -> Neon binding and Neon PITR readiness as verified for Gate 6, and keep the release blocked only on Blob recovery assurance for store `store_bf****7AX`.
+- Reason: read-only Vercel integration metadata uniquely ties production database secrets to Neon resource `neon-fuchsia-jacket` / project `odd-****-7926` on branch `main`, Neon metadata confirms a 6-hour history retention window on that project, and code inspection proves `SMTP_*`, `WEBHOOK_*`, and `UPLOAD_PROVIDER` are not runtime blockers. The remaining unverifiable safety gap is Blob restore coverage.

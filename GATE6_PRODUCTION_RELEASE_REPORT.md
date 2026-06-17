@@ -55,28 +55,53 @@
   - `BLOB_WEBHOOK_PUBLIC_KEY`
 - `vercel deploy --help` confirms the existing production deployment path is available via Vercel CLI.
 - `vercel rollback --help` confirms the rollback path is available via Vercel CLI.
-- Accessible Neon account state confirms multiple candidate `bostar-catalog` projects exist and all expose point-in-time history retention metadata.
+- Vercel project integration metadata now resolves the production database to a unique Neon integration resource:
+  - Provider: `Neon`
+  - Resource name: `neon-fuchsia-jacket`
+  - Vercel integration store: `store_7n****yCQ`
+  - Neon project: `neon-fuchsia-jacket`
+  - Neon project id: `odd-****-7926`
+  - Neon branch: `main`
+  - Neon branch id: `br-p****zgf`
+  - Neon compute host: `ep-d****ew2.c-8.us-east-1.aws.neon.tech`
+  - Neon pooled host: `ep-d****ooler.c-8.us-east-1.aws.neon.tech`
+  - Region: `aws-us-east-1`
+- The linked Neon integration resource explicitly exposes these synced database secret names for the current Vercel project: `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `POSTGRES_URL`, `POSTGRES_URL_NON_POOLING`, `POSTGRES_HOST`, `PGHOST`, `PGHOST_UNPOOLED`, `NEON_PROJECT_ID`, and related `PG*` variables.
+- Production DB scope verification:
+  - `DATABASE_URL` and `DATABASE_URL_UNPOOLED` exist in `Production` scope.
+  - Integration-generated `POSTGRES_*`, `PG*`, and `NEON_PROJECT_ID` values are shared across `Production` and `Preview`.
+  - No database secret in the linked Neon resource is targeted at `Development`.
+- Neon restore-readiness verification:
+  - Production-bound Neon project reports `history_retention_seconds=21600`, which matches a 6-hour restore window.
+  - The production branch is the default root branch `main`, which is eligible for point-in-time restore.
+  - The linked project metadata confirms only one branch is active for production, avoiding branch ambiguity.
+  - Restore path can be executed without overwriting production blindly by using Neon preview / restore workflows that create a backup branch of the current state before finalize.
+- Blob binding verification:
+  - Production blob store: `bostar-geo-website-blob`
+  - Store id: `store_bf****7AX`
+  - Region: `iad1`
+  - Access: `public`
+  - Blob count: `24`
+  - Size: `9.9MB`
+  - Bound project: `bostar-geo-website`
+  - `BLOB_MUTATION_EXPECTED=NO` for this release candidate: the production release process does not call blob write/delete operations.
+- SMTP / Webhook / Upload provider verification:
+  - `SMTP_*`: not referenced by runtime code paths; lead submission API does not depend on SMTP and does not 500 when SMTP is absent.
+  - `WEBHOOK_*`: not referenced by runtime code paths; lead submission does not send webhook notifications and does not depend on them to persist a lead.
+  - `UPLOAD_PROVIDER`: not referenced by runtime code paths; upload API is hard-wired to Vercel Blob and does not fall back to local filesystem storage.
+  - Upload overwrite safety: `app/api/upload/route.ts` uses timestamped `uploads/<Date.now()>-<sanitizedName>` pathnames and does not pass `allowOverwrite`, so routine admin uploads append new blobs instead of overwriting existing ones.
 
 ### Not verifiable under current constraints
 
-- Exact production Neon project binding:
-  - `NEON_PROJECT_ID` exists in Vercel production env names, but its value is encrypted.
-  - Multiple accessible Neon projects named `bostar-catalog` exist.
-  - Reading the decrypted production secret would violate the current no-secret-read boundary.
-- Production database backup evidence:
-  - Neon project metadata shows history retention on candidate projects, but the exact production-bound Neon project cannot be proven from non-secret facts.
-  - Therefore the actual production DB restore target cannot be certified.
 - Production media backup evidence:
-  - `BLOB_STORE_ID` and `BLOB_READ_WRITE_TOKEN` existence prove a Vercel Blob store is configured.
-  - No non-secret local evidence proves recoverable backup/version coverage for the active production store.
-- Optional production env completeness:
-  - `SMTP_*`, `WEBHOOK_*`, and `UPLOAD_PROVIDER` do not appear in the current Vercel production env listing.
-  - It is not yet confirmed whether these omissions are intentional for production.
+  - Store-level metadata proves the active Blob store identity, region, size, object count, and project binding.
+  - Current read-only evidence does not prove native blob versioning, soft delete, mirrored export, or an existing offline backup for the 24 production blobs.
+  - `vercel blob list` still requires a usable read-write token that is not exposed through current protected env metadata, so a pathname-level masked inventory could not be generated without stepping outside the current no-secret-read boundary.
 
 ## Release decision
 
 - Decision: do not create a new production deployment.
-- Reason: Gate 6 requires verifiable production target identity plus recoverable backup evidence for database and media. Those proofs are incomplete under the current no-secret-read boundary.
+- Reason: the production database binding and Neon PITR path are now verified, and SMTP / Webhook / upload-provider checks are no longer blockers. The sole remaining blocking item is Blob recovery assurance for the existing production media store.
 
 ## Verified deployment and rollback command paths
 
@@ -94,7 +119,15 @@
 
 ## Minimal inputs required to unblock Gate 6
 
-1. Non-secret confirmation of which Neon project is bound to production for this Vercel site.
-2. Confirmation or evidence that the bound production Neon project has a recoverable backup or point-in-time restore path acceptable for release.
-3. Confirmation or evidence that the active Vercel Blob store has recoverable backup/version coverage acceptable for release.
-4. Clarification whether `SMTP_*`, `WEBHOOK_*`, and `UPLOAD_PROVIDER` are intentionally absent in production or should be populated before release.
+1. One non-secret operator confirmation of the recovery guarantee for Blob store `store_bf****7AX`: either existing native version/restore coverage, or an existing offline/mirrored backup path for the current 24 production blobs.
+
+## Gate 6 status matrix
+
+| Check item | Status | Evidence | Blocking |
+| --- | --- | --- | --- |
+| Vercel -> Neon binding | VERIFIED | linked Neon integration resource `neon-fuchsia-jacket`, project `odd-****-7926`, branch `main`, host `ep-d****ew2.c-8.us-east-1.aws.neon.tech` | yes |
+| Neon backup / PITR | VERIFIED | `history_retention_seconds=21600`, root branch `main`, restore preview + backup-branch workflow available | yes |
+| Blob recovery readiness | FAILED | store `store_bf****7AX` is bound and counted, but no version / soft-delete / offline-backup evidence is currently provable | yes |
+| SMTP | INTENTIONAL | runtime code has no SMTP path; absence does not cause lead API 500 | no |
+| Webhook | INTENTIONAL | runtime code has no webhook path; absence does not block lead persistence | no |
+| Upload Provider | INTENTIONAL | variable unused; upload API is fixed to Vercel Blob and does not fall back to local filesystem | no |

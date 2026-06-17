@@ -44,7 +44,14 @@
     - `Invoke-WebRequest https://www.bostarcoating.com`: 200
     - `vercel deploy --help`: existing production deploy CLI path confirmed
     - `vercel rollback --help`: existing rollback CLI path confirmed
-    - Neon inspection via `_search` and `_list_projects`: multiple candidate `bostar-catalog` projects found, leaving the exact production binding unresolved without secret access
+    - `vercel integration ls`: confirms one Neon marketplace resource connected to project `bostar-geo-website`
+    - read-only Vercel env metadata audit: production DB variables are bound to integration store `store_7n****yCQ`; `DATABASE_URL` and `DATABASE_URL_UNPOOLED` are production-scoped, while integration `POSTGRES_*`, `PG*`, and `NEON_PROJECT_ID` are shared by production/preview and not targeted at development
+    - read-only Vercel storage metadata audit: integration store `store_7n****yCQ` resolves to Neon external resource `odd-****-7926` in region `iad1` with synced DB secret names; Blob store `store_bf****7AX` resolves to `bostar-geo-website-blob`, `24` blobs, `9.9MB`, public access, bound to project `bostar-geo-website`
+    - Neon metadata inspection via `_search`, `_describe_project`, `_list_branch_computes`, and `_fetch`: unique bound project `odd-****-7926`, default branch `main`, host `ep-d****ew2.c-8.us-east-1.aws.neon.tech`, region `aws-us-east-1`, `history_retention_seconds=21600`
+    - `vercel blob get-store store_bf****7AX`: confirms active Blob store identity, region, size, and object count without mutating data
+    - `vercel blob list-stores`: confirms the production Blob store is connected to project `bostar-geo-website`
+    - masked pathname inventory attempt against the active Blob store: blocked because no usable read-write token is exposed through protected env metadata; therefore restore coverage for existing Blob objects remains unverified
+    - code inspection: `rg -n "SMTP_|WEBHOOK_|UPLOAD_PROVIDER|BLOB_READ_WRITE_TOKEN|put\\(" app lib components` plus reads of `app/api/leads/route.ts` and `app/api/upload/route.ts` confirm SMTP/Webhook vars are unused and upload writes are fixed to Vercel Blob with no local-filesystem fallback
 - 2026-06-16 resumed Gate 3 validation:
   - `npm run typecheck`: pass after home/search/shared-description localization
   - `npm run lint`: pass with 4 pre-existing warnings
@@ -266,4 +273,4 @@
 
 ## Remaining evidence to collect in later gates
 
-- None pending inside the current no-secret boundary; Gate 6 is blocked until the minimal operator inputs listed in `GATE6_PRODUCTION_RELEASE_REPORT.md` are supplied
+- Non-secret confirmation that Blob store `store_bf****7AX` has native restore/version coverage or an existing offline/mirrored backup path for the current 24 production blobs
