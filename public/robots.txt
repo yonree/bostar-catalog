@@ -43,4 +43,4 @@ Disallow: /search
 Disallow: /en/search
 Disallow: /search?
 
-Sitemap: https://www.bostarcoating.com/sitemap.xml
+Sitemap: https://www.fjbosd.com/sitemap.xml

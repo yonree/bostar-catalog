@@ -18,7 +18,7 @@ jobs:
         run: sleep 15
 
       - name: Run smoke regression
-        run: node scripts/smoke-regression.mjs https://www.bostarcoating.com --ci
+        run: node scripts/smoke-regression.mjs https://www.fjbosd.com --ci
 
       - name: Report failure
         if: failure()

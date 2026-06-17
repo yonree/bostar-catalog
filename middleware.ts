@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getLocaleFromPathname, stripLocalePrefix } from '@/lib/i18n';
+import { PRIMARY_SITE_ORIGIN, resolveRedirectHost } from '@/lib/site-origin';
 
 const cookieName = 'bostar_admin_session';
 const adminEmail = process.env.ADMIN_EMAIL || 'admin@bostarcoating.com';
@@ -21,8 +22,7 @@ async function sha256(value: string) {
 }
 
 function shouldCanonicalizeHost(request: NextRequest) {
-  const host = request.headers.get('host') || '';
-  return request.nextUrl.protocol === 'https:' && host === 'bostarcoating.com';
+  return resolveRedirectHost(request.headers.get('host')) !== null;
 }
 
 function withRequestHeaders(request: NextRequest) {
@@ -46,7 +46,10 @@ function isPublicFile(pathname: string) {
 export async function middleware(request: NextRequest) {
   if (shouldCanonicalizeHost(request)) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.host = 'www.bostarcoating.com';
+    const primaryOrigin = new URL(PRIMARY_SITE_ORIGIN);
+    redirectUrl.protocol = primaryOrigin.protocol;
+    redirectUrl.host = resolveRedirectHost(request.headers.get('host')) || primaryOrigin.host;
+    redirectUrl.port = '';
     return NextResponse.redirect(redirectUrl, 301);
   }
 

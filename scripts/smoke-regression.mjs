@@ -6,7 +6,7 @@
  * 用法:
  *   node scripts/smoke-regression.mjs                          # 测试 localhost:3000
  *   node scripts/smoke-regression.mjs http://localhost:3004     # 指定端口
- *   node scripts/smoke-regression.mjs https://www.bostarcoating.com  # 测试生产环境
+ *   node scripts/smoke-regression.mjs https://www.fjbosd.com  # 测试生产环境
  *   node scripts/smoke-regression.mjs --ci                      # CI 模式（紧凑输出）
  */
 

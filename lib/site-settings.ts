@@ -1,6 +1,7 @@
 import { cache } from 'react';
 import { unstable_noStore as noStore } from 'next/cache';
 import { prisma } from '@/lib/prisma';
+import { PRIMARY_SITE_ORIGIN } from '@/lib/site-origin';
 
 export type SiteSettings = {
   brandCn: string;
@@ -26,7 +27,7 @@ export const defaultSiteSettings: SiteSettings = {
   brandCn: '博士达',
   brandEn: 'BOSTAR GEO',
   company: '深圳市博士达机械设备有限公司',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+  url: PRIMARY_SITE_ORIGIN,
   logoUrl: '',
   aboutTitle: '关于博士达 BOSTAR',
   aboutDescription:
@@ -65,7 +66,7 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
     brandCn: setting.brandNameCn || defaultSiteSettings.brandCn,
     brandEn: setting.brandNameEn || defaultSiteSettings.brandEn,
     company: setting.companyName || defaultSiteSettings.company,
-    url: process.env.NEXT_PUBLIC_SITE_URL || defaultSiteSettings.url,
+    url: PRIMARY_SITE_ORIGIN,
     logoUrl: setting.logoUrl || defaultSiteSettings.logoUrl,
     aboutTitle: setting.slogan || defaultSiteSettings.aboutTitle,
     aboutDescription: setting.description || defaultSiteSettings.aboutDescription,

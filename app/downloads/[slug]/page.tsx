@@ -1,14 +1,15 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { LeadForm } from '@/components/lead/LeadForm';
 import { Breadcrumb } from '@/components/layout/Breadcrumb';
 import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
-import { LeadForm } from '@/components/lead/LeadForm';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getDownload, getProducts } from '@/lib/cms-data';
-import { isEnglishLocale, localizeHref } from '@/lib/i18n';
 import { createResolvedPageMetadata } from '@/lib/page-metadata';
+import { isEnglishLocale, localizeHref } from '@/lib/i18n';
 import { getRequestContext } from '@/lib/request-context';
+import { isPendingDownloadAsset } from '@/lib/site-origin';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,10 +43,23 @@ export default async function DownloadDetailPage({
 }) {
   const [{ slug }, { locale }] = await Promise.all([params, getRequestContext()]);
   const [download, products] = await Promise.all([getDownload(slug), getProducts(4)]);
+
   if (!download) notFound();
 
   const isEnglish = isEnglishLocale(locale);
   const downloadsLabel = isEnglish ? 'Downloads' : '资料下载';
+  const pendingAsset = isPendingDownloadAsset(download.fileUrl);
+  const accessMethodLabel = download.requireLeadForm
+    ? isEnglish
+      ? 'Available after form submission'
+      : '提交表单后获取'
+    : pendingAsset
+      ? isEnglish
+        ? 'File update in progress'
+        : '资料更新中'
+      : isEnglish
+        ? 'Direct download available'
+        : '可直接下载';
 
   return (
     <section className="section">
@@ -64,6 +78,7 @@ export default async function DownloadDetailPage({
           </h1>
           {isEnglish ? <TranslationNotice className="mt-6 max-w-3xl" /> : null}
           <p className="mt-6 max-w-3xl text-lg leading-8 text-steel">{download.summary}</p>
+
           <dl className="mt-8 grid gap-4 rounded-[24px] border border-line bg-white p-6 shadow-card md:grid-cols-2">
             <div>
               <dt className="font-semibold uppercase tracking-[0.14em] text-steel">
@@ -72,22 +87,16 @@ export default async function DownloadDetailPage({
               <dd className="mt-2 text-ink">{download.fileType}</dd>
             </div>
             <div>
-              <dt className="font-semibold uppercase tracking-[0.14em] text-steel">{isEnglish ? 'Version' : '版本'}</dt>
+              <dt className="font-semibold uppercase tracking-[0.14em] text-steel">
+                {isEnglish ? 'Version' : '版本'}
+              </dt>
               <dd className="mt-2 text-ink">{download.version}</dd>
             </div>
             <div>
               <dt className="font-semibold uppercase tracking-[0.14em] text-steel">
                 {isEnglish ? 'Access Method' : '获取方式'}
               </dt>
-              <dd className="mt-2 text-ink">
-                {download.requireLeadForm
-                  ? isEnglish
-                    ? 'Available after form submission'
-                    : '提交表单后获取'
-                  : isEnglish
-                    ? 'Direct download available'
-                    : '可直接下载'}
-              </dd>
+              <dd className="mt-2 text-ink">{accessMethodLabel}</dd>
             </div>
           </dl>
 
@@ -107,11 +116,20 @@ export default async function DownloadDetailPage({
           {download.requireLeadForm ? (
             <>
               <SectionHeader title={isEnglish ? 'Submit Information to Access This File' : '填写信息获取资料'} />
-              <LeadForm
-                locale={locale}
-                sourcePage={localizeHref(`/downloads/${download.slug}`, locale)}
-              />
+              <LeadForm locale={locale} sourcePage={localizeHref(`/downloads/${download.slug}`, locale)} />
             </>
+          ) : pendingAsset ? (
+            <div className="rounded-[24px] border border-dashed border-line bg-white p-6 shadow-card">
+              <SectionHeader title={isEnglish ? 'File Update In Progress' : '资料更新中'} />
+              <p className="text-steel">
+                {isEnglish
+                  ? 'This resource is being updated. Use the contact form to request the latest approved file.'
+                  : '当前资料正在更新，请通过联系表单索取最新核定版本。'}
+              </p>
+              <div className="mt-6">
+                <LeadForm locale={locale} sourcePage={localizeHref(`/downloads/${download.slug}`, locale)} />
+              </div>
+            </div>
           ) : (
             <a
               href={download.fileUrl}

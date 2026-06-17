@@ -10,7 +10,7 @@ const manifestPath = path.join(repoRoot, 'planning', 'gate1a', 'url', 'url-decis
 const urlResultsPath = path.join(repoRoot, 'GATE7_PRODUCTION_URL_RESULTS.csv');
 const seoResultsPath = path.join(repoRoot, 'GATE7_SEO_RESULTS.csv');
 
-const productionBaseUrl = process.env.GATE7_BASE_URL || 'https://www.bostarcoating.com';
+const productionBaseUrl = process.env.GATE7_BASE_URL || 'https://www.fjbosd.com';
 const deploymentId = process.env.GATE7_DEPLOYMENT_ID || `alias:${new URL(productionBaseUrl).host}`;
 const requestTimeoutMs = Number.parseInt(process.env.GATE7_TIMEOUT_MS || '15000', 10);
 const maxRequestRetries = Number.parseInt(process.env.GATE7_RETRIES || '1', 10);

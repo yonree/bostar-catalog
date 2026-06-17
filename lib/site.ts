@@ -1,8 +1,10 @@
+import { PRIMARY_SITE_ORIGIN } from '@/lib/site-origin';
+
 export const siteConfig = {
   brandCn: '博士达',
   brandEn: 'BOSTAR',
   company: '博士达涂装设备有限公司',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+  url: PRIMARY_SITE_ORIGIN,
   phone: '400-xxx-xxxx',
   email: 'info@bostarcoating.com',
   address: '广东省东莞市',

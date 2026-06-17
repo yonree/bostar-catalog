@@ -752,7 +752,7 @@ function mapSeedDownload(download: (typeof seedDownloads)[number]): DownloadView
     summary: normalizeFaqAnswer(download.summary),
     fileType: download.fileType,
     version: download.version,
-    fileUrl: '#',
+    fileUrl: download.slug === 'maintenance-guide' ? '/sample-download.pdf' : '#',
     requireLeadForm: download.requireLeadForm,
   };
 }

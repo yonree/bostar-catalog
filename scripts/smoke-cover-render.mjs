@@ -1,6 +1,6 @@
 import { chromium } from 'playwright-core';
 
-const baseUrl = process.env.SMOKE_BASE_URL || 'https://www.bostarcoating.com';
+const baseUrl = process.env.SMOKE_BASE_URL || 'https://www.fjbosd.com';
 const adminEmail = process.env.SMOKE_ADMIN_EMAIL || 'admin@bostarcoating.com';
 const adminPassword = process.env.SMOKE_ADMIN_PASSWORD;
 if (!adminPassword) {

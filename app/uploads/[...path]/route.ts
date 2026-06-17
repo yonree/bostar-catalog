@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { PRIMARY_SITE_ORIGIN } from '@/lib/site-origin';
 
 const defaultImagePath = '/images/product-gun-render.png';
 
@@ -17,7 +18,7 @@ export async function GET(
   const { path } = await params;
   const rawFilename = decodeURIComponent(path[path.length - 1] || '').trim();
   if (!rawFilename) {
-    return NextResponse.redirect(new URL(defaultImagePath, 'https://www.bostarcoating.com'), 307);
+    return NextResponse.redirect(new URL(defaultImagePath, PRIMARY_SITE_ORIGIN), 307);
   }
 
   const safeName = sanitizeFilename(rawFilename);
@@ -38,5 +39,5 @@ export async function GET(
     return NextResponse.redirect(item.url, 307);
   }
 
-  return NextResponse.redirect(new URL(defaultImagePath, 'https://www.bostarcoating.com'), 307);
+  return NextResponse.redirect(new URL(defaultImagePath, PRIMARY_SITE_ORIGIN), 307);
 }
