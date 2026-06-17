@@ -36,8 +36,8 @@
 - Current mitigation: waiver `LIGHTHOUSE_NOT_EXECUTED` is explicitly accepted under `D-008`; browser/fetch baselines plus desktop/mobile visual review remain the recorded performance evidence set.
 - Trigger to escalate: if Gate 6 or post-release monitoring requires quantified Lighthouse scoring before or immediately after production release.
 
-## R-007 Production Blob recovery assurance unresolved
+## R-007 Legacy production route acceptance gap
 
-- Impact: production release cannot be executed safely because restore coverage for Blob store `store_bf****7AX` is not yet proven from non-secret facts.
-- Current mitigation: Gate 6 remains blocked under `D-011`; the current production Vercel deployment `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB` remains untouched, the candidate release stays pinned to clean commit `5f731bf`, and no production blob mutation is planned in this release path.
-- Trigger to escalate: only after an operator confirms native restore/version coverage or an existing offline/mirrored backup path for the 24 production blobs in `store_bf****7AX`.
+- Impact: Gate 6 cannot remain deployed because legacy liquid category routes `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` fail acceptance on Vercel production smoke.
+- Current mitigation: production has already been rolled back to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`; Blob recovery assurance is now covered by offline mirror evidence and is no longer the active blocker.
+- Trigger to escalate: before any next production deploy attempt, reproduce and fix the route-family `404` on a production-like target, then rerun Gate 6 smoke against the fixed candidate.

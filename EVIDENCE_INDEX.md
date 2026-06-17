@@ -52,6 +52,12 @@
     - `vercel blob list-stores`: confirms the production Blob store is connected to project `bostar-geo-website`
     - masked pathname inventory attempt against the active Blob store: blocked because no usable read-write token is exposed through protected env metadata; therefore restore coverage for existing Blob objects remains unverified
     - code inspection: `rg -n "SMTP_|WEBHOOK_|UPLOAD_PROVIDER|BLOB_READ_WRITE_TOKEN|put\\(" app lib components` plus reads of `app/api/leads/route.ts` and `app/api/upload/route.ts` confirm SMTP/Webhook vars are unused and upload writes are fixed to Vercel Blob with no local-filesystem fallback
+    - external Blob offline mirror: `D:\work\gate6-backups\bostar-blob-20260617-094448`, ZIP `D:\work\gate6-backups\bostar-blob-20260617-094448.zip`, sidecar `D:\work\gate6-backups\bostar-blob-20260617-094448.zip.sha256.txt`
+    - Blob mirror verification: `24/24` downloaded, `0` failures, `0` mismatches, ZIP extract recheck `24/24`
+    - release-candidate worktree validation: `npm ci`, `npm run typecheck`, `npm run lint`, `npm run build` all pass on `D:\work\gate6-release\release-5f731bf` at commit `5f731bf`
+    - `vercel deploy --prod --yes`: created production deployment `dpl_Ff9h5z2tUAvbNSFvmrNUZCzn12CF`
+    - production smoke on `https://www.bostarcoating.com`: legacy liquid category routes `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` returned `404`; core routes `/`, `/en`, `/about`, `/en/about`, `/contact`, `/en/contact`, `/faq`, `/knowledge`, `/solutions/hardware-powder-coating`, `/sitemap.xml`, `/robots.txt` remained reachable
+    - rollback recovery: direct project rollback API request restored production to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`; `vercel rollback status bostar-geo-website` returned success
 - 2026-06-16 resumed Gate 3 validation:
   - `npm run typecheck`: pass after home/search/shared-description localization
   - `npm run lint`: pass with 4 pre-existing warnings

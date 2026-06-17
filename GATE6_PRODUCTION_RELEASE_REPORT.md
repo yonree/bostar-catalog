@@ -6,7 +6,7 @@
 - Branch: `feat/gate2-implementation`
 - Release candidate commit: `5f731bf`
 - Release candidate tag: `gate-5-handoff-2026-06-17`
-- Final status: `PRODUCTION_RELEASE_BLOCKED_MISSING_INPUT`
+- Final status: `PRODUCTION_RELEASE_ROLLED_BACK`
 
 ## Production platform and routing
 
@@ -85,49 +85,91 @@
   - Size: `9.9MB`
   - Bound project: `bostar-geo-website`
   - `BLOB_MUTATION_EXPECTED=NO` for this release candidate: the production release process does not call blob write/delete operations.
+- Blob recovery verification:
+  - Offline mirror directory: `D:\work\gate6-backups\bostar-blob-20260617-094448`
+  - Offline mirror ZIP: `D:\work\gate6-backups\bostar-blob-20260617-094448.zip`
+  - ZIP SHA-256 sidecar: `D:\work\gate6-backups\bostar-blob-20260617-094448.zip.sha256.txt`
+  - Recovery status: `VERIFIED_OFFLINE_MIRROR`
+  - Verified object count: `24`
+  - ZIP extract verification: `24/24` blobs restored, `0` missing, `0` hash mismatches
 - SMTP / Webhook / Upload provider verification:
   - `SMTP_*`: not referenced by runtime code paths; lead submission API does not depend on SMTP and does not 500 when SMTP is absent.
   - `WEBHOOK_*`: not referenced by runtime code paths; lead submission does not send webhook notifications and does not depend on them to persist a lead.
   - `UPLOAD_PROVIDER`: not referenced by runtime code paths; upload API is hard-wired to Vercel Blob and does not fall back to local filesystem storage.
   - Upload overwrite safety: `app/api/upload/route.ts` uses timestamped `uploads/<Date.now()>-<sanitizedName>` pathnames and does not pass `allowOverwrite`, so routine admin uploads append new blobs instead of overwriting existing ones.
 
-### Not verifiable under current constraints
+## Release execution
 
-- Production media backup evidence:
-  - Store-level metadata proves the active Blob store identity, region, size, object count, and project binding.
-  - Current read-only evidence does not prove native blob versioning, soft delete, mirrored export, or an existing offline backup for the 24 production blobs.
-  - `vercel blob list` still requires a usable read-write token that is not exposed through current protected env metadata, so a pathname-level masked inventory could not be generated without stepping outside the current no-secret-read boundary.
+- Candidate deployment worktree: `D:\work\gate6-release\release-5f731bf`
+- Candidate deployment command: `vercel deploy --prod --yes`
+- Candidate deployment id: `dpl_Ff9h5z2tUAvbNSFvmrNUZCzn12CF`
+- Candidate deployment url: `https://bostar-geo-website-9rxqbxnmt-yonree-s-projects.vercel.app`
+- Candidate deployment result: `READY`
+
+## Post-release smoke
+
+- `https://www.bostarcoating.com/`: `200`
+- `https://www.bostarcoating.com/en`: `200`
+- `https://www.bostarcoating.com/about`: `200`
+- `https://www.bostarcoating.com/en/about`: `200`
+- `https://www.bostarcoating.com/contact`: `200`
+- `https://www.bostarcoating.com/en/contact`: `200`
+- `https://www.bostarcoating.com/products/manual-powder-coating-gun`: `200`
+- `https://www.bostarcoating.com/en/products/manual-powder-coating-gun`: `200`
+- `https://www.bostarcoating.com/products/manual-powder-coating-gun/manual-powder-spray-gun`: `200`
+- `https://www.bostarcoating.com/en/products/manual-powder-coating-gun/manual-powder-spray-gun`: `200`
+- `https://www.bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun`: `404`
+- `https://www.bostarcoating.com/en/products/Manual-Electrostatic-Liquid-Spray-Gun`: `404`
+- `https://www.bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`: `200`
+- `https://www.bostarcoating.com/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`: `200`
+- `https://www.bostarcoating.com/knowledge`: `200`
+- `https://www.bostarcoating.com/solutions/hardware-powder-coating`: `200`
+- `https://www.bostarcoating.com/faq`: `200`
+- `https://www.bostarcoating.com/search?q=spray`: `200`, `robots=noindex,nofollow`
+- `https://www.bostarcoating.com/missing-route-check`: `404`
+- `https://www.bostarcoating.com/sitemap.xml`: `200`
+- `https://www.bostarcoating.com/robots.txt`: `200`
+- `/admin`: `307`
+- `/api/admin/products`: `401`
+- `/api/search?q=spray`: `200`
+
+## Rollback execution
+
+- Rollback trigger: legacy liquid category routes `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` returned `404` on the new production deployment.
+- CLI rollback attempt `vercel rollback dpl_7GyQnXHosWMRooQauqjrXXV5r6KB -y`: blocked by a team-validation error.
+- Project rollback API fallback: `POST /v9/projects/prj_Snv902TWIACH7i5hQc3jeRgv20Z0/rollback/dpl_7GyQnXHosWMRooQauqjrXXV5r6KB?teamId=team_wiV97iL3q7MEbe71U8rFU9HC`
+- Rollback status: success
+- Restored production deployment id: `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`
+- Restored production deployment url: `https://bostar-geo-website-nfu62kovg-yonree-s-projects.vercel.app`
+- Post-rollback note: the same legacy category route still returns `404` on the restored old deployment, which indicates the failed acceptance check is also present on the previous production state.
 
 ## Release decision
 
-- Decision: do not create a new production deployment.
-- Reason: the production database binding and Neon PITR path are now verified, and SMTP / Webhook / upload-provider checks are no longer blockers. The sole remaining blocking item is Blob recovery assurance for the existing production media store.
+- Decision: production deployment was attempted and then rolled back.
+- Reason: Blob recovery assurance was successfully verified, but post-release smoke hit the automatic rollback condition for legacy liquid category URL availability.
 
 ## Verified deployment and rollback command paths
 
 - Prospective production deploy command path: `vercel deploy --prod --yes`
 - Verified rollback command path for the current stable production deployment: `vercel rollback dpl_7GyQnXHosWMRooQauqjrXXV5r6KB -y`
 
-## No-op production safety record
+## Production safety record
 
-- Production deployment executed: `no`
-- Production rollback executed: `no`
+- Production deployment executed: `yes`
+- Production rollback executed: `yes`
 - DNS modified: `no`
 - Production database written: `no`
 - Production media written: `no`
 - Real leads submitted: `no`
 
-## Minimal inputs required to unblock Gate 6
-
-1. One non-secret operator confirmation of the recovery guarantee for Blob store `store_bf****7AX`: either existing native version/restore coverage, or an existing offline/mirrored backup path for the current 24 production blobs.
-
 ## Gate 6 status matrix
 
 | Check item | Status | Evidence | Blocking |
 | --- | --- | --- | --- |
-| Vercel -> Neon binding | VERIFIED | linked Neon integration resource `neon-fuchsia-jacket`, project `odd-****-7926`, branch `main`, host `ep-d****ew2.c-8.us-east-1.aws.neon.tech` | yes |
-| Neon backup / PITR | VERIFIED | `history_retention_seconds=21600`, root branch `main`, restore preview + backup-branch workflow available | yes |
-| Blob recovery readiness | FAILED | store `store_bf****7AX` is bound and counted, but no version / soft-delete / offline-backup evidence is currently provable | yes |
+| Vercel -> Neon binding | VERIFIED | linked Neon integration resource `neon-fuchsia-jacket`, project `odd-****-7926`, branch `main`, host `ep-d****ew2.c-8.us-east-1.aws.neon.tech` | no |
+| Neon backup / PITR | VERIFIED | `history_retention_seconds=21600`, root branch `main`, restore preview + backup-branch workflow available | no |
+| Blob recovery readiness | VERIFIED_OFFLINE_MIRROR | offline mirror directory + ZIP + SHA-256 sidecar + `24/24` hash verification | no |
 | SMTP | INTENTIONAL | runtime code has no SMTP path; absence does not cause lead API 500 | no |
 | Webhook | INTENTIONAL | runtime code has no webhook path; absence does not block lead persistence | no |
 | Upload Provider | INTENTIONAL | variable unused; upload API is fixed to Vercel Blob and does not fall back to local filesystem | no |
+| Legacy Liquid category acceptance | FAILED | `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` returned `404` on the release deployment | yes |

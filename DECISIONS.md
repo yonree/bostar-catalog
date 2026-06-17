@@ -66,3 +66,9 @@
 - Date: 2026-06-17
 - Decision: treat Vercel -> Neon binding and Neon PITR readiness as verified for Gate 6, and keep the release blocked only on Blob recovery assurance for store `store_bf****7AX`.
 - Reason: read-only Vercel integration metadata uniquely ties production database secrets to Neon resource `neon-fuchsia-jacket` / project `odd-****-7926` on branch `main`, Neon metadata confirms a 6-hour history retention window on that project, and code inspection proves `SMTP_*`, `WEBHOOK_*`, and `UPLOAD_PROVIDER` are not runtime blockers. The remaining unverifiable safety gap is Blob restore coverage.
+
+## D-012
+
+- Date: 2026-06-17
+- Decision: mark Gate 6 as `PRODUCTION_RELEASE_ROLLED_BACK` after the approved release candidate deployed successfully but failed production smoke on legacy liquid category URL acceptance.
+- Reason: Blob recovery assurance was closed with an offline mirror, but the new production deployment returned `404` for `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun`, which matches the user-defined automatic rollback condition. Production was restored to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`.

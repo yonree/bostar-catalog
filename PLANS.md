@@ -21,6 +21,6 @@
 ## Next execution slice
 
 - Gate 5 handoff is closed on commit `5f731bf` with tag `gate-5-handoff-2026-06-17`.
-- Gate 6 production precheck is complete. Vercel -> Neon binding, Neon PITR readiness, and SMTP/Webhook/Upload-provider runtime behavior are verified.
-- Gate 6 remains blocked only on Blob recovery evidence for production store `store_bf****7AX`.
-- Do not create a production deployment until that Blob recovery guarantee is supplied and written into `GATE6_PRODUCTION_RELEASE_REPORT.md`.
+- Gate 6 Blob recovery precondition is now complete through offline mirror verification for store `store_bf****7AX`.
+- Gate 6 production deploy was attempted and rolled back; current production is restored to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`.
+- Do not create another production deployment until legacy liquid category routes `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` are reproducibly `200` on a production-like target.

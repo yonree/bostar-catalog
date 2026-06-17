@@ -69,3 +69,6 @@
 - Refined Gate 6 precheck with read-only Vercel integration metadata and Neon project metadata, uniquely verifying the production Neon project/branch/host binding plus a 6-hour PITR window without disclosing secrets
 - Verified by code inspection that `SMTP_*`, `WEBHOOK_*`, and `UPLOAD_PROVIDER` are non-blocking in current runtime paths; `app/api/upload/route.ts` remains Blob-only with no local-filesystem fallback
 - Narrowed the sole remaining Gate 6 blocker to Blob recovery assurance for production store `store_bf****7AX`, because store identity/count/size/binding are proven but restore/version/offline-backup coverage is still not evidenced inside the current no-secret boundary
+- Created offline mirror `D:\work\gate6-backups\bostar-blob-20260617-094448` and ZIP `D:\work\gate6-backups\bostar-blob-20260617-094448.zip` for production Blob store `store_bf****7AX`, verifying `24/24` object downloads and matching SHA-256s
+- Built and deployed approved release candidate `5f731bf` from external worktree `D:\work\gate6-release\release-5f731bf` as production deployment `dpl_Ff9h5z2tUAvbNSFvmrNUZCzn12CF`
+- Triggered automatic rollback after production smoke found legacy liquid category routes returning `404`, then restored production to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB` through the project rollback API when the CLI rollback command hit a team-validation error

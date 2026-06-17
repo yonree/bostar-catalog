@@ -8,8 +8,8 @@
 - Previous planning branch retained: `plan/gate1a`
 - Authoritative preview server: `http://127.0.0.1:3011`
 - Non-authoritative stale preview servers observed during recovery: `http://127.0.0.1:3008`, `http://127.0.0.1:3009`, `http://127.0.0.1:3010`
-- Current gate: `PRODUCTION_RELEASE_BLOCKED_MISSING_INPUT`
-- Release path baseline: clean Gate 5 handoff commit `5f731bf` with tag `gate-5-handoff-2026-06-17`; any later branch movement is Gate 6 evidence-only until the missing production inputs are supplied
+- Current gate: `PRODUCTION_RELEASE_ROLLED_BACK`
+- Release path baseline: clean Gate 5 handoff commit `5f731bf` with tag `gate-5-handoff-2026-06-17`; Gate 6 evidence-only commits document an attempted production deploy plus rollback back to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`
 
 ## Completed in this execution
 
@@ -48,7 +48,9 @@
 - Received explicit execution authority to continue from Gate 5 close-out directly into Gate 6 production precheck, and to release only if the existing production path, environment, backups, and rollback route are all verifiable without guessing missing inputs
 - Closed Gate 5 on clean commit `5f731bf docs(gate5): synchronize final release candidate evidence` and tag `gate-5-handoff-2026-06-17`
 - Completed Gate 6 production precheck against the bound Vercel project and verified the production Neon target, PITR window, and optional env behavior through read-only metadata plus code inspection
-- Narrowed the remaining Gate 6 blocker to Blob recovery assurance for the active production store after confirming SMTP, Webhook, and `UPLOAD_PROVIDER` are non-blocking in current runtime paths
+- Verified Blob recovery assurance by creating an external offline mirror for production store `store_bf****7AX` at `D:\work\gate6-backups\bostar-blob-20260617-094448` and ZIP `D:\work\gate6-backups\bostar-blob-20260617-094448.zip`
+- Deployed approved release candidate commit `5f731bf` to Vercel production as deployment `dpl_Ff9h5z2tUAvbNSFvmrNUZCzn12CF`
+- Triggered automatic rollback after production smoke found legacy liquid category routes returning `404`, and restored production back to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`
 
 ## Active blockers
 
@@ -61,8 +63,8 @@
 - Reserved news routes now use `noindex,nofollow`, are excluded from `sitemap.xml`, and remain online without losing the URL contract
 - Product and video JSON-LD now emit only repository-backed facts; hardcoded offer price, stock, and upload-date placeholders are removed
 - Sampled Gate 1A legacy liquid-product URL families are now restored locally and no longer block Gate 4 parity acceptance
-- Gate 6 hard blocker: production media backup/recovery evidence for the active Blob store is still not verifiable from current non-secret local facts
-- Production release is therefore blocked pending minimal operator input; no production deployment, rollback, DNS change, or database write has been executed in this turn
+- Gate 6 terminal outcome: production release was rolled back after acceptance failure on legacy liquid category routes
+- Production is currently restored to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`; no DNS change, production database write, production blob mutation, or real lead submission was executed in this turn
 
 ## Latest verification
 
@@ -88,7 +90,10 @@
   - Read-only Neon metadata confirms `history_retention_seconds=21600` on the bound production project and a restore-capable default branch `main`
   - `vercel blob get-store store_bf****7AX` and `vercel blob list-stores` verify the active production Blob store identity, size (`9.9MB`), object count (`24`), region (`iad1`), public access mode, and project binding
   - Code inspection confirms `SMTP_*`, `WEBHOOK_*`, and `UPLOAD_PROVIDER` are not consumed by current runtime paths; `app/api/upload/route.ts` is hard-wired to Vercel Blob with no local-filesystem fallback
-  - Remaining Gate 6 blocker: no non-secret evidence currently proves versioning, soft delete, mirrored export, or offline backup for Blob store `store_bf****7AX`
+  - External offline mirror verification for Blob store `store_bf****7AX`: `24/24` blobs downloaded, `0` failures, `0` hash mismatches, ZIP SHA-256 sidecar recorded at `D:\work\gate6-backups\bostar-blob-20260617-094448.zip.sha256.txt`
+  - Release-candidate worktree `D:\work\gate6-release\release-5f731bf`: `npm ci` pass, `npm run typecheck` pass, `npm run lint` pass with the same 4 warnings, `npm run build` pass
+  - Production deployment `dpl_Ff9h5z2tUAvbNSFvmrNUZCzn12CF`: `https://www.bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` returned `404`, which triggered automatic rollback
+  - Rollback API restored production to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`; `vercel rollback status bostar-geo-website` reports success
 - 2026-06-17 Gate 4 metadata parity slice:
   - `npm run typecheck`: pass after page-level Open Graph and Twitter metadata alignment
   - `npm run lint`: pass with the same 4 pre-existing warnings after the metadata slice
@@ -174,5 +179,5 @@
 
 ## Next task
 
-- Await the minimal missing production input required to unblock Gate 6:
-  - one non-secret confirmation that Blob store `store_bf****7AX` has recoverable native version/restore coverage or an existing offline/mirrored backup path for the current 24 production blobs
+- Investigate why legacy liquid category routes `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` return `404` on production deployments, despite local Gate 4 parity evidence showing `200`
+- Do not attempt another Gate 6 production deploy until that route-family acceptance issue is resolved and revalidated on a production-like target
