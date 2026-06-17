@@ -4,7 +4,7 @@
 
 - Date: 2026-06-17
 - Branch: `feat/gate2-implementation`
-- HEAD: `0332860`
+- HEAD: `30f2f63`
 - Status: `HANDOFF_COMPLETE_RELEASE_CANDIDATE_READY`
 
 ## Delivered implementation scope
@@ -55,6 +55,7 @@
 - `R-001`: several `/en` detail pages still use verified Chinese source content with explicit translation notice disclosure
 - 4 pre-existing lint warnings remain in non-target admin/data modules
 - Lighthouse package is not installed locally; Gate 4 performance evidence was accepted through existing browser/fetch baselines per `D-008`
+- Lighthouse waiver status: `LIGHTHOUSE_NOT_EXECUTED`
 
 ## Evidence index
 
@@ -67,5 +68,6 @@
 
 ## Recommended next steps
 
-1. Stop before Gate 6 production release
-2. When production deployment is approved, use the current branch, tags, rollback notes, and final delivery report as the release package
+1. Commit the final Gate 5 control-plane evidence sync and create a dedicated handoff tag from the resulting clean tree
+2. Use the immutable Gate 5 handoff commit, tags, rollback notes, and final delivery report as the only allowed release package for Gate 6 precheck
+3. Release only if the existing production platform, target, environment completeness, backup evidence, and rollback path are all verifiable without inventing missing inputs

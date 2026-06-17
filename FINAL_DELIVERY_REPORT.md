@@ -4,7 +4,7 @@
 
 - Date: 2026-06-17
 - Branch: `feat/gate2-implementation`
-- HEAD: `0332860`
+- HEAD: `30f2f63`
 - Final status: `RELEASE_CANDIDATE_READY`
 
 ## Delivered scope
@@ -30,10 +30,11 @@
 - performance evidence:
   - existing fetch/browser baselines recorded on `http://127.0.0.1:3011`
   - no local Lighthouse binary/package was available without installing a new dependency
+  - waiver: `LIGHTHOUSE_NOT_EXECUTED`
 
 ## Not done
 
-- Gate 6 production release was not executed
+- Gate 6 production release precheck is still pending verification of the existing production platform, target, backup evidence, and rollback route
 - No new English business-body translations were authored for source-language detail content
 - No new runtime or QA dependency was installed to collect Lighthouse scores
 
@@ -42,9 +43,10 @@
 - Some `/en` detail pages still surface verified Chinese source content; translation notice disclosure is present on the audited data-backed detail routes
 - 4 pre-existing lint warnings remain in legacy admin/data modules
 - Local Lighthouse is unavailable without adding a new package; release-candidate performance evidence relies on existing browser/fetch baselines instead
+- Waiver `LIGHTHOUSE_NOT_EXECUTED` remains an accepted QA gap, not a fabricated pass signal
 
 ## Release recommendation
 
-- Ready for a controlled production release decision
+- Ready to enter Gate 6 production precheck from the immutable Gate 5 handoff commit
 - Keep the previous production deploy available for rollback
-- Stop here until Gate 6 is explicitly approved
+- Block the actual production release if any required production identity, environment completeness, backup evidence, or rollback path cannot be verified from existing local facts

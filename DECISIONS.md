@@ -45,6 +45,7 @@
 ## D-008
 
 - Date: 2026-06-17
+- Waiver: `LIGHTHOUSE_NOT_EXECUTED`
 - Decision: do not install Lighthouse during the current rollout; treat existing browser/fetch baselines plus desktop/mobile visual review as the Gate 4 performance evidence set.
 - Reason: local `lighthouse` is not installed, `npx --no-install lighthouse --version` confirms no existing package is available, and adding a new QA dependency mid-rollout is not required to verify current release-candidate behavior.
 

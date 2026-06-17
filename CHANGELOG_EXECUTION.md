@@ -57,3 +57,8 @@
 - Collected final desktop/mobile visual evidence through in-app browser screenshots for `/en/contact` and the restored legacy liquid product detail route
 - Audited `/en` data-backed detail routes to confirm the manual-verification translation notice is present wherever Chinese source technical content remains
 - Promoted the branch state to `RELEASE_CANDIDATE_READY` with Gate 4/Gate 5 handoff artifacts and accepted known-risk documentation, stopping short of Gate 6 production release
+- Created final handoff commit `30f2f63 docs(gate5): finalize release candidate handoff`
+- Added Gate completion tags `gate-4-pass` and `gate-5-final` at commit `30f2f63`
+- Re-ran final Gate 5 close-out validation: `npm run typecheck`, `npm run lint`, and `npm run build` all pass; lint remains at the same 4 pre-existing warnings with no new warnings
+- Revalidated the authoritative `3011` preview on `/`, `/en`, `/contact`, `/en/contact`, restored zh/en legacy liquid product detail, `/sitemap.xml`, `/robots.txt`, and `/missing-route-check`, confirming expected status, canonical, hreflang, and robots behavior before the evidence-sync commit
+- Promoted the Lighthouse waiver to the explicit marker `LIGHTHOUSE_NOT_EXECUTED` across decision, risk, and delivery control-plane artifacts for Gate 6 precheck consumption

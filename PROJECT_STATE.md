@@ -4,12 +4,12 @@
 
 - Date: 2026-06-17
 - Branch: `feat/gate2-implementation`
-- HEAD: `0332860`
+- HEAD: `30f2f63`
 - Previous planning branch retained: `plan/gate1a`
 - Authoritative preview server: `http://127.0.0.1:3011`
 - Non-authoritative stale preview servers observed during recovery: `http://127.0.0.1:3008`, `http://127.0.0.1:3009`, `http://127.0.0.1:3010`
-- Current gate: `RELEASE_CANDIDATE_READY`
-- Working tree: clean after checkpoint commit `0332860`; live control-plane updates below record final Gate 4 / Gate 5 close-out status
+- Current gate: `GATE_5_CLOSEOUT_SYNC_IN_PROGRESS`
+- Working tree: dirty by design during final control-plane evidence sync after handoff commit `30f2f63` and tags `gate-4-pass` / `gate-5-final`
 
 ## Completed in this execution
 
@@ -40,9 +40,12 @@
 - Fixed locale hydration risk in `components/lead/LeadForm.tsx` by passing server-resolved `locale` and localized `sourcePage` into all public lead-form entry points instead of deriving locale from client pathname after middleware rewrites
 - Revalidated `/en/contact`, `/en`, and restored `/en/products/...` server HTML plus hydrated DOM parity for English lead-form labels and localized hidden `sourcePage` values
 - Created checkpoint commit `0332860 fix(gate4): restore legacy liquid routes and align lead form locale`
+- Created final handoff commit `30f2f63 docs(gate5): finalize release candidate handoff`
+- Created release tags `gate-4-pass` and `gate-5-final` at commit `30f2f63`
 - Collected desktop/mobile visual evidence for `/en/contact` and the restored mobile legacy product detail route through in-app browser screenshots
 - Audited `/en` data-backed detail routes to confirm the manual-verification translation notice appears wherever Chinese source technical content still remains
 - Closed Gate 4 with Lighthouse waiver `D-008` and English source-content waiver `D-009`, promoting the branch to `RELEASE_CANDIDATE_READY`
+- Received explicit execution authority to continue from Gate 5 close-out directly into Gate 6 production precheck, and to release only if the existing production path, environment, backups, and rollback route are all verifiable without guessing missing inputs
 
 ## Active blockers
 
@@ -62,6 +65,13 @@
 - `npm run typecheck`: pass
 - `npm run build`: pass with warnings
 - `npm run lint`: pass with warnings only
+- 2026-06-17 final Gate 5 close-out validation:
+  - `npm run typecheck`: pass
+  - `npm run lint`: pass with the same 4 pre-existing warnings and no new warnings
+  - `npm run build`: pass with the same 4 pre-existing warnings and no new warnings
+  - targeted runtime smoke on `http://127.0.0.1:3011`:
+    - `/`, `/en`, `/contact`, `/en/contact`, restored zh/en legacy liquid product detail, `/sitemap.xml`, `/robots.txt`, and `/missing-route-check` all return expected status
+    - canonical, hreflang, and robots outputs match the current release-candidate policy on the audited routes
 - 2026-06-17 Gate 4 metadata parity slice:
   - `npm run typecheck`: pass after page-level Open Graph and Twitter metadata alignment
   - `npm run lint`: pass with the same 4 pre-existing warnings after the metadata slice
@@ -129,6 +139,8 @@
       - in-app browser dev logs still surface an older React 418 entry with timestamp `2026-06-16T17:33:40.110Z`; treated as stale session history because refreshed server HTML and hydrated DOM now agree on localized lead-form output
   - release-candidate close-out:
     - `git commit -m "fix(gate4): restore legacy liquid routes and align lead form locale"` -> `0332860`
+    - `git commit -m "docs(gate5): finalize release candidate handoff"` -> `30f2f63`
+    - `git tag gate-4-pass 30f2f63` and `git tag gate-5-final 30f2f63`
     - `Get-Command lighthouse` -> no local binary found
     - `npx --no-install lighthouse --version` -> fails without installed package; no package auto-install performed
     - desktop screenshot review: `/en/contact` renders a stable English form shell with no blank state or overlap
@@ -145,4 +157,6 @@
 
 ## Next task
 
-- Stop before Gate 6 production release; hand off the current branch, tags, rollback notes, and final delivery report as a release candidate
+- Finish the final Gate 5 evidence-sync commit and handoff tag on a clean working tree
+- Enter `GATE_6_PRODUCTION_PRECHECK` immediately after the Gate 5 sync commit
+- Release only from the immutable Gate 5 handoff commit if the existing production platform, target, environment completeness, backup evidence, and rollback path can all be verified from current local facts

@@ -4,7 +4,7 @@
 
 - Date: 2026-06-17
 - Branch: `feat/gate2-implementation`
-- HEAD: `0332860`
+- HEAD: `30f2f63`
 - Authoritative preview: `http://127.0.0.1:3011`
 - Latest preview listener PID: `32624`
 - Current release status: `RELEASE_CANDIDATE_READY`
@@ -97,4 +97,6 @@ Source evidence:
 
 ## Next action
 
-- Gate 4 is complete. Stop before Gate 6 production release.
+- Gate 4 remains complete and accepted.
+- Finish the final Gate 5 control-plane evidence sync on a clean working tree.
+- Enter Gate 6 production precheck immediately after the Gate 5 sync commit and release only if the existing production target, environment, backups, and rollback path are all verifiable.

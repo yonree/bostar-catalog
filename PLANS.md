@@ -20,5 +20,6 @@
 
 ## Next execution slice
 
-- Stop before Gate 6 production release.
-- Preserve the current branch, tags, evidence set, and rollback notes as the release-candidate handoff package.
+- Synchronize the final Gate 5 control-plane evidence to the latest Git state and create the dedicated handoff tag.
+- Enter Gate 6 production precheck immediately after the Gate 5 evidence-sync commit reaches a clean working tree.
+- If the existing production release path, required environment, backup evidence, and rollback path are all verifiable, execute the production release from the immutable Gate 5 handoff commit without waiting for another approval.

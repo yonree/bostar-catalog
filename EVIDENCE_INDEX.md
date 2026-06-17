@@ -18,11 +18,19 @@
 - `npx prisma generate`: generated Prisma Client v6.19.3 successfully
 - `git commit -m "feat(gate4): checkpoint localized route parity baseline"`: created checkpoint commit `22d4d24`
 - `git commit -m "fix(gate4): restore legacy liquid routes and align lead form locale"`: created checkpoint commit `0332860`
+- `git commit -m "docs(gate5): finalize release candidate handoff"`: created final handoff commit `30f2f63`
+- `git tag gate-4-pass 30f2f63`
+- `git tag gate-5-final 30f2f63`
 - `npm run typecheck`: pass
 - `npm run lint`: pass with warnings only
 - `npm run build`: pass with warnings only
 - `Get-Command lighthouse`: no local binary present
 - `npx --no-install lighthouse --version`: confirms no preinstalled package is available; no dependency was installed
+- 2026-06-17 Gate 5 close-out validation:
+  - `npm run typecheck`: pass
+  - `npm run lint`: pass with the same 4 pre-existing warnings and no new warnings
+  - `npm run build`: pass with the same 4 pre-existing warnings and no new warnings
+  - targeted runtime smoke on `http://127.0.0.1:3011` for `/`, `/en`, `/contact`, `/en/contact`, restored zh/en legacy liquid product detail, `/sitemap.xml`, `/robots.txt`, and `/missing-route-check`: status/canonical/hreflang/robots checks pass
 - 2026-06-16 resumed Gate 3 validation:
   - `npm run typecheck`: pass after home/search/shared-description localization
   - `npm run lint`: pass with 4 pre-existing warnings
@@ -244,4 +252,4 @@
 
 ## Remaining evidence to collect in later gates
 
-- None before Gate 6 production release; remaining known risks and waivers are recorded in `RISKS.md`, `DECISIONS.md`, and `GATE4_RELEASE_PREP.md`
+- Gate 6 production precheck evidence: platform identity, target/project binding, environment completeness, backup evidence, rollback route, and deployment command path

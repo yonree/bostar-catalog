@@ -29,3 +29,9 @@
 - Impact: sampled Gate 1A legacy liquid-product families previously blocked Gate 4 because required `200` routes returned `404`.
 - Current mitigation: resolved locally on 2026-06-17 by restoring audited seed-backed category/detail entities in `lib/data.ts`; zh/en route, metadata, and sitemap parity revalidated on `http://127.0.0.1:3011`.
 - Trigger to escalate: only if broader legacy URL audit finds additional uncovered families beyond the restored sampled routes.
+
+## R-006 Lighthouse evidence gap
+
+- Impact: no fresh Lighthouse score is available for the release candidate.
+- Current mitigation: waiver `LIGHTHOUSE_NOT_EXECUTED` is explicitly accepted under `D-008`; browser/fetch baselines plus desktop/mobile visual review remain the recorded performance evidence set.
+- Trigger to escalate: if Gate 6 or post-release monitoring requires quantified Lighthouse scoring before or immediately after production release.
