@@ -115,6 +115,26 @@ export const productCategories: ProductCategory[] = [
     name: '自动液体静电喷枪',
     summary: '自动液体静电喷枪产品目录。',
   },
+  {
+    slug: 'Automatic-Electrostatic-Powder-Rotary-Bell',
+    name: '粉末静电旋杯',
+    summary: '粉末静电旋杯产品目录。',
+  },
+  {
+    slug: 'Automatic-Electrostatic-Rotary-Bell-Atomizer',
+    name: '自动静电旋杯',
+    summary: '自动静电旋杯产品目录。',
+  },
+  {
+    slug: 'High-Pressure-Airless-Spraying-Equipment',
+    name: '高压无气喷涂设备',
+    summary: '高压无气喷涂设备产品目录。',
+  },
+  {
+    slug: 'Testing-Instruments',
+    name: '检测仪器',
+    summary: '检测仪器产品目录。',
+  },
 ];
 
 const productNames = [
@@ -242,6 +262,78 @@ const legacyAuditProducts: Product[] = [
     },
     sellingPoints: ['内置高压串级发生器', '支持 100 组数字化工艺配方存储', '适用于往复机与机器人联动自动化涂装'],
     applications: ['自动化涂装', '往复机联动', '机器人联动'],
+  },
+  {
+    categorySlug: 'Automatic-Electrostatic-Powder-Rotary-Bell',
+    slug: 'bostar-f18-automatic-powder-electrostatic-rotary-bell',
+    name: '粉末静电旋杯',
+    model: 'F18',
+    summary:
+      '博士达 F18 粉末静电旋杯专为现代工业涂装设计，结合电晕放电与高速旋转离心力，强调粉末均匀覆盖和附着力。',
+    aiSummary:
+      '基于已审计的生产快照，F18 粉末静电旋杯面向现代化粉末喷涂工位，突出上粉率、膜厚均匀性和节能环保特性。',
+    image: '/images/product-render-explode.png',
+    specs: {
+      设备型号: 'F18',
+      适用工艺: '粉末静电旋杯喷涂',
+      审计来源: 'audit/04-production-url-inventory.csv:90',
+    },
+    sellingPoints: ['电晕放电高效带电', '高速旋转离心雾化', '改善涂层均匀覆盖'],
+    applications: ['现代工业涂装', '粉末喷涂'],
+  },
+  {
+    categorySlug: 'Automatic-Electrostatic-Rotary-Bell-Atomizer',
+    slug: 'automatic-electrostatic-powder-rotary-bell-bsd-cu300',
+    name: '自动粉末静电旋杯',
+    model: 'BSD-CU300',
+    summary:
+      '博士达 BSD-CU300 自动粉末静电旋杯面向自动化工业粉末喷涂，强调粉末颗粒高效带电与上粉率提升。',
+    aiSummary:
+      '基于已审计的生产快照，BSD-CU300 适用于汽车、家电和金属加工等自动化涂装线，突出高压静电场与空气涡轮雾化配合下的传递效率。',
+    image: '/images/product-render-explode.png',
+    specs: {
+      设备型号: 'BSD-CU300',
+      适用工艺: '自动粉末静电旋杯喷涂',
+      审计来源: 'audit/04-production-url-inventory.csv:92',
+    },
+    sellingPoints: ['高压静电场带电', '空气涡轮高速雾化', '提升粉末转移效率'],
+    applications: ['汽车制造', '家电生产', '金属加工'],
+  },
+  {
+    categorySlug: 'Automatic-Electrostatic-Rotary-Bell-Atomizer',
+    slug: 'bell-cup-automatic-electrostatic-coating-system-bsd-3029',
+    name: '液体自动静电旋杯',
+    model: 'BSD-3029',
+    summary:
+      '博士达 BSD-3029 内置高压型自动静电旋杯喷涂系统面向溶剂型和水性涂料的自动化表面处理。',
+    aiSummary:
+      '基于已审计的生产快照，BSD-3029 在自动化流水线中强调高上漆效率、漆膜细腻均匀以及包覆效果。',
+    image: '/images/product-set.png',
+    specs: {
+      设备型号: 'BSD-3029',
+      适用工艺: '液体自动静电旋杯喷涂',
+      审计来源: 'audit/04-production-url-inventory.csv:93',
+    },
+    sellingPoints: ['内置高压加电工艺', '上漆效率最高可达 95%', '减少过喷与飞溅'],
+    applications: ['溶剂型涂料', '水性涂料', '自动化流水线'],
+  },
+  {
+    categorySlug: 'Testing-Instruments',
+    slug: 'paint-resistance-tester-zk815',
+    name: '油漆电阻测试仪',
+    model: 'ZK-815',
+    summary:
+      'ZK-815 涂料阻抗检测仪采用工业级 MCU 微控制器，面向静电喷涂、涂料研发与流水线质检。',
+    aiSummary:
+      '基于已审计的生产快照，ZK-815 支持 0~450MΩ 宽量程数字显示，包含油性漆和水性漆双模式、高压自动安全放电等能力。',
+    image: '/images/gear-pump.png',
+    specs: {
+      设备型号: 'ZK-815',
+      测量范围: '0~450MΩ',
+      审计来源: 'audit/04-production-url-inventory.csv:99',
+    },
+    sellingPoints: ['工业级 MCU 微控制器', '0~450MΩ 宽量程', '油性漆与水性漆双模式'],
+    applications: ['静电喷涂', '涂料研发', '流水线质检'],
   },
 ];
 

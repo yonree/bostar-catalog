@@ -797,6 +797,10 @@ function mergeMissingLegacyCategories(categories: CategoryView[]) {
   const approvedLegacyCategories = [
     'Manual-Electrostatic-Liquid-Spray-Gun',
     'Automatic-Electrostatic-Liquid-Spray-Gun',
+    'Automatic-Electrostatic-Powder-Rotary-Bell',
+    'Automatic-Electrostatic-Rotary-Bell-Atomizer',
+    'High-Pressure-Airless-Spraying-Equipment',
+    'Testing-Instruments',
   ];
 
   for (const legacySlug of approvedLegacyCategories) {
