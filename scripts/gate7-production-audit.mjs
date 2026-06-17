@@ -11,10 +11,20 @@ const urlResultsPath = path.join(repoRoot, 'GATE7_PRODUCTION_URL_RESULTS.csv');
 const seoResultsPath = path.join(repoRoot, 'GATE7_SEO_RESULTS.csv');
 
 const productionBaseUrl = process.env.GATE7_BASE_URL || 'https://www.bostarcoating.com';
-const deploymentId = process.env.GATE7_DEPLOYMENT_ID || 'dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC';
+const deploymentId = process.env.GATE7_DEPLOYMENT_ID || `alias:${new URL(productionBaseUrl).host}`;
+const requestTimeoutMs = Number.parseInt(process.env.GATE7_TIMEOUT_MS || '15000', 10);
+const maxRequestRetries = Number.parseInt(process.env.GATE7_RETRIES || '1', 10);
 const sitemapUrl = `${productionBaseUrl.replace(/\/+$/, '')}/sitemap.xml`;
 const userAgent =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36';
+const blockingResults = new Set([
+  'UNEXPECTED_404',
+  'UNEXPECTED_REDIRECT',
+  'RUNTIME_ERROR',
+  'CANONICAL_ERROR',
+  'HREFLANG_ERROR',
+  'UNEXPECTED_NOINDEX',
+]);
 
 const requestHeaders = {
   'user-agent': userAgent,
@@ -23,6 +33,56 @@ const requestHeaders = {
   'accept-language': 'en-US,en;q=0.9',
   'cache-control': 'no-cache',
 };
+
+function buildTimeoutSignal(timeoutMs) {
+  if (Number.isFinite(timeoutMs) && timeoutMs > 0 && typeof AbortSignal.timeout === 'function') {
+    return AbortSignal.timeout(timeoutMs);
+  }
+
+  return undefined;
+}
+
+function isRetriableStatus(status) {
+  return status === 408 || status === 429 || status >= 500;
+}
+
+async function fetchWithPolicy(url, init = {}, options = {}) {
+  const timeoutMs = options.timeoutMs ?? requestTimeoutMs;
+  const retries = options.retries ?? maxRequestRetries;
+  let attempt = 0;
+  let lastError;
+
+  while (attempt <= retries) {
+    try {
+      const response = await fetch(url, {
+        ...init,
+        signal: buildTimeoutSignal(timeoutMs),
+      });
+
+      if (attempt < retries && isRetriableStatus(response.status)) {
+        await response.arrayBuffer();
+        attempt += 1;
+        continue;
+      }
+
+      return response;
+    } catch (error) {
+      lastError = error;
+      const retriable =
+        error?.name === 'AbortError' ||
+        error?.name === 'TimeoutError' ||
+        error instanceof TypeError;
+
+      if (!retriable || attempt >= retries) {
+        throw error;
+      }
+
+      attempt += 1;
+    }
+  }
+
+  throw lastError;
+}
 
 function parseCsv(text) {
   const rows = [];
@@ -179,7 +239,7 @@ function extractSchemaTypes(html) {
 }
 
 async function fetchSitemapSet() {
-  const response = await fetch(sitemapUrl, {
+  const response = await fetchWithPolicy(sitemapUrl, {
     headers: requestHeaders,
     redirect: 'follow',
   });
@@ -202,7 +262,7 @@ async function fetchWithTrace(url) {
   let redirectCount = 0;
 
   while (redirectCount <= 5) {
-    const response = await fetch(currentUrl, {
+    const response = await fetchWithPolicy(currentUrl, {
       headers: requestHeaders,
       redirect: 'manual',
     });
@@ -558,8 +618,13 @@ async function main() {
   summary.SITEMAP_STATUS = sitemap.status;
   summary.URL_ROWS = sortedUrlRows.length;
   summary.SEO_ROWS = seoRows.length;
+  summary.BLOCKING_FAILURES = sortedUrlRows.filter((row) => blockingResults.has(row.result)).length;
 
   console.log(JSON.stringify(summary, null, 2));
+
+  if (summary.SITEMAP_STATUS >= 400 || summary.BLOCKING_FAILURES > 0) {
+    process.exitCode = 1;
+  }
 }
 
 main().catch((error) => {
