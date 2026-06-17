@@ -72,3 +72,21 @@
 - Date: 2026-06-17
 - Decision: mark Gate 6 as `PRODUCTION_RELEASE_ROLLED_BACK` after the approved release candidate deployed successfully but failed production smoke on legacy liquid category URL acceptance.
 - Reason: Blob recovery assurance was closed with an offline mirror, but the new production deployment returned `404` for `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun`, which matches the user-defined automatic rollback condition. Production was restored to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`.
+
+## D-013
+
+- Date: 2026-06-17
+- Decision: restore only the approved legacy liquid route family through an explicit compatibility manifest and selective seed fallback inside `lib/cms-data.ts`.
+- Reason: the audited legacy contract required category/detail recovery for specific liquid route families, but a blanket "DB empty -> all seed data" fallback would have risked inventing content for unknown slugs. The approved manifest keeps the recovery scope tight, traceable, and reversible.
+
+## D-014
+
+- Date: 2026-06-17
+- Decision: use the Vercel promote API endpoint instead of the CLI promote/rollback commands for the final Gate 6 retry.
+- Reason: `vercel promote` and `vercel rollback` returned false team-mismatch and rollback-depth errors in this workspace, while the authenticated API path successfully switched active production traffic for the same project/team context.
+
+## D-015
+
+- Date: 2026-06-17
+- Decision: treat external public fetches plus live deployment resolution as the source of truth for the final production smoke after the retry promote.
+- Reason: repeated local shell requests from the agent host began receiving `403 Vercel Security Checkpoint`, which no longer represented general public reachability. External fetches still reached the promoted production deployment and confirmed the target route family publicly.

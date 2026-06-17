@@ -3,9 +3,9 @@
 ## Snapshot
 
 - Date: 2026-06-17
-- Branch: `feat/gate2-implementation`
-- Release candidate commit: `5f731bf`
-- Final status: `PRODUCTION_RELEASE_ROLLED_BACK`
+- Branch: `fix/gate6-legacy-vercel-404`
+- Release candidate commit: `1767fc9`
+- Final status: `PRODUCTION_RELEASE_PASS`
 
 ## Delivered scope
 
@@ -16,6 +16,7 @@
 - Seed fallback restoration for representative public data routes when local Prisma/PostgreSQL content is unavailable
 - Restored sampled legacy liquid-product category/detail route families from audited seed facts so approved legacy URLs return local `200` again
 - Fixed public lead-form locale hydration by switching all inquiry entry points to server-resolved `locale` and localized `sourcePage`
+- Completed Gate 6 production retry by promoting fix deployment `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` from commit `1767fc98162aa7a99dfa1d30e185399adefcd609`
 
 ## Verification summary
 
@@ -23,8 +24,12 @@
 - `npm run lint`: pass with the same 4 pre-existing warnings and no new warnings
 - `npm run build`: pass
 - Blob offline mirror: `VERIFIED_OFFLINE_MIRROR` for store `store_bf****7AX`, `24/24` objects downloaded, ZIP hash sidecar recorded
-- Production deploy attempt: created `dpl_Ff9h5z2tUAvbNSFvmrNUZCzn12CF` from approved release candidate `5f731bf`
-- Automatic rollback: restored production to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB` after legacy liquid category route smoke failed
+- Successful production deployment: `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` from fix commit `1767fc9`
+- Public production verification:
+  - `/`, `/en`, `/about`, `/contact`, `/en/contact` reachable
+  - `/solutions/automatic-coating-line`, `/knowledge/process-knowledge/adjust-spray-voltage`, `/downloads` reachable
+  - Legacy liquid route family restored publicly on zh/en category/detail targets, including the previously failing `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun`
+- Vercel deployment metadata confirms live production traffic resolves to `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC`
 - zh/en route smoke: pass for core top-level routes, representative detail routes, reserved routes, system 404s, sitemap, and robots
 - legacy liquid-product sampled route family: pass on zh/en category/detail pairs with canonical, hreflang, `index, follow`, and sitemap presence
 - visual review:
@@ -37,9 +42,9 @@
 
 ## Not done
 
-- Gate 6 production release was not left in place because post-release smoke failed on legacy liquid category route acceptance and production was rolled back
 - No new English business-body translations were authored for source-language detail content
 - No new runtime or QA dependency was installed to collect Lighthouse scores
+- After the final promote, local shell HTTP checks from the agent host were challenged by `403 Vercel Security Checkpoint`, so final production smoke used independent public fetches instead of the local PowerShell path for route reachability
 
 ## Accepted known risks
 
@@ -50,6 +55,6 @@
 
 ## Release recommendation
 
-- Do not reattempt Gate 6 until legacy liquid category routes are reproducibly `200` on a production-like Vercel target
-- Keep the current production deployment `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB` available as the rollback target
-- Resume from the immutable Gate 5 handoff commit `5f731bf` after the legacy route acceptance gap is fixed and revalidated
+- Keep the current production deployment `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` as the live release for this rollout
+- Preserve `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB` and `dpl_Ff9h5z2tUAvbNSFvmrNUZCzn12CF` as historical rollback references
+- On the next production change, repeat legacy liquid route smoke before and after promotion, and prefer the Vercel promote API path over the CLI promote path in this workspace

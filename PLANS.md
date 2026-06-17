@@ -17,10 +17,11 @@
 - Gate 3: complete, public route localization, metadata parity, seed fallback, and legacy sampled URL restoration verified
 - Gate 4: complete, build/smoke/visual/perf baseline evidence captured with release-candidate waivers documented
 - Gate 5: complete, handoff and final delivery artifacts prepared up to `RELEASE_CANDIDATE_READY`
+- Gate 6: complete, production retry fix on `1767fc9` promoted and publicly verified on `https://www.bostarcoating.com`
 
 ## Next execution slice
 
 - Gate 5 handoff is closed on commit `5f731bf` with tag `gate-5-handoff-2026-06-17`.
-- Gate 6 Blob recovery precondition is now complete through offline mirror verification for store `store_bf****7AX`.
-- Gate 6 production deploy was attempted and rolled back; current production is restored to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`.
-- Do not create another production deployment until legacy liquid category routes `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` are reproducibly `200` on a production-like target.
+- Gate 6 Blob recovery precondition remains satisfied through offline mirror verification for store `store_bf****7AX`.
+- Current production deployment is `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` from commit `1767fc98162aa7a99dfa1d30e185399adefcd609`.
+- No further deployment is planned in this rollout. The remaining work is documentation close-out only.

@@ -38,6 +38,12 @@
 
 ## R-007 Legacy production route acceptance gap
 
-- Impact: Gate 6 cannot remain deployed because legacy liquid category routes `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` fail acceptance on Vercel production smoke.
-- Current mitigation: production has already been rolled back to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`; Blob recovery assurance is now covered by offline mirror evidence and is no longer the active blocker.
-- Trigger to escalate: before any next production deploy attempt, reproduce and fix the route-family `404` on a production-like target, then rerun Gate 6 smoke against the fixed candidate.
+- Impact: this was the active Gate 6 release blocker because legacy liquid category routes `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` failed acceptance on the prior public deployment baseline.
+- Current mitigation: resolved in production by promoting fix commit `1767fc9`, which restores the approved legacy liquid category/detail family through a selective compatibility manifest and verified public route reachability on the promoted deployment `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC`.
+- Trigger to escalate: only if a future production deployment changes `lib/cms-data.ts`, `lib/legacy-compatibility.ts`, or the audited legacy route family and those exact URLs are not re-smoked before release.
+
+## R-008 Local agent IP hits Vercel security checkpoint
+
+- Impact: direct shell-based HTTP smoke from the current agent host can receive `403 Vercel Security Checkpoint`, which makes local PowerShell fetches unreliable as the sole production verification channel after repeated deployment testing.
+- Current mitigation: final production smoke is anchored on live deployment resolution plus external public fetches, while local shell requests are treated as host-specific challenge evidence only.
+- Trigger to escalate: if all independent public verification channels start returning the same 403 challenge, or if human browser verification reports a public access failure.

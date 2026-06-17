@@ -72,3 +72,11 @@
 - Created offline mirror `D:\work\gate6-backups\bostar-blob-20260617-094448` and ZIP `D:\work\gate6-backups\bostar-blob-20260617-094448.zip` for production Blob store `store_bf****7AX`, verifying `24/24` object downloads and matching SHA-256s
 - Built and deployed approved release candidate `5f731bf` from external worktree `D:\work\gate6-release\release-5f731bf` as production deployment `dpl_Ff9h5z2tUAvbNSFvmrNUZCzn12CF`
 - Triggered automatic rollback after production smoke found legacy liquid category routes returning `404`, then restored production to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB` through the project rollback API when the CLI rollback command hit a team-validation error
+- Created fix branch `fix/gate6-legacy-vercel-404` and committed `1767fc9 fix(gate6): restore legacy liquid routes in vercel runtime`
+- Added `lib/legacy-compatibility.ts` and selective legacy liquid fallback paths in `lib/cms-data.ts`, plus `scripts/smoke-legacy-routes.mjs` for route-family regression coverage
+- Revalidated the approved legacy liquid family on local dev and local production builds before redeploy
+- Built preview deployment `dpl_9zcG69R1eVVekeP4dDJK9H6SHdAf` and production-target deployment `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` from commit `1767fc98162aa7a99dfa1d30e185399adefcd609`
+- Confirmed via Vercel deployment metadata that `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` was originally `STAGED`, then promoted it to live production traffic through the `/v10/projects/{projectId}/promote/{deploymentId}` API after the CLI promote command failed with a false team mismatch
+- Re-promoted `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB` through the same API to re-establish a public baseline before the final production retry
+- Completed the final Gate 6 public verification on the promoted release using independent public fetches after local PowerShell requests from the agent host began returning `403 Vercel Security Checkpoint`
+- Final production state is now `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` on `https://www.bostarcoating.com`, with the previously failing legacy liquid category/detail family publicly restored

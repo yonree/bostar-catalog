@@ -8,8 +8,8 @@
 - Previous planning branch retained: `plan/gate1a`
 - Authoritative preview server: `http://127.0.0.1:3011`
 - Non-authoritative stale preview servers observed during recovery: `http://127.0.0.1:3008`, `http://127.0.0.1:3009`, `http://127.0.0.1:3010`
-- Current gate: `PRODUCTION_RELEASE_ROLLED_BACK`
-- Release path baseline: clean Gate 5 handoff commit `5f731bf` with tag `gate-5-handoff-2026-06-17`; Gate 6 evidence-only commits document an attempted production deploy plus rollback back to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`
+- Current gate: `PRODUCTION_RELEASE_PASS`
+- Release path baseline: clean Gate 5 handoff commit `5f731bf` with tag `gate-5-handoff-2026-06-17`; successful Gate 6 production retry is now running on fix commit `1767fc9` as deployment `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC`
 
 ## Completed in this execution
 
@@ -51,6 +51,15 @@
 - Verified Blob recovery assurance by creating an external offline mirror for production store `store_bf****7AX` at `D:\work\gate6-backups\bostar-blob-20260617-094448` and ZIP `D:\work\gate6-backups\bostar-blob-20260617-094448.zip`
 - Deployed approved release candidate commit `5f731bf` to Vercel production as deployment `dpl_Ff9h5z2tUAvbNSFvmrNUZCzn12CF`
 - Triggered automatic rollback after production smoke found legacy liquid category routes returning `404`, and restored production back to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`
+- Created fix branch `fix/gate6-legacy-vercel-404` from Gate 6 evidence baseline and committed `1767fc9 fix(gate6): restore legacy liquid routes in vercel runtime`
+- Added `lib/legacy-compatibility.ts` plus selective fallback logic in `lib/cms-data.ts` so approved legacy liquid category/detail URLs resolve from audited seed data when production DB content is missing those category entities
+- Added `scripts/smoke-legacy-routes.mjs` and revalidated the approved legacy liquid route family on local dev and local production builds
+- Built preview deployment `dpl_9zcG69R1eVVekeP4dDJK9H6SHdAf` and production-target deployment `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` from commit `1767fc98162aa7a99dfa1d30e185399adefcd609`
+- Confirmed from Vercel deployment metadata that `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` was initially `STAGED`, which invalidated the earlier assumption that `www.bostarcoating.com` had already been testing the new fix
+- Promoted `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` to active production traffic through `POST /v10/projects/{projectId}/promote/{deploymentId}?teamId=...` after `vercel promote` failed with a false `Deployment belongs to a different team` CLI error
+- Re-promoted `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB` through the same promote API after the first promote/rollback cycle to restore a public baseline before the final retry
+- Verified the final public production state through external fetches on `https://www.bostarcoating.com` because repeated local PowerShell requests from the agent host were challenged by `403 Vercel Security Checkpoint` and no longer reflected general public reachability
+- Public verification on the final production retry confirms `/`, `/en`, `/about`, `/contact`, `/en/contact`, `/solutions/automatic-coating-line`, `/knowledge/process-knowledge/adjust-spray-voltage`, `/downloads`, `/products/Manual-Electrostatic-Liquid-Spray-Gun`, `/en/products/Manual-Electrostatic-Liquid-Spray-Gun`, `/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`, `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`, `/products/Automatic-Electrostatic-Liquid-Spray-Gun`, `/en/products/Automatic-Electrostatic-Liquid-Spray-Gun`, and `/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun` are publicly reachable on the promoted release
 
 ## Active blockers
 
@@ -63,14 +72,19 @@
 - Reserved news routes now use `noindex,nofollow`, are excluded from `sitemap.xml`, and remain online without losing the URL contract
 - Product and video JSON-LD now emit only repository-backed facts; hardcoded offer price, stock, and upload-date placeholders are removed
 - Sampled Gate 1A legacy liquid-product URL families are now restored locally and no longer block Gate 4 parity acceptance
-- Gate 6 terminal outcome: production release was rolled back after acceptance failure on legacy liquid category routes
-- Production is currently restored to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`; no DNS change, production database write, production blob mutation, or real lead submission was executed in this turn
+- Gate 6 terminal outcome: production release retry is live and publicly reachable on `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC`
+- No DNS change, production database write, production blob mutation, or real lead submission was executed during the successful retry
 
 ## Latest verification
 
 - `npm run typecheck`: pass
 - `npm run build`: pass with warnings
 - `npm run lint`: pass with warnings only
+- 2026-06-17 Gate 6 successful production retry:
+  - `vercel api /v13/deployments/dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC`: confirms commit `1767fc98162aa7a99dfa1d30e185399adefcd609`, message `fix(gate6): restore legacy liquid routes in vercel runtime`, and `readySubstate=PROMOTED`
+  - `vercel inspect www.bostarcoating.com`: resolves live production traffic to `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC`
+  - public fetch verification confirms the high-risk legacy liquid category/detail routes are publicly reachable on the promoted release
+  - local shell requests from the agent host now receive `403 Vercel Security Checkpoint`; treated as host-specific challenge evidence rather than a public-site outage because the public fetch channel and Vercel deployment resolution both match the promoted release
 - 2026-06-17 final Gate 5 close-out validation:
   - `npm run typecheck`: pass
   - `npm run lint`: pass with the same 4 pre-existing warnings and no new warnings
@@ -179,5 +193,4 @@
 
 ## Next task
 
-- Investigate why legacy liquid category routes `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` return `404` on production deployments, despite local Gate 4 parity evidence showing `200`
-- Do not attempt another Gate 6 production deploy until that route-family acceptance issue is resolved and revalidated on a production-like target
+- Gate 6 is complete. Only evidence sync, final delivery close-out, and production release tagging remain for this rollout branch.

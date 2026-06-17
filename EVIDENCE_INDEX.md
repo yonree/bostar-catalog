@@ -27,6 +27,8 @@
 - `npm run build`: pass with warnings only
 - `Get-Command lighthouse`: no local binary present
 - `npx --no-install lighthouse --version`: confirms no preinstalled package is available; no dependency was installed
+- `git commit -m "fix(gate6): restore legacy liquid routes in vercel runtime"`: created Gate 6 fix commit `1767fc9`
+- `git tag gate-6-retry-candidate-2026-06-17 1767fc9`
 - 2026-06-17 Gate 5 close-out validation:
   - `npm run typecheck`: pass
   - `npm run lint`: pass with the same 4 pre-existing warnings and no new warnings
@@ -58,6 +60,32 @@
     - `vercel deploy --prod --yes`: created production deployment `dpl_Ff9h5z2tUAvbNSFvmrNUZCzn12CF`
     - production smoke on `https://www.bostarcoating.com`: legacy liquid category routes `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` returned `404`; core routes `/`, `/en`, `/about`, `/en/about`, `/contact`, `/en/contact`, `/faq`, `/knowledge`, `/solutions/hardware-powder-coating`, `/sitemap.xml`, `/robots.txt` remained reachable
     - rollback recovery: direct project rollback API request restored production to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`; `vercel rollback status bostar-geo-website` returned success
+  - 2026-06-17 Gate 6 difference-fix retry:
+    - `npm run typecheck`: pass on fix branch before redeploy
+    - `npm run lint`: pass with the same 4 pre-existing warnings and no new warnings on fix branch before redeploy
+    - `npm run build`: pass with the same 4 pre-existing warnings and no new warnings on fix branch before redeploy
+    - local legacy smoke: `node scripts/smoke-legacy-routes.mjs http://127.0.0.1:3012` on `next dev` and `node scripts/smoke-legacy-routes.mjs http://127.0.0.1:3014` on `next start` both pass for the approved legacy liquid zh/en category/detail set plus an unknown-slug `404`
+    - `vercel inspect dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC --logs`: confirms production-target deployment built from commit `1767fc98162aa7a99dfa1d30e185399adefcd609`
+    - `vercel api /v13/deployments/dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC?teamId=team_wiV97iL3q7MEbe71U8rFU9HC`: confirms `readySubstate` moved from `STAGED` to `PROMOTED`
+    - `vercel api /v10/projects/prj_Snv902TWIACH7i5hQc3jeRgv20Z0/promote/dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC?teamId=team_wiV97iL3q7MEbe71U8rFU9HC -X POST`: successfully switched active production traffic to the Gate 6 fix deployment after CLI promote failed
+    - `vercel inspect www.bostarcoating.com`: resolves the live production alias set to `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC`
+    - public fetch verification on the promoted release:
+      - `/` -> public page render present
+      - `/en` -> public English home render present
+      - `/about` -> public page render present
+      - `/contact` -> public page render present
+      - `/en/contact` -> public English contact render present
+      - `/solutions/automatic-coating-line` -> public `200`
+      - `/knowledge/process-knowledge/adjust-spray-voltage` -> public `200`
+      - `/downloads` -> public `200`
+      - `/products/Manual-Electrostatic-Liquid-Spray-Gun` -> public `200`
+      - `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` -> public `200`
+      - `/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` -> public `200`
+      - `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` -> public `200`
+      - `/products/Automatic-Electrostatic-Liquid-Spray-Gun` -> public `200`
+      - `/en/products/Automatic-Electrostatic-Liquid-Spray-Gun` -> public `200`
+      - `/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun` -> public `200`
+    - local PowerShell fetches after repeated production testing began returning `403 Vercel Security Checkpoint`; this was recorded as host-specific challenge evidence and not treated as public-site outage because independent public fetches still reached the promoted deployment
 - 2026-06-16 resumed Gate 3 validation:
   - `npm run typecheck`: pass after home/search/shared-description localization
   - `npm run lint`: pass with 4 pre-existing warnings

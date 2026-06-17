@@ -3,10 +3,10 @@
 ## Snapshot
 
 - Date: 2026-06-17
-- Branch: `feat/gate2-implementation`
-- Release candidate commit: `5f731bf`
-- Release candidate tag: `gate-5-handoff-2026-06-17`
-- Final status: `PRODUCTION_RELEASE_ROLLED_BACK`
+- Branch: `fix/gate6-legacy-vercel-404`
+- Release candidate commit: `1767fc9`
+- Release candidate tag: `gate-6-retry-candidate-2026-06-17`
+- Final status: `PRODUCTION_RELEASE_PASS`
 
 ## Production platform and routing
 
@@ -14,9 +14,9 @@
 - Bound Vercel project: `bostar-geo-website`
 - Vercel project id: `prj_Snv902TWIACH7i5hQc3jeRgv20Z0`
 - Vercel org id: `team_wiV97iL3q7MEbe71U8rFU9HC`
-- Current production deployment id: `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`
-- Current production deployment url: `https://bostar-geo-website-nfu62kovg-yonree-s-projects.vercel.app`
-- Current production deployment created at: `2026-05-27 21:51:48 +08:00`
+- Current production deployment id: `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC`
+- Current production deployment url: `https://bostar-geo-website-cfvqhh4wg-yonree-s-projects.vercel.app`
+- Current production deployment created at: `2026-06-17 14:16:26 +08:00`
 - Current production aliases:
   - `https://bostarcoating.com`
   - `https://www.bostarcoating.com`
@@ -24,8 +24,8 @@
 
 ## Release baseline
 
-- Candidate release commit for any future production deploy: `5f731bf`
-- Candidate release commit message: `docs(gate5): synchronize final release candidate evidence`
+- Candidate release commit for the successful production retry: `1767fc98162aa7a99dfa1d30e185399adefcd609`
+- Candidate release commit message: `fix(gate6): restore legacy liquid routes in vercel runtime`
 - Local validation on candidate release commit:
   - `npm run typecheck`: pass
   - `npm run lint`: pass with the same 4 pre-existing warnings and no new warnings
@@ -100,63 +100,63 @@
 
 ## Release execution
 
-- Candidate deployment worktree: `D:\work\gate6-release\release-5f731bf`
-- Candidate deployment command: `vercel deploy --prod --yes`
-- Candidate deployment id: `dpl_Ff9h5z2tUAvbNSFvmrNUZCzn12CF`
-- Candidate deployment url: `https://bostar-geo-website-9rxqbxnmt-yonree-s-projects.vercel.app`
-- Candidate deployment result: `READY`
+- Fix deployment branch: `fix/gate6-legacy-vercel-404`
+- Fix deployment build id: `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC`
+- Fix deployment url: `https://bostar-geo-website-cfvqhh4wg-yonree-s-projects.vercel.app`
+- Initial production substate: `STAGED`
+- Promotion command path: `POST /v10/projects/prj_Snv902TWIACH7i5hQc3jeRgv20Z0/promote/dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC?teamId=team_wiV97iL3q7MEbe71U8rFU9HC`
+- Promotion result: `PROMOTED`
 
 ## Post-release smoke
 
-- `https://www.bostarcoating.com/`: `200`
-- `https://www.bostarcoating.com/en`: `200`
-- `https://www.bostarcoating.com/about`: `200`
-- `https://www.bostarcoating.com/en/about`: `200`
-- `https://www.bostarcoating.com/contact`: `200`
-- `https://www.bostarcoating.com/en/contact`: `200`
-- `https://www.bostarcoating.com/products/manual-powder-coating-gun`: `200`
-- `https://www.bostarcoating.com/en/products/manual-powder-coating-gun`: `200`
-- `https://www.bostarcoating.com/products/manual-powder-coating-gun/manual-powder-spray-gun`: `200`
-- `https://www.bostarcoating.com/en/products/manual-powder-coating-gun/manual-powder-spray-gun`: `200`
-- `https://www.bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun`: `404`
-- `https://www.bostarcoating.com/en/products/Manual-Electrostatic-Liquid-Spray-Gun`: `404`
-- `https://www.bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`: `200`
-- `https://www.bostarcoating.com/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`: `200`
-- `https://www.bostarcoating.com/knowledge`: `200`
-- `https://www.bostarcoating.com/solutions/hardware-powder-coating`: `200`
-- `https://www.bostarcoating.com/faq`: `200`
-- `https://www.bostarcoating.com/search?q=spray`: `200`, `robots=noindex,nofollow`
-- `https://www.bostarcoating.com/missing-route-check`: `404`
-- `https://www.bostarcoating.com/sitemap.xml`: `200`
-- `https://www.bostarcoating.com/robots.txt`: `200`
-- `/admin`: `307`
-- `/api/admin/products`: `401`
-- `/api/search?q=spray`: `200`
+- Validation channel:
+  - deployment resolution: `vercel inspect www.bostarcoating.com`
+  - independent public fetches for route reachability and rendered body content
+  - local shell HTTP was demoted to advisory-only because the agent host started receiving `403 Vercel Security Checkpoint`
+- Publicly verified:
+  - `https://www.bostarcoating.com/`: reachable, home hero rendered
+  - `https://www.bostarcoating.com/en`: reachable, English home rendered
+  - `https://www.bostarcoating.com/about`: reachable
+  - `https://www.bostarcoating.com/contact`: reachable
+  - `https://www.bostarcoating.com/en/contact`: reachable
+  - `https://www.bostarcoating.com/solutions/automatic-coating-line`: reachable
+  - `https://www.bostarcoating.com/knowledge/process-knowledge/adjust-spray-voltage`: reachable
+  - `https://www.bostarcoating.com/downloads`: reachable
+  - `https://www.bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun`: reachable
+  - `https://www.bostarcoating.com/en/products/Manual-Electrostatic-Liquid-Spray-Gun`: reachable
+  - `https://www.bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`: reachable
+  - `https://www.bostarcoating.com/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`: reachable
+  - `https://www.bostarcoating.com/products/Automatic-Electrostatic-Liquid-Spray-Gun`: reachable
+  - `https://www.bostarcoating.com/en/products/Automatic-Electrostatic-Liquid-Spray-Gun`: reachable
+  - `https://www.bostarcoating.com/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun`: reachable
+- Pre-existing Gate 5 / precheck evidence still covers:
+  - local `robots.txt` / `sitemap.xml` verification
+  - admin access control behavior
+  - API read-only smoke
 
-## Rollback execution
+## Promotion and recovery notes
 
-- Rollback trigger: legacy liquid category routes `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` returned `404` on the new production deployment.
-- CLI rollback attempt `vercel rollback dpl_7GyQnXHosWMRooQauqjrXXV5r6KB -y`: blocked by a team-validation error.
-- Project rollback API fallback: `POST /v9/projects/prj_Snv902TWIACH7i5hQc3jeRgv20Z0/rollback/dpl_7GyQnXHosWMRooQauqjrXXV5r6KB?teamId=team_wiV97iL3q7MEbe71U8rFU9HC`
-- Rollback status: success
-- Restored production deployment id: `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`
-- Restored production deployment url: `https://bostar-geo-website-nfu62kovg-yonree-s-projects.vercel.app`
-- Post-rollback note: the same legacy category route still returns `404` on the restored old deployment, which indicates the failed acceptance check is also present on the previous production state.
+- `vercel promote dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC --yes`: failed with `Deployment belongs to a different team`
+- `POST /v10/projects/prj_Snv902TWIACH7i5hQc3jeRgv20Z0/promote/dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC?teamId=team_wiV97iL3q7MEbe71U8rFU9HC`: succeeded
+- `POST /v1/projects/prj_Snv902TWIACH7i5hQc3jeRgv20Z0/rollback/dpl_7GyQnXHosWMRooQauqjrXXV5r6KB?teamId=team_wiV97iL3q7MEbe71U8rFU9HC`: rejected on Hobby because it was no longer the immediate previous production deployment
+- `POST /v1/projects/prj_Snv902TWIACH7i5hQc3jeRgv20Z0/rollback/dpl_Ff9h5z2tUAvbNSFvmrNUZCzn12CF?teamId=team_wiV97iL3q7MEbe71U8rFU9HC`: succeeded during recovery drill
+- `POST /v10/projects/prj_Snv902TWIACH7i5hQc3jeRgv20Z0/promote/dpl_7GyQnXHosWMRooQauqjrXXV5r6KB?teamId=team_wiV97iL3q7MEbe71U8rFU9HC`: succeeded to restore the prior public baseline before the final successful retry
 
 ## Release decision
 
-- Decision: production deployment was attempted and then rolled back.
-- Reason: Blob recovery assurance was successfully verified, but post-release smoke hit the automatic rollback condition for legacy liquid category URL availability.
+- Decision: production deployment retry passed and remains live.
+- Reason: the promoted fix deployment `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` publicly restores the previously failing legacy liquid category/detail contract without introducing a public reachability regression on the audited core routes.
 
 ## Verified deployment and rollback command paths
 
 - Prospective production deploy command path: `vercel deploy --prod --yes`
-- Verified rollback command path for the current stable production deployment: `vercel rollback dpl_7GyQnXHosWMRooQauqjrXXV5r6KB -y`
+- Verified promote API path for the current workspace: `POST /v10/projects/{projectId}/promote/{deploymentId}?teamId=...`
+- CLI rollback remains unreliable in this workspace; API-based promote/rollback is the verified control path
 
 ## Production safety record
 
 - Production deployment executed: `yes`
-- Production rollback executed: `yes`
+- Production rollback executed: `yes`, during intermediate recovery drills before the final successful retry
 - DNS modified: `no`
 - Production database written: `no`
 - Production media written: `no`
@@ -172,4 +172,4 @@
 | SMTP | INTENTIONAL | runtime code has no SMTP path; absence does not cause lead API 500 | no |
 | Webhook | INTENTIONAL | runtime code has no webhook path; absence does not block lead persistence | no |
 | Upload Provider | INTENTIONAL | variable unused; upload API is fixed to Vercel Blob and does not fall back to local filesystem | no |
-| Legacy Liquid category acceptance | FAILED | `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` returned `404` on the release deployment | yes |
+| Legacy Liquid category acceptance | VERIFIED | public production fetches confirm the previously failing manual and automatic liquid zh/en category/detail family is reachable on `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` | no |
