@@ -12,6 +12,11 @@ import {
   solutions as seedSolutions,
   videos as seedVideos,
 } from '@/lib/data';
+import {
+  getLegacyCompatibleProduct,
+  getLegacyCompatibleProductCategory,
+  getLegacyCompatibleProductsByCategory,
+} from '@/lib/legacy-compatibility';
 
 export type ProductView = {
   id: string;
@@ -787,13 +792,35 @@ function mapSeedFaq(faq: (typeof seedFaqs)[number]): FaqView {
   };
 }
 
+function mergeMissingLegacyCategories(categories: CategoryView[]) {
+  const merged = [...categories];
+  const approvedLegacyCategories = [
+    'Manual-Electrostatic-Liquid-Spray-Gun',
+    'Automatic-Electrostatic-Liquid-Spray-Gun',
+  ];
+
+  for (const legacySlug of approvedLegacyCategories) {
+    const exists = merged.some(
+      (category) => normalizeSlugPart(category.slug).toLowerCase() === normalizeSlugPart(legacySlug).toLowerCase()
+    );
+    if (exists) continue;
+
+    const fallbackCategory = getLegacyCompatibleProductCategory(legacySlug);
+    if (!fallbackCategory) continue;
+
+    merged.push(mapSeedCategory(fallbackCategory));
+  }
+
+  return merged;
+}
+
 export async function getProductCategories(): Promise<CategoryView[]> {
   try {
     const categories = await prisma.productCategory.findMany({
       where: { isPublished: true },
       orderBy: { sortOrder: 'asc' },
     });
-    return categories.map((category: {
+    return mergeMissingLegacyCategories(categories.map((category: {
       id: string;
       slug: string;
       name: string;
@@ -804,7 +831,7 @@ export async function getProductCategories(): Promise<CategoryView[]> {
       slug: normalizeSlugPart(category.slug),
       name: category.name,
       summary: category.summary || category.description || '',
-    }));
+    })));
   } catch {
     return seedProductCategories.map(mapSeedCategory);
   }
@@ -853,7 +880,15 @@ export async function getProductsByCategory(
         ],
       },
     });
-    if (!category) return { category: null, products: [] };
+    if (!category) {
+      const legacyCategory = getLegacyCompatibleProductCategory(categorySlug);
+      if (!legacyCategory) return { category: null, products: [] };
+
+      return {
+        category: mapSeedCategory(legacyCategory),
+        products: getLegacyCompatibleProductsByCategory(categorySlug).map(mapSeedProduct),
+      };
+    }
     const products = await prisma.product.findMany({
       where: { isPublished: true, category: { slug: category.slug } },
       include: { category: true },
@@ -921,7 +956,9 @@ export async function getProduct(
     );
     if (exactMatch) return mapProduct(exactMatch);
     if (categoryMatched.length === 1) return mapProduct(categoryMatched[0]);
-    return null;
+
+    const legacyProduct = getLegacyCompatibleProduct(categorySlug, productSlug);
+    return legacyProduct ? mapSeedProduct(legacyProduct) : null;
   } catch {
     const normalizedCategorySlug = normalizeSlugPart(categorySlug).toLowerCase();
     const normalizedProductSlug = normalizeSlugPart(productSlug).toLowerCase();
