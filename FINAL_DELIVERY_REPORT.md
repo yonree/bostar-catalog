@@ -3,9 +3,9 @@
 ## Snapshot
 
 - Date: 2026-06-17
-- Branch: `fix/gate6-legacy-vercel-404`
-- Release candidate commit: `1767fc9`
-- Final status: `PRODUCTION_RELEASE_PASS`
+- Branch: `fix/gate9-primary-domain-fjbosd`
+- Release candidate commit: `062b729`
+- Final status: `PRIMARY_DOMAIN_MIGRATION_PASS_WITH_DOWNLOAD_ASSET_PENDING`
 
 ## Delivered scope
 
@@ -69,3 +69,20 @@
 - Remaining non-blocking backlog:
   - `sample-download.pdf` business disposition
   - review extra aliases `fjbosd.com` and `www.fjbosd.com`
+
+## Gate 9 Addendum
+
+- Gate 9 business decision implementation commit: `062b729`
+- Gate 9 candidate tag: `gate9-fjbosd-domain-migration-candidate-2026-06-17`
+- Gate 9 preview deployment: `dpl_jyphDTLWbJY3Y8GJuFVhumfcnqAz`
+- Gate 9 production deployment: `dpl_789JmQSfhJTTCqWo9Qmz2udPYVaN`
+- Final primary domain: `https://www.fjbosd.com`
+- Legacy redirect domains:
+  - `https://fjbosd.com` -> `https://www.fjbosd.com`
+  - `https://www.bostarcoating.com` -> `https://www.fjbosd.com`
+  - `https://bostarcoating.com` -> `https://www.fjbosd.com`
+- Download status:
+  - `DOWNLOAD=B_PENDING_ASSET`
+  - zh/en `maintenance-guide` pages now render a pending-asset state with contact / inquiry entry
+  - no fake PDF was published
+  - no clickable `/sample-download.pdf` `404` remains on the public page

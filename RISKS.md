@@ -50,12 +50,12 @@
 
 ## R-009 Orphaned public asset remains unresolved
 
-- Impact: `https://www.bostarcoating.com/sample-download.pdf` still resolves to `404` and has no verified in-repo source file or approved replacement target.
-- Current mitigation: Gate 8 verified that live zh/en `maintenance-guide` detail pages still link to the asset, documented the decision surface in `GATE8_BACKLOG_DECISION_REPORT.md`, and recommended owner answer `DOWNLOAD=B` instead of fabricating a file or retiring the URL without approval.
-- Trigger to escalate: if business requires the file to remain publicly reachable, confirms a verified replacement, or approves retirement of the download CTA.
+- Impact: a verified replacement file for `maintenance-guide` still does not exist in the repository or approved media inventory.
+- Current mitigation: Gate 9 executed `DOWNLOAD=B_PENDING_ASSET`, removed the clickable `404` href from live zh/en `maintenance-guide` pages, preserved contact / inquiry entry, and kept the URL contract without fabricating a PDF or overwriting Blob state.
+- Trigger to escalate: if business provides the real asset, requires the file to become directly reachable again, or wants the pending-download policy retired.
 
-## R-010 Extra production aliases remain attached to the Vercel project
+## R-010 Legacy redirect domains depend on alias continuity
 
-- Impact: the live production deployment for `www.bostarcoating.com` also carries `fjbosd.com` and `www.fjbosd.com` aliases, which expands the public surface beyond the declared primary domain.
-- Current mitigation: Gate 8 verified the aliases are live on `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`, serve site content, and canonicalize to the primary host; no alias or DNS mutation was made, and the owner-decision path is recorded in `GATE8_BACKLOG_DECISION_REPORT.md` with recommended answer `DOMAIN=B`.
-- Trigger to escalate: if those aliases are unintended, if they should be normalized with redirect behavior, or if a future release changes alias ownership or exposure.
+- Impact: Gate 9 now intentionally keeps `fjbosd.com`, `www.bostarcoating.com`, and `bostarcoating.com` attached as redirect domains, so future alias or DNS drift could break the approved single-hop migration behavior.
+- Current mitigation: Gate 9 promoted `dpl_789JmQSfhJTTCqWo9Qmz2udPYVaN`, verified that all three non-primary domains redirect in one hop to `https://www.fjbosd.com` with path/query preservation, and recorded the owner-approved policy as `DOMAIN=PRIMARY_FJBOSD`.
+- Trigger to escalate: if any redirect domain is detached, begins looping, loses TLS, or stops preserving the approved path/query contract.

@@ -90,3 +90,15 @@
 - Date: 2026-06-17
 - Decision: treat external public fetches plus live deployment resolution as the source of truth for the final production smoke after the retry promote.
 - Reason: repeated local shell requests from the agent host began receiving `403 Vercel Security Checkpoint`, which no longer represented general public reachability. External fetches still reached the promoted production deployment and confirmed the target route family publicly.
+
+## D-016
+
+- Date: 2026-06-17
+- Decision: invalidate the earlier Gate 8 recommendation that would have normalized `fjbosd.com` toward `www.bostarcoating.com`, and instead adopt `https://www.fjbosd.com` as the sole canonical production origin.
+- Reason: the business owner explicitly superseded the earlier domain conclusion and approved `PRIMARY_DOMAIN=https://www.fjbosd.com` with permanent redirects from `fjbosd.com`, `www.bostarcoating.com`, and `bostarcoating.com` to the new primary host while preserving path and query.
+
+## D-017
+
+- Date: 2026-06-17
+- Decision: execute the download-owner answer as `DOWNLOAD=B_PENDING_ASSET`, keeping `maintenance-guide` online with a pending-state card, no fake PDF, no clickable `404` download, and preserved contact / inquiry entry.
+- Reason: a verified replacement file is still unavailable, and publishing fabricated media or leaving a broken CTA would be less correct than holding the asset in an explicit pending state.

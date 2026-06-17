@@ -376,3 +376,59 @@
   - `npm run typecheck`: pass
   - `npm run lint`: pass with the same 4 pre-existing warnings and no new warnings
   - `npm run build`: pass with the same 4 pre-existing warnings and no new warnings
+
+## Gate 9 evidence
+
+- Recovery and baseline:
+  - `git branch --show-current`: `fix/gate9-primary-domain-fjbosd`
+  - `git rev-parse HEAD` before code checkpoint: `d7265f946d8732be3c1e4ea69269a4a095b41767`
+  - `git status --short`: only Gate 9 code/config changes before commit, clean after `062b729`
+  - `vercel inspect https://bostar-geo-website-4ztdadjpu-yonree-s-projects.vercel.app`: pre-migration production deployment `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`
+- Local code verification:
+  - `npm run typecheck`: pass
+  - `npm run lint`: pass with the same 4 pre-existing warnings and no new warnings
+  - `NEXT_PUBLIC_SITE_URL=https://www.fjbosd.com npm run build`: pass
+  - refreshed `next start` on `http://127.0.0.1:3011` (parent PID `48168`, listener PID `47060`)
+  - local host-header redirect checks:
+    - `Host: fjbosd.com` + `/` -> `301` -> `https://www.fjbosd.com/`
+    - `Host: www.bostarcoating.com` + `/en/products?ref=gate9` -> `301` -> `https://www.fjbosd.com/en/products?ref=gate9`
+    - `Host: bostarcoating.com` + `/products/Manual-Electrostatic-Liquid-Spray-Gun?src=legacy` -> `301` -> `https://www.fjbosd.com/products/Manual-Electrostatic-Liquid-Spray-Gun?src=legacy`
+  - local production-build content checks:
+    - `/` -> canonical `https://www.fjbosd.com`, no `bostarcoating.com` in HTML
+    - `/en` -> canonical `https://www.fjbosd.com/en`, hreflang zh/en on `www.fjbosd.com`
+    - `/downloads/maintenance-guide` -> pending-state text present, no `/sample-download.pdf` href
+    - `/en/downloads/maintenance-guide` -> pending-state text present, no `/sample-download.pdf` href
+    - `/sitemap.xml` contains `www.fjbosd.com` and no `www.bostarcoating.com`
+    - `/robots.txt` points to `https://www.fjbosd.com/sitemap.xml`
+- Preview verification:
+  - `vercel deploy --yes --build-env NEXT_PUBLIC_SITE_URL=https://www.fjbosd.com --env NEXT_PUBLIC_SITE_URL=https://www.fjbosd.com`: preview deployment `dpl_jyphDTLWbJY3Y8GJuFVhumfcnqAz`
+  - `vercel inspect https://bostar-geo-website-h0vvy345o-yonree-s-projects.vercel.app`: `Ready`
+  - direct shell fetch of the preview hostname returned the Vercel Authentication interstitial, so content acceptance used deployment readiness plus local production-build parity
+- Git checkpoint:
+  - `git commit -m "fix(gate9): migrate canonical origin to fjbosd"`: created code checkpoint `062b729`
+  - `git tag gate9-fjbosd-domain-migration-candidate-2026-06-17 062b729`
+- Production deployment and verification:
+  - `vercel deploy --prod --yes --build-env NEXT_PUBLIC_SITE_URL=https://www.fjbosd.com --env NEXT_PUBLIC_SITE_URL=https://www.fjbosd.com`: produced deployment `dpl_789JmQSfhJTTCqWo9Qmz2udPYVaN` at `https://bostar-geo-website-mwa7r7qxg-yonree-s-projects.vercel.app`
+  - `vercel inspect https://bostar-geo-website-mwa7r7qxg-yonree-s-projects.vercel.app`: `Ready`, aliases include `https://www.fjbosd.com`, `https://fjbosd.com`, `https://www.bostarcoating.com`, and `https://bostarcoating.com`
+  - public redirect verification:
+    - `https://www.fjbosd.com/` -> `200`, redirect count `0`
+    - `https://fjbosd.com/` -> `308` -> `https://www.fjbosd.com/`, redirect count `1`
+    - `https://www.bostarcoating.com/` -> `301` -> `https://www.fjbosd.com/`, redirect count `1`
+    - `https://bostarcoating.com/` -> `301` -> `https://www.fjbosd.com/`, redirect count `1`
+    - `https://www.bostarcoating.com/en/products?ref=gate9` -> `301` -> `https://www.fjbosd.com/en/products?ref=gate9`
+    - `https://bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun?src=legacy` -> `301` -> `https://www.fjbosd.com/products/Manual-Electrostatic-Liquid-Spray-Gun?src=legacy`
+  - public canonical / robots / hreflang verification:
+    - `https://www.fjbosd.com/` -> canonical `https://www.fjbosd.com`, `index, follow`, hreflang zh/x-default/en on `www.fjbosd.com`
+    - `https://www.fjbosd.com/en` -> canonical `https://www.fjbosd.com/en`, `index, follow`, hreflang zh/x-default/en on `www.fjbosd.com`
+    - `https://www.fjbosd.com/products/manual-powder-coating-gun` -> canonical `https://www.fjbosd.com/products/manual-powder-coating-gun`
+    - `https://www.fjbosd.com/en/products/manual-powder-coating-gun` -> canonical `https://www.fjbosd.com/en/products/manual-powder-coating-gun`
+    - `https://www.fjbosd.com/knowledge/selection-guide` -> canonical `https://www.fjbosd.com/knowledge/selection-guide`
+    - `https://www.fjbosd.com/en/knowledge/selection-guide` -> canonical `https://www.fjbosd.com/en/knowledge/selection-guide`
+    - `https://www.fjbosd.com/downloads/maintenance-guide` -> canonical `https://www.fjbosd.com/downloads/maintenance-guide`, pending state present, no `/sample-download.pdf` href
+    - `https://www.fjbosd.com/en/downloads/maintenance-guide` -> canonical `https://www.fjbosd.com/en/downloads/maintenance-guide`, pending state present, no `/sample-download.pdf` href
+    - `https://www.fjbosd.com/404-test` -> canonical `https://www.fjbosd.com/404-test`, `noindex`
+  - public site-origin verification:
+    - homepage `og:url` -> `https://www.fjbosd.com`
+    - homepage `Organization` and `WebSite` JSON-LD URLs -> `https://www.fjbosd.com`
+    - `https://www.fjbosd.com/sitemap.xml` contains `www.fjbosd.com` and no `www.bostarcoating.com`
+    - `https://www.fjbosd.com/robots.txt` points to `https://www.fjbosd.com/sitemap.xml` only

@@ -95,3 +95,16 @@
 - Revalidated Gate 7 production audit outputs after tooling hardening with `PASS_301=58`, `PASS_200=65`, `EXPECTED_NOINDEX=1`, `BUSINESS_REVIEW_REQUIRED=1`, and `BLOCKING_FAILURES=0`
 - Created Gate 8 handoff artifacts: `GATE8_BACKLOG_DECISION_REPORT.md`, `GATE8_MAINTENANCE_RUNBOOK.md`, `GATE8_MONITORING_CHECKLIST.md`, and `GATE8_BUSINESS_DECISIONS_REQUIRED.md`
 - Updated the control plane to `MAINTENANCE_HANDOFF_PASS_WITH_BUSINESS_DECISIONS_REQUIRED`, compressing the only remaining owner input to `DOWNLOAD=A/B/C` and `DOMAIN=A/B/C`
+- Started Gate 9 from clean maintenance baseline `d7265f9` on branch `fix/gate9-primary-domain-fjbosd`
+- Added `lib/site-origin.ts` and rewired middleware, site metadata defaults, sitemap, robots, upload fallback redirects, and production audit scripts to the approved primary origin `https://www.fjbosd.com`
+- Reworked `app/downloads/[slug]/page.tsx` and seeded download fallback handling so `maintenance-guide` now renders an explicit pending-asset state on zh/en routes without a clickable `/sample-download.pdf` href
+- Revalidated locally with `npm run typecheck`, `npm run lint`, `NEXT_PUBLIC_SITE_URL=https://www.fjbosd.com npm run build`, and refreshed `next start` on `http://127.0.0.1:3011`
+- Verified local host-header redirects for `fjbosd.com`, `www.bostarcoating.com`, and `bostarcoating.com`, confirming single-hop redirect targets under `https://www.fjbosd.com` with preserved path/query
+- Built preview deployment `dpl_jyphDTLWbJY3Y8GJuFVhumfcnqAz`; direct shell fetch hit the Vercel Authentication wall, so preview acceptance used deployment readiness plus local production-build parity
+- Created code checkpoint commit `062b729 fix(gate9): migrate canonical origin to fjbosd` and candidate tag `gate9-fjbosd-domain-migration-candidate-2026-06-17`
+- Promoted production deployment `dpl_789JmQSfhJTTCqWo9Qmz2udPYVaN` from commit `062b729`, replacing pre-migration production deployment `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`
+- Verified production domain migration live:
+  - `https://www.fjbosd.com` serves the canonical site
+  - `https://fjbosd.com`, `https://www.bostarcoating.com`, and `https://bostarcoating.com` each redirect in one hop to `https://www.fjbosd.com`
+  - representative zh/en product, knowledge, and download routes now canonicalize to `https://www.fjbosd.com`
+  - `sitemap.xml` and `robots.txt` now reference only the new primary domain

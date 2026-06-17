@@ -1,0 +1,7 @@
+source_url,expected_target,initial_status,final_url,redirect_count,result,notes
+https://www.fjbosd.com/,https://www.fjbosd.com/,200,https://www.fjbosd.com/,0,PASS,Primary host already canonical
+https://fjbosd.com/,https://www.fjbosd.com/,308,https://www.fjbosd.com/,1,PASS,Apex redirects to primary host
+https://www.bostarcoating.com/,https://www.fjbosd.com/,301,https://www.fjbosd.com/,1,PASS,Legacy www redirects to new primary host
+https://bostarcoating.com/,https://www.fjbosd.com/,301,https://www.fjbosd.com/,1,PASS,Legacy apex redirects to new primary host
+https://www.bostarcoating.com/en/products?ref=gate9,https://www.fjbosd.com/en/products?ref=gate9,301,https://www.fjbosd.com/en/products?ref=gate9,1,PASS,Path and query preserved
+https://bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun?src=legacy,https://www.fjbosd.com/products/Manual-Electrostatic-Liquid-Spray-Gun?src=legacy,301,https://www.fjbosd.com/products/Manual-Electrostatic-Liquid-Spray-Gun?src=legacy,1,PASS,Legacy liquid path preserved

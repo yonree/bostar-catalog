@@ -31,3 +31,17 @@
   - `C`: aliases stop resolving through this production deployment
 - Rollback: reattach or restore the prior alias policy if needed
 - Owner answer required: `DOMAIN=A`, `DOMAIN=B`, or `DOMAIN=C`
+
+## Resolution (2026-06-17)
+
+- This file is now historical input only; both Gate 8 owner decisions were resolved and executed in Gate 9.
+- Final owner-approved answers:
+  - `DOWNLOAD=B_PENDING_ASSET`
+  - `DOMAIN=PRIMARY_FJBOSD`
+- Executed outcome:
+  - `https://www.fjbosd.com` is now the sole canonical production origin
+  - `https://fjbosd.com`, `https://www.bostarcoating.com`, and `https://bostarcoating.com` now redirect to `https://www.fjbosd.com`
+  - live zh/en `maintenance-guide` detail pages no longer expose a clickable `404` download and instead render the approved pending-asset state
+- Follow the Gate 9 records for the implementation and evidence trail:
+  - `GATE9_BUSINESS_DECISION_IMPLEMENTATION.md`
+  - `GATE9_DOMAIN_MIGRATION_REPORT.md`

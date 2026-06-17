@@ -3,15 +3,17 @@
 ## Snapshot
 
 - Date: 2026-06-17
-- Working branch: `codex/gate8-maintenance-handoff`
-- Stable production baseline branch: `fix/gate6-legacy-vercel-404`
-- Stable production baseline tag: `post-release-stable-2026-06-17`
-- Stable production baseline commit: `9b37b31`
+- Working branch: `fix/gate9-primary-domain-fjbosd`
+- Stable production baseline branch: `codex/gate8-maintenance-handoff`
+- Stable production baseline tag: `maintenance-handoff-2026-06-17`
+- Stable production baseline commit: `d7265f9`
 - Maintenance tooling commit: `bde0346`
+- Gate 9 candidate commit: `062b729`
+- Gate 9 candidate tag: `gate9-fjbosd-domain-migration-candidate-2026-06-17`
 - Current local preview: `http://127.0.0.1:3011`
-- Current gate: `MAINTENANCE_HANDOFF_PASS_WITH_BUSINESS_DECISIONS_REQUIRED`
-- Production domain: `https://www.bostarcoating.com`
-- Live production deployment: `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`
+- Current gate: `PRIMARY_DOMAIN_MIGRATION_PASS_WITH_DOWNLOAD_ASSET_PENDING`
+- Production domain: `https://www.fjbosd.com`
+- Live production deployment: `dpl_789JmQSfhJTTCqWo9Qmz2udPYVaN`
 
 ## Completed in Gate 8
 
@@ -36,12 +38,39 @@
   - `GATE8_MONITORING_CHECKLIST.md`
   - `GATE8_BUSINESS_DECISIONS_REQUIRED.md`
 
+## Completed in Gate 9
+
+- Superseded the invalidated Gate 8 domain recommendation with the approved owner answer:
+  - `DOMAIN=PRIMARY_FJBOSD`
+  - `PRIMARY_ORIGIN=https://www.fjbosd.com`
+  - `fjbosd.com` -> `https://www.fjbosd.com`
+  - `www.bostarcoating.com` -> `https://www.fjbosd.com`
+  - `bostarcoating.com` -> `https://www.fjbosd.com`
+- Executed the approved download decision:
+  - `DOWNLOAD=B_PENDING_ASSET`
+  - no fake PDF was created
+  - `maintenance-guide` zh/en detail pages now show a pending-state card instead of a clickable `404` download
+  - contact / lead-form entry remains available on the pending state
+- Centralized the canonical site origin in `lib/site-origin.ts` and rewired middleware, sitemap, robots, upload fallback redirects, and site metadata defaults to `https://www.fjbosd.com`
+- Verified Gate 9 local production-build parity on `http://127.0.0.1:3011`:
+  - legacy and apex host-header requests redirect to `https://www.fjbosd.com` with path/query preservation
+  - `/`, `/en`, `/downloads/maintenance-guide`, `/en/downloads/maintenance-guide`, `/sitemap.xml`, and `/robots.txt` all emit the new primary origin and no longer reference `www.bostarcoating.com`
+- Built preview deployment `dpl_jyphDTLWbJY3Y8GJuFVhumfcnqAz` and production deployment `dpl_789JmQSfhJTTCqWo9Qmz2udPYVaN` from commit `062b729`
+- Completed public production verification:
+  - `https://www.fjbosd.com` serves canonical content
+  - `https://fjbosd.com` redirects in one hop to `https://www.fjbosd.com`
+  - `https://www.bostarcoating.com` redirects in one hop to `https://www.fjbosd.com`
+  - `https://bostarcoating.com` redirects in one hop to `https://www.fjbosd.com`
+  - representative `/en/products`, legacy liquid path, product category, knowledge category, and zh/en `maintenance-guide` pages all canonicalize to `https://www.fjbosd.com`
+
 ## Active blockers
 
 - No hard blocker remains inside repository-controlled work
-- Remaining owner decisions:
-  - `DOWNLOAD=A/B/C`
-  - `DOMAIN=A/B/C`
+- Business decisions are now resolved:
+  - `DOWNLOAD=B_PENDING_ASSET`
+  - `DOMAIN=PRIMARY_FJBOSD`
+- Remaining non-blocking follow-up:
+  - publish the real replacement asset only after the owner provides the verified file and target policy
 
 ## Latest verification
 
@@ -64,10 +93,31 @@
     - `https://www.bostarcoating.com/en/downloads/maintenance-guide` -> `200`
     - `https://fjbosd.com` -> `308` -> `https://www.fjbosd.com/`
     - `https://www.fjbosd.com/` -> `200`
+- Gate 9 code verification:
+  - `npm run typecheck`: pass
+  - `npm run lint`: pass with the same 4 pre-existing warnings and no new warnings
+  - `NEXT_PUBLIC_SITE_URL=https://www.fjbosd.com npm run build`: pass
+- Gate 9 preview verification:
+  - `vercel deploy --yes --build-env NEXT_PUBLIC_SITE_URL=https://www.fjbosd.com --env NEXT_PUBLIC_SITE_URL=https://www.fjbosd.com`: preview deployment `dpl_jyphDTLWbJY3Y8GJuFVhumfcnqAz`
+  - `vercel inspect https://bostar-geo-website-h0vvy345o-yonree-s-projects.vercel.app`: `Ready`
+  - direct shell fetch against the preview hostname returned the Vercel Authentication wall, so preview acceptance used deployment readiness plus local production-build parity
+- Gate 9 production verification:
+  - `vercel inspect https://bostar-geo-website-4ztdadjpu-yonree-s-projects.vercel.app`: pre-migration production deployment `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`
+  - `vercel inspect https://bostar-geo-website-mwa7r7qxg-yonree-s-projects.vercel.app`: post-migration production deployment `dpl_789JmQSfhJTTCqWo9Qmz2udPYVaN`
+  - public fetch:
+    - `https://www.fjbosd.com/` -> `200`, canonical `https://www.fjbosd.com`
+    - `https://fjbosd.com/` -> `308` -> `https://www.fjbosd.com/`
+    - `https://www.bostarcoating.com/` -> `301` -> `https://www.fjbosd.com/`
+    - `https://bostarcoating.com/` -> `301` -> `https://www.fjbosd.com/`
+    - `https://www.bostarcoating.com/en/products?ref=gate9` -> `301` -> `https://www.fjbosd.com/en/products?ref=gate9`
+    - `https://bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun?src=legacy` -> `301` -> `https://www.fjbosd.com/products/Manual-Electrostatic-Liquid-Spray-Gun?src=legacy`
+    - `https://www.fjbosd.com/sitemap.xml` contains only `www.fjbosd.com`
+    - `https://www.fjbosd.com/robots.txt` points only to `https://www.fjbosd.com/sitemap.xml`
+    - live zh/en `maintenance-guide` pages no longer expose `/sample-download.pdf` as a clickable href
 
 ## Next task
 
-- Gate 8 autonomous maintenance closure is complete.
-- Next operator action is to record:
-  - `DOWNLOAD=A/B/C`
-  - `DOMAIN=A/B/C`
+- Gate 9 primary-domain migration is complete.
+- Next operator action is optional only:
+  - publish a verified replacement file for `maintenance-guide`, or
+  - keep the current pending-asset state until a verified asset exists.
