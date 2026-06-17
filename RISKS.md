@@ -51,11 +51,11 @@
 ## R-009 Orphaned public asset remains unresolved
 
 - Impact: `https://www.bostarcoating.com/sample-download.pdf` still resolves to `404` and has no verified in-repo source file or approved replacement target.
-- Current mitigation: Gate 7 classifies the asset as `BUSINESS_REVIEW_REQUIRED` instead of fabricating a replacement file or redirect target; this remains the only non-system backlog item in the full URL audit.
-- Trigger to escalate: if business requires the file to remain publicly reachable or wants it redirected to a verified replacement.
+- Current mitigation: Gate 8 verified that live zh/en `maintenance-guide` detail pages still link to the asset, documented the decision surface in `GATE8_BACKLOG_DECISION_REPORT.md`, and recommended owner answer `DOWNLOAD=B` instead of fabricating a file or retiring the URL without approval.
+- Trigger to escalate: if business requires the file to remain publicly reachable, confirms a verified replacement, or approves retirement of the download CTA.
 
 ## R-010 Extra production aliases remain attached to the Vercel project
 
 - Impact: the live production deployment for `www.bostarcoating.com` also carries `fjbosd.com` and `www.fjbosd.com` aliases, which expands the public surface beyond the declared primary domain.
-- Current mitigation: no alias or DNS change was made in this execution; the condition is recorded for project-owner review because the approved primary domain continues to resolve correctly.
-- Trigger to escalate: if those aliases are unintended, if they surface duplicate-content concerns, or if a future release changes alias ownership.
+- Current mitigation: Gate 8 verified the aliases are live on `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`, serve site content, and canonicalize to the primary host; no alias or DNS mutation was made, and the owner-decision path is recorded in `GATE8_BACKLOG_DECISION_REPORT.md` with recommended answer `DOMAIN=B`.
+- Trigger to escalate: if those aliases are unintended, if they should be normalized with redirect behavior, or if a future release changes alias ownership or exposure.

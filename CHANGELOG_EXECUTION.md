@@ -88,3 +88,10 @@
 - Built and promoted production deployment `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`, which now serves `https://www.bostarcoating.com`
 - Re-ran the full Gate 7 production audit after deployment; all approved system-owned URLs now pass except the explicit business-review orphan asset `sample-download.pdf`
 - Added `GATE7_POST_RELEASE_REPORT.md`, `GATE7_RUNTIME_RESULTS.csv`, `GATE7_SECURITY_RESULTS.md`, and `GATE7_REMAINING_BACKLOG.md`, and updated the root control plane to `POST_RELEASE_STABILIZATION_PASS_WITH_NON_BLOCKING_BACKLOG`
+- Started Gate 8 on clean stable baseline `post-release-stable-2026-06-17` and moved onto dedicated maintenance branch `codex/gate8-maintenance-handoff`
+- Collected read-only evidence for `sample-download.pdf`, confirming that live zh/en `maintenance-guide` pages still link to the URL while the target asset itself returns `404` and no in-repo file or verified replacement asset exists
+- Collected read-only evidence for `fjbosd.com` and `www.fjbosd.com`, confirming both aliases are attached to live production deployment `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`, serve site content, and canonicalize to `https://www.bostarcoating.com`
+- Hardened `scripts/gate7-production-audit.mjs` with explicit request timeout handling, bounded retries, non-fabricated deployment labeling, and blocking-failure exit signaling
+- Revalidated Gate 7 production audit outputs after tooling hardening with `PASS_301=58`, `PASS_200=65`, `EXPECTED_NOINDEX=1`, `BUSINESS_REVIEW_REQUIRED=1`, and `BLOCKING_FAILURES=0`
+- Created Gate 8 handoff artifacts: `GATE8_BACKLOG_DECISION_REPORT.md`, `GATE8_MAINTENANCE_RUNBOOK.md`, `GATE8_MONITORING_CHECKLIST.md`, and `GATE8_BUSINESS_DECISIONS_REQUIRED.md`
+- Updated the control plane to `MAINTENANCE_HANDOFF_PASS_WITH_BUSINESS_DECISIONS_REQUIRED`, compressing the only remaining owner input to `DOWNLOAD=A/B/C` and `DOMAIN=A/B/C`

@@ -12,6 +12,10 @@
 - `GATE4_RELEASE_PREP.md`
 - `GATE5_HANDOFF_DRAFT.md`
 - `GATE6_PRODUCTION_RELEASE_REPORT.md`
+- `GATE8_BACKLOG_DECISION_REPORT.md`
+- `GATE8_MAINTENANCE_RUNBOOK.md`
+- `GATE8_MONITORING_CHECKLIST.md`
+- `GATE8_BUSINESS_DECISIONS_REQUIRED.md`
 
 ## Command evidence
 
@@ -29,6 +33,7 @@
 - `npx --no-install lighthouse --version`: confirms no preinstalled package is available; no dependency was installed
 - `git commit -m "fix(gate6): restore legacy liquid routes in vercel runtime"`: created Gate 6 fix commit `1767fc9`
 - `git tag gate-6-retry-candidate-2026-06-17 1767fc9`
+- `git commit -m "chore(gate8): harden production audit tooling"`: created Gate 8 maintenance-tooling commit `bde0346`
 - 2026-06-17 Gate 5 close-out validation:
   - `npm run typecheck`: pass
   - `npm run lint`: pass with the same 4 pre-existing warnings and no new warnings
@@ -337,3 +342,37 @@
     - corresponding representative legacy details
     - `/news` remains `noindex,nofollow`
     - `/sitemap.xml` contains the restored legacy category family
+
+## Gate 8 evidence
+
+- Recovery and baseline:
+  - `git branch --show-current`: confirmed recovery on the clean stable baseline before branching
+  - `git rev-parse HEAD`: stable baseline `9b37b31f8f85f76db62a8074666a53673e4db870`
+  - `git status --porcelain`: clean before Gate 8 edits
+  - `vercel inspect https://www.bostarcoating.com`: production still resolves to `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`
+- `sample-download.pdf` evidence:
+  - `rg -n "sample-download\\.pdf|maintenance-guide|fileUrl" prisma\\seed-data.ts app lib components`: confirms seeded `maintenance-guide` data path and detail-page CTA source
+  - `Get-ChildItem public -Recurse -File`: confirms no `sample-download.pdf` exists in `public/**`
+  - public fetch inspection:
+    - `https://www.bostarcoating.com/sample-download.pdf` -> `404`, HTML not-found shell, `noindex`
+    - `https://www.bostarcoating.com/downloads/maintenance-guide` -> `200`, canonical self, hreflang zh/en
+    - `https://www.bostarcoating.com/en/downloads/maintenance-guide` -> `200`, canonical self, hreflang zh/en
+  - HTML snippet check confirms both zh/en `maintenance-guide` pages render CTA `href="/sample-download.pdf"`
+  - `sitemap.xml` contains `downloads/maintenance-guide` but not `sample-download.pdf`
+  - external Blob mirror search under `D:\work\gate6-backups\bostar-blob-20260617-094448`: no verified filename evidence for `sample-download.pdf`
+- `fjbosd.com` / `www.fjbosd.com` evidence:
+  - `vercel inspect https://www.bostarcoating.com`: live alias set includes `fjbosd.com` and `www.fjbosd.com`
+  - `vercel domains ls`: `fjbosd.com` present under the same Vercel team with third-party registrar handling
+  - `nslookup fjbosd.com`: resolves to `216.198.79.1`
+  - `nslookup www.fjbosd.com`: resolves via `vercel-dns-017.com`
+  - public fetch inspection:
+    - `https://fjbosd.com` -> `308` -> `https://www.fjbosd.com/`
+    - `https://www.fjbosd.com/` -> `200`
+    - alias-host canonical -> `https://www.bostarcoating.com`
+    - alias-host hreflang -> primary zh/en URLs
+    - alias-host `robots.txt` and `sitemap.xml` are reachable while sitemap content lists only primary-domain URLs
+- Gate 8 tooling hardening validation:
+  - `node scripts/gate7-production-audit.mjs` with `GATE7_TIMEOUT_MS=8000`, `GATE7_RETRIES=0`, and `GATE7_DEPLOYMENT_ID=dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`: `PASS_301=58`, `PASS_200=65`, `EXPECTED_NOINDEX=1`, `BUSINESS_REVIEW_REQUIRED=1`, `BLOCKING_FAILURES=0`
+  - `npm run typecheck`: pass
+  - `npm run lint`: pass with the same 4 pre-existing warnings and no new warnings
+  - `npm run build`: pass with the same 4 pre-existing warnings and no new warnings

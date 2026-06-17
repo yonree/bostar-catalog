@@ -1,17 +1,25 @@
 # Gate 7 Remaining Backlog
 
-## Non-blocking
+## Rolled into Gate 8
 
 1. `sample-download.pdf`
-   - Status: `BUSINESS_REVIEW_REQUIRED`
-   - Current behavior: `https://www.bostarcoating.com/sample-download.pdf` returns `404`
-   - Reason: approved planning asset marks it as an orphaned public file with no verified repository source or replacement target
-   - Required input: either provide the real file, approve a verified replacement URL, or approve permanent removal
+   - Gate 8 status: `BUSINESS_OWNER_DECISION_REQUIRED`
+   - Verified behavior:
+     - `https://www.bostarcoating.com/sample-download.pdf` returns `404`
+     - zh/en `maintenance-guide` detail pages still link to `/sample-download.pdf`
+     - no in-repo file or verified replacement asset was found
+   - Required owner input: `DOWNLOAD=A`, `DOWNLOAD=B`, or `DOWNLOAD=C`
+   - Source of truth: `GATE8_BACKLOG_DECISION_REPORT.md`, `GATE8_BUSINESS_DECISIONS_REQUIRED.md`
 
 2. Extra Vercel aliases
-   - Status: `OWNER_REVIEW_RECOMMENDED`
-   - Current aliases observed on the live deployment: `fjbosd.com`, `www.fjbosd.com`
-   - Reason: the declared primary domain for this rollout is `www.bostarcoating.com`; extra aliases expand the public surface and may create duplicate-content or ownership questions
+   - Gate 8 status: `BUSINESS_OWNER_DECISION_REQUIRED`
+   - Verified behavior:
+     - `fjbosd.com` and `www.fjbosd.com` are attached to live deployment `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`
+     - alias hosts serve BOSTAR homepage content with canonical pointing at `https://www.bostarcoating.com`
+   - Required owner input: `DOMAIN=A`, `DOMAIN=B`, or `DOMAIN=C`
+   - Source of truth: `GATE8_BACKLOG_DECISION_REPORT.md`, `GATE8_BUSINESS_DECISIONS_REQUIRED.md`
+
+## Known scope gaps retained
 
 3. English body-copy parity
    - Status: `KNOWN_SCOPE_GAP`

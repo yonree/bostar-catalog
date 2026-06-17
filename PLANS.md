@@ -10,6 +10,7 @@
 6. Gate 5 handoff: complete
 7. Gate 6 production release: complete
 8. Gate 7 post-release stabilization: complete with non-blocking backlog
+9. Gate 8 backlog closure and maintenance handoff: complete with business decisions required
 
 ## Current status
 
@@ -21,6 +22,7 @@
 - Gate 5: complete, handoff and delivery control plane prepared
 - Gate 6: complete, production retry fix `1767fc9` previously promoted and verified
 - Gate 7: `PASS_WITH_NON_BLOCKING_BACKLOG` after production patch `523b6b0` was deployed as `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`
+- Gate 8: `MAINTENANCE_HANDOFF_PASS_WITH_BUSINESS_DECISIONS_REQUIRED` after read-only evidence closure for `sample-download.pdf` and `fjbosd.com` / `www.fjbosd.com`, plus maintenance hardening of `scripts/gate7-production-audit.mjs`
 
 ## Gate 7 close-out
 
@@ -35,15 +37,31 @@
 - Production deployment `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h` is now the live deployment for `https://www.bostarcoating.com`.
 - Post-patch full production audit now passes for every approved URL except one business-review orphan asset: `https://www.bostarcoating.com/sample-download.pdf`.
 
+## Gate 8 close-out
+
+- `sample-download.pdf` is no longer an uninvestigated backlog item; it is now a documented owner decision:
+  - live zh/en `maintenance-guide` pages still link to it
+  - the asset URL returns `404`
+  - no in-repo file or verified replacement was found
+  - recommended owner answer: `DOWNLOAD=B`
+- `fjbosd.com` and `www.fjbosd.com` are no longer an uninvestigated backlog item; they are now a documented owner decision:
+  - both aliases are attached to live deployment `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`
+  - alias hosts serve site content with canonical/hreflang pointing at `https://www.bostarcoating.com`
+  - recommended owner answer: `DOMAIN=B`
+- `scripts/gate7-production-audit.mjs` now has explicit request timeout, bounded retries, non-fabricated deployment labeling, and non-zero exit signaling for blocking audit failures.
+
 ## Remaining backlog
 
-- Business review required for `sample-download.pdf`: the file remains an approved orphaned `404` with no verified repository source or replacement asset.
-- Review whether auxiliary production aliases `fjbosd.com` / `www.fjbosd.com` should remain attached to the same Vercel project; no change was made in this execution.
+- Business-owner answers only:
+  - `DOWNLOAD=A/B/C`
+  - `DOMAIN=A/B/C`
 - Optional follow-up only:
   - translated English body copy for source-language detail content
   - Lighthouse collection with an approved tooling path
 
 ## Next execution slice
 
-- No further autonomous implementation work remains inside Gate 7.
-- If a new rollout starts, use `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h` as the current production baseline and `523b6b0` as the last production patch commit.
+- No further autonomous code rollout is required to close Gate 8.
+- The next operator action is either:
+  - record explicit owner answers for `DOWNLOAD` and `DOMAIN`, or
+  - start a new maintenance / release slice from `post-release-stable-2026-06-17` and production baseline `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`.
