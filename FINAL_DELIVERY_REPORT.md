@@ -55,6 +55,17 @@
 
 ## Release recommendation
 
-- Keep the current production deployment `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` as the live release for this rollout
+- Superseded by Gate 7: the current production deployment is now `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h` from commit `523b6b0`
 - Preserve `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB` and `dpl_Ff9h5z2tUAvbNSFvmrNUZCzn12CF` as historical rollback references
 - On the next production change, repeat legacy liquid route smoke before and after promotion, and prefer the Vercel promote API path over the CLI promote path in this workspace
+
+## Gate 7 Addendum
+
+- Post-release stabilization found and fixed four additional approved legacy category regressions that were still returning `404` after the successful Gate 6 retry.
+- Gate 7 patch commit: `523b6b0`
+- Gate 7 preview deployment: `dpl_DRV6DRMUZRvxb4jGU79EGcrwLf3v`
+- Gate 7 production deployment: `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`
+- Final Gate 7 status: `PASS_WITH_NON_BLOCKING_BACKLOG`
+- Remaining non-blocking backlog:
+  - `sample-download.pdf` business disposition
+  - review extra aliases `fjbosd.com` and `www.fjbosd.com`

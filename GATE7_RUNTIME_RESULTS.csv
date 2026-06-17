@@ -1,0 +1,10 @@
+observed_at,area,source,target,expected,actual,deployment,result,notes
+2026-06-17,production-resolution,vercel_inspect,www.bostarcoating.com,production alias resolves to current Gate 7 deployment,dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h,dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h,PASS,"`vercel inspect www.bostarcoating.com` after Gate 7 patch"
+2026-06-17,production-metadata,vercel_api,dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h,Ready production deployment,Ready,dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h,PASS,"deployment built from commit `523b6b0`; target production"
+2026-06-17,public-page,fetch,/admin,307 to /admin/login,307,dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h,PASS,"no unauthenticated admin page exposure"
+2026-06-17,admin-api,fetch,/api/admin/products,401,401,dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h,PASS,"unauthenticated admin products API denied"
+2026-06-17,admin-api,fetch,/api/admin/leads,401,401,dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h,PASS,"unauthenticated leads API denied"
+2026-06-17,upload-api,fetch,/api/upload,401,401,dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h,PASS,"upload API still guarded by admin session"
+2026-06-17,public-seo,fetch,/news,200 and noindex,nofollow,200,dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h,PASS,"reserved news route remains online and intentionally excluded from indexing"
+2026-06-17,public-seo,fetch,/sitemap.xml,200 and contains restored legacy categories,200,dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h,PASS,"`Automatic-Electrostatic-Powder-Rotary-Bell` and `Testing-Instruments` present"
+2026-06-17,public-seo,fetch,/robots.txt,200,200,dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h,PASS,"robots file served on live production"

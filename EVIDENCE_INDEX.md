@@ -308,3 +308,32 @@
 ## Remaining evidence to collect in later gates
 
 - Non-secret confirmation that Blob store `store_bf****7AX` has native restore/version coverage or an existing offline/mirrored backup path for the current 24 production blobs
+
+## Gate 7 evidence
+
+- `scripts/gate7-production-audit.mjs`: full production URL / SEO audit helper created for Gate 7 stabilization
+- `GATE7_PRODUCTION_URL_RESULTS.csv`: full approved-URL production regression after Gate 7 patch deployment `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`
+- `GATE7_SEO_RESULTS.csv`: page-level canonical / hreflang / sitemap / schema audit after the Gate 7 patch
+- `GATE7_RUNTIME_RESULTS.csv`: production deployment stability, admin-auth, sitemap, robots, and reserved-route runtime checks
+- `GATE7_SECURITY_RESULTS.md`: Gate 7 read-only security posture summary
+- `GATE7_REMAINING_BACKLOG.md`: remaining non-blocking business and owner-review items
+- `GATE7_POST_RELEASE_REPORT.md`: Gate 7 execution narrative and final acceptance state
+- Gate 7 local verification:
+  - `npm run typecheck`: pass
+  - `npm run lint`: pass with the same 4 pre-existing warnings and no new warnings
+  - `npm run build`: pass with the same 4 pre-existing warnings and no new warnings
+  - local production smoke on `http://127.0.0.1:3011`: restored zh/en legacy category routes and representative legacy detail routes return `200`
+- Gate 7 preview verification:
+  - `vercel deploy --yes`: preview deployment `dpl_DRV6DRMUZRvxb4jGU79EGcrwLf3v`
+  - `vercel inspect bostar-geo-website-eh9frjz46-yonree-s-projects.vercel.app`: `Ready`
+- Gate 7 production verification:
+  - `vercel deploy --prod --yes`: production deployment `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`
+  - `vercel inspect www.bostarcoating.com`: resolves live production to `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`
+  - targeted public fetch confirms:
+    - restored `/products/Automatic-Electrostatic-Powder-Rotary-Bell`
+    - restored `/products/Automatic-Electrostatic-Rotary-Bell-Atomizer`
+    - restored `/products/High-Pressure-Airless-Spraying-Equipment`
+    - restored `/products/Testing-Instruments`
+    - corresponding representative legacy details
+    - `/news` remains `noindex,nofollow`
+    - `/sitemap.xml` contains the restored legacy category family

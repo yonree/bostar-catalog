@@ -80,3 +80,11 @@
 - Re-promoted `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB` through the same API to re-establish a public baseline before the final production retry
 - Completed the final Gate 6 public verification on the promoted release using independent public fetches after local PowerShell requests from the agent host began returning `403 Vercel Security Checkpoint`
 - Final production state is now `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` on `https://www.bostarcoating.com`, with the previously failing legacy liquid category/detail family publicly restored
+- Created `scripts/gate7-production-audit.mjs` and used it to audit all approved Gate 1A URLs against live production for Gate 7 stabilization
+- Identified four remaining approved legacy category regressions on production: `Automatic-Electrostatic-Powder-Rotary-Bell`, `Automatic-Electrostatic-Rotary-Bell-Atomizer`, `High-Pressure-Airless-Spraying-Equipment`, and `Testing-Instruments`
+- Extended legacy fallback coverage in `lib/data.ts`, `lib/legacy-compatibility.ts`, and `lib/cms-data.ts`, then committed `523b6b0 fix(gate7): restore remaining legacy category routes`
+- Rebuilt locally, restarted the authoritative preview on `http://127.0.0.1:3011` (listener PID `41272`), and revalidated the restored zh/en category routes plus representative legacy detail routes
+- Built preview deployment `dpl_DRV6DRMUZRvxb4jGU79EGcrwLf3v`; Vercel reported `Ready`, while direct preview-host fetch from the current agent host remained unreachable and was recorded as an access-path limitation
+- Built and promoted production deployment `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`, which now serves `https://www.bostarcoating.com`
+- Re-ran the full Gate 7 production audit after deployment; all approved system-owned URLs now pass except the explicit business-review orphan asset `sample-download.pdf`
+- Added `GATE7_POST_RELEASE_REPORT.md`, `GATE7_RUNTIME_RESULTS.csv`, `GATE7_SECURITY_RESULTS.md`, and `GATE7_REMAINING_BACKLOG.md`, and updated the root control plane to `POST_RELEASE_STABILIZATION_PASS_WITH_NON_BLOCKING_BACKLOG`

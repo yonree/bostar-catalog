@@ -3,194 +3,87 @@
 ## Snapshot
 
 - Date: 2026-06-17
-- Branch: `feat/gate2-implementation`
-- Release candidate commit: `5f731bf`
-- Previous planning branch retained: `plan/gate1a`
-- Authoritative preview server: `http://127.0.0.1:3011`
-- Non-authoritative stale preview servers observed during recovery: `http://127.0.0.1:3008`, `http://127.0.0.1:3009`, `http://127.0.0.1:3010`
-- Current gate: `PRODUCTION_RELEASE_PASS`
-- Release path baseline: clean Gate 5 handoff commit `5f731bf` with tag `gate-5-handoff-2026-06-17`; successful Gate 6 production retry is now running on fix commit `1767fc9` as deployment `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC`
+- Branch: `fix/gate6-legacy-vercel-404`
+- HEAD: `523b6b0`
+- Previous Gate 5 handoff commit: `5f731bf`
+- Previous Gate 6 retry commit: `1767fc9`
+- Current local preview: `http://127.0.0.1:3011`
+- Current local preview listener: `next start --hostname 127.0.0.1 --port 3011` on PID `41272`
+- Current gate: `POST_RELEASE_STABILIZATION_PASS_WITH_NON_BLOCKING_BACKLOG`
+- Live production deployment: `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`
+- Previous production deployment before Gate 7 patch: `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC`
+- Preview deployment for the Gate 7 patch: `dpl_DRV6DRMUZRvxb4jGU79EGcrwLf3v`
 
 ## Completed in this execution
 
-- Recovered interrupted execution state from Git working tree, root control plane files, and existing verification evidence
-- Promoted Gate 1A ownership file to `agent-file-ownership.csv`
-- Added root execution control files
-- Implemented locale registry and request-context helpers
-- Added `/en` rewrite support through middleware without duplicating route files
-- Implemented locale-aware navigation, CTA links, breadcrumbs, footer, lead form, and selected public links
-- Replaced interactive lint path with CLI ESLint config
-- Restored successful `build` and `typecheck`
-- Localized Gate 3 key template pages for English output: `/`, `/about`, `/contact`, `/faq`, `/service`, `/news`, `/products`, `/solutions`, `/knowledge`, `/cases`, `/downloads`, `/videos`, `/search`
-- Added English translation notice on pages that still surface source-language CMS content
-- Unified English fallback description across root metadata, footer, `WebSiteJsonLd`, and `OrganizationJsonLd`
-- Localized Gate 3 shell copy for category/detail templates on `products/[categorySlug]`, `knowledge/[categorySlug]`, `cases/[slug]`, `downloads/[slug]`, `videos/[slug]`, `solutions/[slug]`, and `knowledge/[categorySlug]/[slug]`
-- Localized `app/products/[categorySlug]/[productSlug]/page.tsx` for English shell output while preserving source product facts, models, values, and units
-- Restored product/category fallback reads from `lib/data.ts` inside `lib/cms-data.ts` so seeded product routes remain available when local Prisma/PostgreSQL is offline
-- Fixed locale header preservation in `middleware.ts` so rewritten `/en/**` requests keep English SSR metadata, `html lang`, canonical, and hreflang output
-- Localized English metadata and shell copy for `cases/[slug]`, `downloads/[slug]`, `videos/[slug]`, `solutions/[slug]`, and `knowledge/[categorySlug]/[slug]`
-- Restored seeded fallback reads in `lib/cms-data.ts` for articles, article categories, solutions, downloads, videos, cases, and FAQs so representative Gate 3 detail routes stay testable without local Prisma/PostgreSQL content
-- Reworked `app/news/[slug]/page.tsx` from a raw placeholder into a locale-aware detail shell with breadcrumb, noindex metadata, slug reference, and inquiry CTA while keeping the route non-factual until a verified news source exists
-- Extended `lib/page-metadata.ts` so page-level localized metadata also drives `og:title`, `og:description`, and Twitter summary tags instead of inheriting the site-wide default
-- Revalidated page-level metadata parity on localized product, case, knowledge, news placeholder, and search routes while preserving canonical, hreflang, and robots output
-- Created checkpoint commit `22d4d24 feat(gate4): checkpoint localized route parity baseline`
-- Added `GATE4_RELEASE_PREP.md` and `GATE5_HANDOFF_DRAFT.md` to carry release-prep facts, rollback notes, and handoff scope without crossing the Gate 6 production boundary
-- Restored sampled legacy liquid-product category/detail routes in `lib/data.ts` from audited production inventory so Gate 1A-approved URL families regain local `200` coverage without inventing new parameters
-- Revalidated the restored legacy routes for zh/en canonical, hreflang, robots, and sitemap inclusion on the refreshed `3011` preview
-- Fixed locale hydration risk in `components/lead/LeadForm.tsx` by passing server-resolved `locale` and localized `sourcePage` into all public lead-form entry points instead of deriving locale from client pathname after middleware rewrites
-- Revalidated `/en/contact`, `/en`, and restored `/en/products/...` server HTML plus hydrated DOM parity for English lead-form labels and localized hidden `sourcePage` values
-- Created checkpoint commit `0332860 fix(gate4): restore legacy liquid routes and align lead form locale`
-- Created final handoff commit `30f2f63 docs(gate5): finalize release candidate handoff`
-- Created release tags `gate-4-pass` and `gate-5-final` at commit `30f2f63`
-- Collected desktop/mobile visual evidence for `/en/contact` and the restored mobile legacy product detail route through in-app browser screenshots
-- Audited `/en` data-backed detail routes to confirm the manual-verification translation notice appears wherever Chinese source technical content still remains
-- Closed Gate 4 with Lighthouse waiver `D-008` and English source-content waiver `D-009`, promoting the branch to `RELEASE_CANDIDATE_READY`
-- Received explicit execution authority to continue from Gate 5 close-out directly into Gate 6 production precheck, and to release only if the existing production path, environment, backups, and rollback route are all verifiable without guessing missing inputs
-- Closed Gate 5 on clean commit `5f731bf docs(gate5): synchronize final release candidate evidence` and tag `gate-5-handoff-2026-06-17`
-- Completed Gate 6 production precheck against the bound Vercel project and verified the production Neon target, PITR window, and optional env behavior through read-only metadata plus code inspection
-- Verified Blob recovery assurance by creating an external offline mirror for production store `store_bf****7AX` at `D:\work\gate6-backups\bostar-blob-20260617-094448` and ZIP `D:\work\gate6-backups\bostar-blob-20260617-094448.zip`
-- Deployed approved release candidate commit `5f731bf` to Vercel production as deployment `dpl_Ff9h5z2tUAvbNSFvmrNUZCzn12CF`
-- Triggered automatic rollback after production smoke found legacy liquid category routes returning `404`, and restored production back to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`
-- Created fix branch `fix/gate6-legacy-vercel-404` from Gate 6 evidence baseline and committed `1767fc9 fix(gate6): restore legacy liquid routes in vercel runtime`
-- Added `lib/legacy-compatibility.ts` plus selective fallback logic in `lib/cms-data.ts` so approved legacy liquid category/detail URLs resolve from audited seed data when production DB content is missing those category entities
-- Added `scripts/smoke-legacy-routes.mjs` and revalidated the approved legacy liquid route family on local dev and local production builds
-- Built preview deployment `dpl_9zcG69R1eVVekeP4dDJK9H6SHdAf` and production-target deployment `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` from commit `1767fc98162aa7a99dfa1d30e185399adefcd609`
-- Confirmed from Vercel deployment metadata that `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` was initially `STAGED`, which invalidated the earlier assumption that `www.bostarcoating.com` had already been testing the new fix
-- Promoted `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC` to active production traffic through `POST /v10/projects/{projectId}/promote/{deploymentId}?teamId=...` after `vercel promote` failed with a false `Deployment belongs to a different team` CLI error
-- Re-promoted `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB` through the same promote API after the first promote/rollback cycle to restore a public baseline before the final retry
-- Verified the final public production state through external fetches on `https://www.bostarcoating.com` because repeated local PowerShell requests from the agent host were challenged by `403 Vercel Security Checkpoint` and no longer reflected general public reachability
-- Public verification on the final production retry confirms `/`, `/en`, `/about`, `/contact`, `/en/contact`, `/solutions/automatic-coating-line`, `/knowledge/process-knowledge/adjust-spray-voltage`, `/downloads`, `/products/Manual-Electrostatic-Liquid-Spray-Gun`, `/en/products/Manual-Electrostatic-Liquid-Spray-Gun`, `/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`, `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`, `/products/Automatic-Electrostatic-Liquid-Spray-Gun`, `/en/products/Automatic-Electrostatic-Liquid-Spray-Gun`, and `/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun` are publicly reachable on the promoted release
+- Read the Gate 6 control plane and recovered on actual branch `fix/gate6-legacy-vercel-404` instead of the stale Gate 6 branch note
+- Created `scripts/gate7-production-audit.mjs` to audit all approved Gate 1A URLs against live production and emit Gate 7 URL / SEO evidence
+- Ran a full post-release production audit on `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC`
+- Identified four unresolved legacy category regressions that were still violating approved `RESTORE_200` requirements:
+  - `/products/Automatic-Electrostatic-Powder-Rotary-Bell`
+  - `/products/Automatic-Electrostatic-Rotary-Bell-Atomizer`
+  - `/products/High-Pressure-Airless-Spraying-Equipment`
+  - `/products/Testing-Instruments`
+- Implemented a minimal seed-backed compatibility patch in `523b6b0 fix(gate7): restore remaining legacy category routes`
+- Extended legacy fallback coverage in:
+  - `lib/data.ts`
+  - `lib/legacy-compatibility.ts`
+  - `lib/cms-data.ts`
+- Verified the patch locally with:
+  - `npm run typecheck`
+  - `npm run lint`
+  - `npm run build`
+  - targeted local production smoke on `http://127.0.0.1:3011`
+- Built preview deployment `dpl_DRV6DRMUZRvxb4jGU79EGcrwLf3v` and confirmed Vercel `Ready` status
+- Built and promoted production deployment `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`
+- Re-ran the full Gate 7 production audit and cleared all system-owned URL / SEO regressions
 
 ## Active blockers
 
-- No blocking build errors remain
-- English detail content still reuses Chinese source material where no approved English content exists in current CMS/data sources
-- Structured data URL localization is in place, but source-language content strings remain untranslated on data-backed detail pages without approved English copy
-- Existing lint warnings remain in legacy admin/FAQ/data modules and are tracked as non-blocking debt
-- Product-detail shell localization plus representative seeded runtime smoke are complete for product, case, download, video, solution, and knowledge detail routes
-- Static public-surface verification is now complete for `/faq`, `/service`, `/contact`, `/about`, and `/`
-- Reserved news routes now use `noindex,nofollow`, are excluded from `sitemap.xml`, and remain online without losing the URL contract
-- Product and video JSON-LD now emit only repository-backed facts; hardcoded offer price, stock, and upload-date placeholders are removed
-- Sampled Gate 1A legacy liquid-product URL families are now restored locally and no longer block Gate 4 parity acceptance
-- Gate 6 terminal outcome: production release retry is live and publicly reachable on `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC`
-- No DNS change, production database write, production blob mutation, or real lead submission was executed during the successful retry
+- No hard blockers remain
+- Remaining non-blocking backlog:
+  - `sample-download.pdf` remains a business-review orphaned `404`
+  - auxiliary production aliases `fjbosd.com` and `www.fjbosd.com` are still attached to the same Vercel project and should be reviewed outside this rollout
 
 ## Latest verification
 
-- `npm run typecheck`: pass
-- `npm run build`: pass with warnings
-- `npm run lint`: pass with warnings only
-- 2026-06-17 Gate 6 successful production retry:
-  - `vercel api /v13/deployments/dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC`: confirms commit `1767fc98162aa7a99dfa1d30e185399adefcd609`, message `fix(gate6): restore legacy liquid routes in vercel runtime`, and `readySubstate=PROMOTED`
-  - `vercel inspect www.bostarcoating.com`: resolves live production traffic to `dpl_EGAsdvJjcZqgE9tHCdNkV85SoPYC`
-  - public fetch verification confirms the high-risk legacy liquid category/detail routes are publicly reachable on the promoted release
-  - local shell requests from the agent host now receive `403 Vercel Security Checkpoint`; treated as host-specific challenge evidence rather than a public-site outage because the public fetch channel and Vercel deployment resolution both match the promoted release
-- 2026-06-17 final Gate 5 close-out validation:
+- Local code patch verification on `523b6b0`:
   - `npm run typecheck`: pass
   - `npm run lint`: pass with the same 4 pre-existing warnings and no new warnings
   - `npm run build`: pass with the same 4 pre-existing warnings and no new warnings
-  - targeted runtime smoke on `http://127.0.0.1:3011`:
-    - `/`, `/en`, `/contact`, `/en/contact`, restored zh/en legacy liquid product detail, `/sitemap.xml`, `/robots.txt`, and `/missing-route-check` all return expected status
-    - canonical, hreflang, and robots outputs match the current release-candidate policy on the audited routes
-- 2026-06-17 Gate 6 production precheck:
-  - `git status --porcelain`: clean immediately after Gate 5 handoff commit `5f731bf`
-  - `vercel whoami`: authenticated as `chenshengminng-3236`
-  - `.vercel/project.json`: bound to Vercel project `bostar-geo-website` (`prj_Snv902TWIACH7i5hQc3jeRgv20Z0`) in org `team_wiV97iL3q7MEbe71U8rFU9HC`
-  - `vercel inspect www.bostarcoating.com`: active production deployment `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`, target `production`, status `Ready`, created `2026-05-27 21:51:48 +08:00`
-  - `Invoke-WebRequest https://www.bostarcoating.com`: 200
-  - `vercel env ls production`: core runtime names present for `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `NEXT_PUBLIC_SITE_URL`, `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `ADMIN_SESSION_SECRET`, `BLOB_READ_WRITE_TOKEN`, `BLOB_STORE_ID`, `BLOB_WEBHOOK_PUBLIC_KEY`; `SMTP_*`, `WEBHOOK_*`, and `UPLOAD_PROVIDER` are absent from current production env listing
-  - `vercel deploy --help` and `vercel rollback --help`: existing production deploy/rollback CLI path is available
-  - Read-only Vercel integration metadata uniquely binds production DB secrets to Neon resource `neon-fuchsia-jacket` (`odd-****-7926`), branch `main` (`br-p****zgf`), region `aws-us-east-1`, and host `ep-d****ew2.c-8.us-east-1.aws.neon.tech`
-  - Read-only Neon metadata confirms `history_retention_seconds=21600` on the bound production project and a restore-capable default branch `main`
-  - `vercel blob get-store store_bf****7AX` and `vercel blob list-stores` verify the active production Blob store identity, size (`9.9MB`), object count (`24`), region (`iad1`), public access mode, and project binding
-  - Code inspection confirms `SMTP_*`, `WEBHOOK_*`, and `UPLOAD_PROVIDER` are not consumed by current runtime paths; `app/api/upload/route.ts` is hard-wired to Vercel Blob with no local-filesystem fallback
-  - External offline mirror verification for Blob store `store_bf****7AX`: `24/24` blobs downloaded, `0` failures, `0` hash mismatches, ZIP SHA-256 sidecar recorded at `D:\work\gate6-backups\bostar-blob-20260617-094448.zip.sha256.txt`
-  - Release-candidate worktree `D:\work\gate6-release\release-5f731bf`: `npm ci` pass, `npm run typecheck` pass, `npm run lint` pass with the same 4 warnings, `npm run build` pass
-  - Production deployment `dpl_Ff9h5z2tUAvbNSFvmrNUZCzn12CF`: `https://www.bostarcoating.com/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` returned `404`, which triggered automatic rollback
-  - Rollback API restored production to `dpl_7GyQnXHosWMRooQauqjrXXV5r6KB`; `vercel rollback status bostar-geo-website` reports success
-- 2026-06-17 Gate 4 metadata parity slice:
-  - `npm run typecheck`: pass after page-level Open Graph and Twitter metadata alignment
-  - `npm run lint`: pass with the same 4 pre-existing warnings after the metadata slice
-  - `npm run build`: pass with the same 4 pre-existing warnings after the metadata slice
-- Local smoke on `http://127.0.0.1:3011`:
-  - `/en`: 200, `lang=en`, canonical `http://localhost:3000/en`, English hero copy and translation notice present
-  - `/en/about`: 200, canonical `http://localhost:3000/en/about`, English breadcrumb and capability cards present
-  - `/en/search?q=spray`: 200, canonical `http://localhost:3000/en/search`, `noindex,nofollow`, English empty-state and translation notice present
-  - `/en/about`: `OrganizationJsonLd` description and footer summary now use English fallback copy
-- Preview restart sequence completed on `http://127.0.0.1:3011`; current authoritative listener is `next start --hostname 127.0.0.1 --port 3011` with Node PID `32624` (spawned via `npm run start -- --hostname 127.0.0.1 --port 3011`, parent PID `47892`)
-- Representative seeded product-detail smoke:
-  - zh: `/products/manual-powder-coating-gun/manual-powder-spray-gun` -> 200, title `鎵嬪姩绮夋湯闈欑數鍠锋灙 | BOSTAR GEO`, canonical `http://localhost:3000/products/manual-powder-coating-gun/manual-powder-spray-gun`, hreflang zh/en pair present, breadcrumb JSON-LD present, `BS-PM100` and `0.4-0.7 MPa` unchanged, `index, follow`, no runtime error
-  - en: `/en/products/manual-powder-coating-gun/manual-powder-spray-gun` -> 200, `html lang=en`, title `鎵嬪姩绮夋湯闈欑數鍠锋灙 Product Details | BOSTAR GEO`, canonical `http://localhost:3000/en/products/manual-powder-coating-gun/manual-powder-spray-gun`, hreflang zh/en pair present, English shell headings and translation notice present, no Chinese shell leakage, `BS-PM100` and `0.4-0.7 MPa` unchanged, `index, follow`, no runtime error
-- Remaining seeded detail smoke:
-  - zh/en case detail: `/cases/hardware-powder-coating-case`, `/en/cases/hardware-powder-coating-case` -> 200, canonical/hreflang pair present, breadcrumb JSON-LD present, English `Case Studies` shell present, `index, follow`, no runtime error
-  - zh/en download detail: `/downloads/powder-gun-catalog`, `/en/downloads/powder-gun-catalog` -> 200, canonical/hreflang pair present, breadcrumb JSON-LD present, English `Downloads`, `Resource Type`, and access CTA shell present, `index, follow`, no runtime error
-  - zh/en video detail: `/videos/powder-gun-operation`, `/en/videos/powder-gun-operation` -> 200, canonical/hreflang pair present, breadcrumb JSON-LD present, English `Video Center` and `Video Summary` shell present, `index, follow`, no runtime error
-  - zh/en solution detail: `/solutions/hardware-powder-coating`, `/en/solutions/hardware-powder-coating` -> 200, canonical/hreflang pair present, breadcrumb JSON-LD present, English `Solutions`, `Consult This Solution`, and FAQ shell present, `index, follow`, no runtime error
-  - zh/en knowledge detail: `/knowledge/selection-guide/how-to-choose-electrostatic-spray-gun`, `/en/knowledge/selection-guide/how-to-choose-electrostatic-spray-gun` -> 200, canonical/hreflang pair present, breadcrumb JSON-LD present, English `Knowledge Center`, FAQ shell, and inquiry CTA shell present, `index, follow`, no runtime error
-  - zh/en news placeholder detail: `/news/release-placeholder`, `/en/news/release-placeholder` -> 200, `noindex,nofollow`, canonical/hreflang pair present, breadcrumb JSON-LD present, English `News Detail Placeholder`, `Current Status`, and inquiry CTA shell present, no runtime error
-  - zh/en news index routes: `/news`, `/en/news` -> 200, canonical/hreflang pair present, `noindex,nofollow`, reserved placeholder shell retained, no runtime error
-  - remaining public list/category pages on `/en`: `/products`, `/products/manual-powder-coating-gun`, `/cases`, `/downloads`, `/videos`, `/solutions`, `/knowledge`, `/knowledge/selection-guide` -> 200, `lang=en`, canonical/hreflang present, `index, follow`, no runtime error
-  - zh/en not-found routes: `/missing-route-check`, `/en/missing-route-check` -> 404, locale-specific `html lang`, canonical/hreflang present, `noindex`, no runtime error; English not-found copy and Chinese not-found heading render correctly
-  - static public-surface sweep on `/en`:
-    - `/en/faq` -> 200, `lang=en`, title `FAQ | BOSTAR GEO`, canonical `http://localhost:3000/en/faq`, hreflang pair present, `index, follow`, translation notice present, no technical FAQ section leakage, no FAQ JSON-LD, no runtime error
-    - `/en/service`, `/en/contact`, `/en/about`, `/en` -> 200, `lang=en`, canonical/hreflang present, `index, follow`, expected English titles render, no runtime error
-  - sitemap and robots parity:
-    - `/sitemap.xml` -> 200, `/news` and `/en/news` absent, `/faq`, `/en/faq`, and seeded localized product detail URLs present
-    - `/robots.txt` -> 200, disallow rules present for `/api/admin/`, `/search`, and `/en/search`
-- structured-data parity:
-    - zh/en seeded product detail routes -> 200, no `Offer` schema and no fabricated `price: 0.00`; localized product URL remains present in JSON-LD
-    - zh/en seeded video detail routes -> 200, no hardcoded `uploadDate: 2026-01-01`; JSON-LD remains runtime-safe and omits unverifiable thumbnail data when absent
-  - legacy URL parity sampling:
-    - `/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` -> 404, `noindex`
-    - `/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun` -> 404, `noindex`
-    - matching planning rows and production-inventory evidence captured in `GATE3_LEGACY_URL_GAP_REPORT.md`
-  - Gate 4 entry baseline:
-    - core zh/en indexable pages -> 200, locale-aware title/canonical/hreflang present, no runtime error
-    - reserved routes `/news`, `/en/news`, `/search?q=spray`, `/en/search?q=spray` -> reachable with `noindex,nofollow`
-    - missing-route checks `/missing-route-check`, `/en/missing-route-check` -> 404 with `noindex`
-    - `/sitemap.xml` and `/robots.txt` -> 200 with non-empty bodies; summary captured in `GATE4_ENTRY_BASELINE.md`
-  - Gate 4 metadata parity re-audit on latest build:
-    - `/`, `/en`, seeded zh/en product detail, zh/en case detail, zh/en knowledge detail, zh/en news placeholder, and zh/en search all emit page-level `og:title`, `og:description`, `twitter:title`, canonical, and hreflang values consistent with route locale and indexing policy
-    - `/en` DOM layout metrics confirm the hero, h1, translation notice, and subsequent sections are present in runtime despite repeated in-app screenshot timeouts on the browser capture channel
-  - lightweight response-time baseline on the refreshed `3011` preview:
-    - `/` -> 200 in 4651 ms, body 114278 chars
-    - `/en` -> 200 in 4284 ms, body 120262 chars
-    - `/en/products/manual-powder-coating-gun/manual-powder-spray-gun` -> 200 in 4174 ms, body 57563 chars
-    - `/en/news/release-placeholder` -> 200 in 4143 ms, body 43451 chars
-  - post-restoration and locale-parity slice:
-    - `npm run typecheck`: pass after lead-form locale propagation and legacy liquid-route restoration
-    - `npm run lint`: pass with the same 4 pre-existing warnings after the lead-form and legacy-route slice
-    - `npm run build`: pass with the same 4 pre-existing warnings after the lead-form and legacy-route slice
-    - restored legacy-route parity:
-      - `/products/Manual-Electrostatic-Liquid-Spray-Gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun` -> 200, canonical/hreflang present, `index, follow`
-      - `/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` -> 200, titles match audited route family, `BSD-3009A` present, canonical/hreflang present, `index, follow`
-      - `/products/Manual-Electrostatic-Liquid-Spray-Gun/manual-liquid-electrostatic-spray-gun` and `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/manual-liquid-electrostatic-spray-gun` -> 200, canonical/hreflang present, `index, follow`
-      - `/products/Automatic-Electrostatic-Liquid-Spray-Gun` and `/en/products/Automatic-Electrostatic-Liquid-Spray-Gun` -> 200, canonical/hreflang present, `index, follow`
-      - `/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun` and `/en/products/Automatic-Electrostatic-Liquid-Spray-Gun/bsd-3029-automatic-liquid-electrostatic-spray-gun` -> 200, titles match audited route family, `BSD-3029` present, canonical/hreflang present, `index, follow`
-      - `/sitemap.xml` includes the restored zh/en category/detail routes above
-    - lead-form locale parity:
-      - `/en/contact` server HTML contains English field labels, English request-type options, and hidden `sourcePage=/en/contact`
-      - browser DOM on `/en/contact` confirms English labels/options and hidden `sourcePage=/en/contact`
-      - `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` server HTML contains English lead-form shell and hidden localized product detail `sourcePage`
-      - in-app browser dev logs still surface an older React 418 entry with timestamp `2026-06-16T17:33:40.110Z`; treated as stale session history because refreshed server HTML and hydrated DOM now agree on localized lead-form output
-  - release-candidate close-out:
-    - `git commit -m "fix(gate4): restore legacy liquid routes and align lead form locale"` -> `0332860`
-    - `git commit -m "docs(gate5): finalize release candidate handoff"` -> `30f2f63`
-    - `git tag gate-4-pass 30f2f63` and `git tag gate-5-final 30f2f63`
-    - `Get-Command lighthouse` -> no local binary found
-    - `npx --no-install lighthouse --version` -> fails without installed package; no package auto-install performed
-    - desktop screenshot review: `/en/contact` renders a stable English form shell with no blank state or overlap
-    - mobile screenshot review: restored `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun` renders the translation notice, Chinese source body, and image stack without visible overlap on `390x844`
-    - translation-notice audit:
-      - `/en/products/manual-powder-coating-gun/manual-powder-spray-gun`
-      - `/en/products/Manual-Electrostatic-Liquid-Spray-Gun/bsd-3009a-manual-liquid-electrostatic-spray-gun`
-      - `/en/cases/hardware-powder-coating-case`
-      - `/en/downloads/powder-gun-catalog`
-      - `/en/videos/powder-gun-operation`
-      - `/en/solutions/hardware-powder-coating`
-      - `/en/knowledge/selection-guide/how-to-choose-electrostatic-spray-gun`
-      - all above detail routes retain Chinese source titles/content and now explicitly show the manual-verification translation notice
+  - local production smoke on `http://127.0.0.1:3011`:
+    - restored zh/en category routes return `200` for:
+      - `/products/Automatic-Electrostatic-Powder-Rotary-Bell`
+      - `/products/Automatic-Electrostatic-Rotary-Bell-Atomizer`
+      - `/products/High-Pressure-Airless-Spraying-Equipment`
+      - `/products/Testing-Instruments`
+    - corresponding legacy detail routes return `200`
+    - `/sitemap.xml` returns `200`
+- Preview deployment:
+  - `vercel deploy --yes`: created preview deployment `dpl_DRV6DRMUZRvxb4jGU79EGcrwLf3v`
+  - `vercel inspect bostar-geo-website-eh9frjz46-yonree-s-projects.vercel.app`: `Ready`
+  - direct host fetch to the preview alias timed out from the current agent host; treated as an access-path limitation rather than a build failure because Vercel reported `Ready` and the local production build matched the deployed artifact
+- Production deployment:
+  - `vercel deploy --prod --yes`: created production deployment `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`
+  - `vercel inspect www.bostarcoating.com`: resolves `www.bostarcoating.com` to `dpl_AJn9W2vkJZ9zWdQHrUAdT7UkHM8h`
+  - post-deploy targeted smoke on `https://www.bostarcoating.com`:
+    - the four restored legacy category routes now return `200`
+    - corresponding legacy detail routes return `200`
+    - `/news` remains `noindex,nofollow`
+    - `/sitemap.xml` includes the restored category family
+    - `/robots.txt` returns `200`
+- Full Gate 7 production audit after the patch:
+  - `PASS_301`: `58`
+  - `PASS_200`: `65`
+  - `EXPECTED_NOINDEX`: `1`
+  - `BUSINESS_REVIEW_REQUIRED`: `1`
+  - `UNEXPECTED_404`: `0`
+  - `CANONICAL_ERROR`: `0`
+  - `HREFLANG_ERROR`: `0`
 
 ## Next task
 
-- Gate 6 is complete. Only evidence sync, final delivery close-out, and production release tagging remain for this rollout branch.
+- Gate 7 autonomous stabilization is complete.
+- Only non-blocking business follow-up remains:
+  - confirm disposition of `sample-download.pdf`
+  - review whether extra aliases on the Vercel project should remain

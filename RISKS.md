@@ -26,9 +26,9 @@
 
 ## R-005 Legacy product URLs lack local source entities
 
-- Impact: sampled Gate 1A legacy liquid-product families previously blocked Gate 4 because required `200` routes returned `404`.
-- Current mitigation: resolved locally on 2026-06-17 by restoring audited seed-backed category/detail entities in `lib/data.ts`; zh/en route, metadata, and sitemap parity revalidated on `http://127.0.0.1:3011`.
-- Trigger to escalate: only if broader legacy URL audit finds additional uncovered families beyond the restored sampled routes.
+- Impact: broader Gate 7 production audit proved that legacy category coverage can regress independently from previously restored detail coverage.
+- Current mitigation: resolved on 2026-06-17 by extending audited seed-backed compatibility coverage for the remaining approved legacy category family in `lib/data.ts`, `lib/legacy-compatibility.ts`, and `lib/cms-data.ts`; full production re-audit now clears all approved legacy route families except the explicit business-review orphan asset.
+- Trigger to escalate: if a future deployment changes the compatibility manifest or product fallback layer and any approved legacy category/detail route drops out of `GATE7_PRODUCTION_URL_RESULTS.csv`.
 
 ## R-006 Lighthouse evidence gap
 
@@ -47,3 +47,15 @@
 - Impact: direct shell-based HTTP smoke from the current agent host can receive `403 Vercel Security Checkpoint`, which makes local PowerShell fetches unreliable as the sole production verification channel after repeated deployment testing.
 - Current mitigation: final production smoke is anchored on live deployment resolution plus external public fetches, while local shell requests are treated as host-specific challenge evidence only.
 - Trigger to escalate: if all independent public verification channels start returning the same 403 challenge, or if human browser verification reports a public access failure.
+
+## R-009 Orphaned public asset remains unresolved
+
+- Impact: `https://www.bostarcoating.com/sample-download.pdf` still resolves to `404` and has no verified in-repo source file or approved replacement target.
+- Current mitigation: Gate 7 classifies the asset as `BUSINESS_REVIEW_REQUIRED` instead of fabricating a replacement file or redirect target; this remains the only non-system backlog item in the full URL audit.
+- Trigger to escalate: if business requires the file to remain publicly reachable or wants it redirected to a verified replacement.
+
+## R-010 Extra production aliases remain attached to the Vercel project
+
+- Impact: the live production deployment for `www.bostarcoating.com` also carries `fjbosd.com` and `www.fjbosd.com` aliases, which expands the public surface beyond the declared primary domain.
+- Current mitigation: no alias or DNS change was made in this execution; the condition is recorded for project-owner review because the approved primary domain continues to resolve correctly.
+- Trigger to escalate: if those aliases are unintended, if they surface duplicate-content concerns, or if a future release changes alias ownership.
