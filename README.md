@@ -1,70 +1,71 @@
-# BOSTAR GEO 品牌官网
+# BOSTAR GEO Website
 
-面向 GEO / SEO / 工业设备询盘转化的博士达品牌官网工程。技术栈为 Next.js App Router、TypeScript、Tailwind CSS、Prisma 和 PostgreSQL。
+博士达官网重设计工程，基于 `Next.js App Router + TypeScript + Prisma + PostgreSQL`。
 
 ## 启动
 
 ```bash
 npm install
 cp .env.example .env
-npm run prisma:generate
+npm run prisma:generate:no-engine
 npm run dev
 ```
 
-默认访问地址：
+默认地址：
 
 ```text
 http://localhost:3000
 ```
 
-## 数据库
-
-配置 `.env` 中的 `DATABASE_URL` 后执行：
+## 关键脚本
 
 ```bash
-npm run prisma:migrate
-npm run prisma:seed
+npm run typecheck
+npm run lint
+npm run build
+npm run test:unit
+npm run test:integration
+npm run test:e2e
+npm run prisma:validate
+npm run prisma:diff:empty
 ```
 
-当前前台页面使用 `lib/data.ts` 的本地种子数据兜底，数据库未连接时仍可展示官网内容。`POST /api/leads` 会尝试写入 Prisma `Lead` 表；未配置数据库时仍返回成功，便于前期页面联调。
+## Lead / Inquiry Workflow
 
-## 已实现
+- `/api/leads`
+  - richer 询盘字段校验
+  - UTM / referrer / source metadata
+  - SLA 截止时间计算
+  - `LeadEvent` / `NotificationLog`
+- `/api/lead-attachments`
+  - 私有存储
+  - MIME / 扩展名 / 大小限制
+  - 上传草稿 token
+- `/api/admin/leads/[id]/attachments/[attachmentId]`
+  - 后台鉴权下载附件
 
-- 首页、关于、产品中心、产品分类、产品详情
-- 知识中心、知识分类、文章详情
-- 解决方案、案例、资料下载、视频中心、服务、FAQ、联系、搜索
-- 后台管理入口和产品、文章、方案、案例、资料、视频、FAQ、线索、设置页面
-- `sitemap.ts`、`robots.ts`、canonical metadata、Open Graph
-- Organization、Product、FAQPage、Article、Breadcrumb、VideoObject、HowTo JSON-LD 组件
-- Prisma schema 和 seed 脚本
+## Prisma
 
-## 后续接入点
-
-- 将 `lib/data.ts` 替换为 Prisma 查询
-- 接入 Auth.js 或服务端 session 保护 `/admin` 和 `/api/admin`
-- 配置 SMTP / 飞书 / 企业微信 Webhook
-- 上传接口接入 OSS / COS / S3，并增加文件类型与大小限制
-
-## 上线到 bostarcoating.com
-
-推荐先部署到 Vercel，并把正式环境变量设置为：
+新增迁移位于：
 
 ```text
-NEXT_PUBLIC_SITE_URL=https://www.bostarcoating.com
+prisma/migrations/20260618_lead_workflow_foundation/
 ```
 
-在 Vercel 项目中添加两个域名：
+执行前先看：
 
 ```text
-www.bostarcoating.com
-bostarcoating.com
+docs/MIGRATION_RUNBOOK.md
 ```
 
-域名服务商 DNS 解析建议：
+## 文档
 
-```text
-主机记录 @     类型 A      记录值 76.76.21.21
-主机记录 www   类型 CNAME  记录值 cname.vercel-dns.com
-```
+- [docs/EXECUTION_PLAN.md](/D:/桌面/液体自动静电喷枪说明书项目文件夹%20-1/bostar-geo-website/docs/EXECUTION_PLAN.md)
+- [docs/TASK_STATE.md](/D:/桌面/液体自动静电喷枪说明书项目文件夹%20-1/bostar-geo-website/docs/TASK_STATE.md)
+- [docs/DECISIONS.md](/D:/桌面/液体自动静电喷枪说明书项目文件夹%20-1/bostar-geo-website/docs/DECISIONS.md)
+- [docs/MIGRATION_RUNBOOK.md](/D:/桌面/液体自动静电喷枪说明书项目文件夹%20-1/bostar-geo-website/docs/MIGRATION_RUNBOOK.md)
 
-如果部署到自有服务器，则把 `@` 的 A 记录指向服务器公网 IP，并把 `www` 设置为 CNAME 到 `bostarcoating.com`，或同样设置 A 记录到服务器 IP。
+## 说明
+
+- Windows 本地如果 Prisma query engine DLL 被占用，可先执行 `npm run prisma:generate:no-engine` 完成类型生成。
+- 真实 SMTP / Webhook / 生产数据库迁移不在本仓库内自动执行，需要按 runbook 在 staging 或 production 手动启用。

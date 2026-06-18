@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { getLeadRepository } from '@/lib/lead/repository';
 
 export async function GET() {
-  const leads = await prisma.lead.findMany({ orderBy: { createdAt: 'desc' }, take: 200 });
+  const leads = await getLeadRepository().listLeads();
   return NextResponse.json({ leads });
 }

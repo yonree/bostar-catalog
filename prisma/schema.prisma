@@ -236,28 +236,141 @@ model Video {
 
 model Lead {
   id                String    @id @default(cuid())
+  inquiryNumber     String?   @unique
+  locale            String    @default("zh-CN")
   name              String
   company           String?
   phone             String?
   email             String?
   wechat            String?
+  whatsapp          String?
   region            String?
+  country           String?
   sourcePage        String?
+  sourceType        String?
+  referrer          String?
   demandType        String?
+  target            String?
   interestedProduct String?
+  interestedProductModel String?
+  interestedSolution String?
   workpiece         String?
+  workpieceMaterial String?
+  coatingMaterial   String?
+  capacity          String?
   currentIssue      String?
   message           String?
+  privacyConsent    Boolean   @default(false)
+  utmSource         String?
+  utmMedium         String?
+  utmCampaign       String?
+  utmTerm           String?
+  utmContent        String?
+  rawPayload        Json?
   attachmentUrl     String?
   productId         String?
   product           Product?  @relation(fields: [productId], references: [id])
   downloadId        String?
   download          Download? @relation(fields: [downloadId], references: [id])
   status            String    @default("new")
+  slaStatus         String    @default("pending")
+  slaMinutes        Int?
+  businessTimeZone  String?
+  businessWindowStart String?
+  businessWindowEnd String?
+  workingDays       String?
+  holidaySnapshot   String?
+  dueAt             DateTime?
+  firstNotifiedAt   DateTime?
+  assignedAt        DateTime?
+  firstResponseAt   DateTime?
+  firstContactAt    DateTime?
+  timedOutAt        DateTime?
   assignedTo        String?
+  backupAssignee    String?
+  escalationTo      String?
   remark            String?
+  attachments       LeadAttachment[]
+  events            LeadEvent[]
+  notificationLogs  NotificationLog[]
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
+
+  @@index([createdAt])
+  @@index([status, createdAt])
+  @@index([locale, createdAt])
+  @@index([dueAt])
+  @@index([sourcePage])
+}
+
+model LeadAttachment {
+  id               String   @id @default(cuid())
+  leadId           String?
+  lead             Lead?    @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  uploadToken      String   @unique
+  originalFilename String
+  safeFilename     String
+  storageProvider  String
+  storagePath      String
+  storageKey       String
+  storageUrl       String?
+  mimeType         String
+  extension        String
+  sizeBytes        Int
+  accessStatus     String   @default("temporary")
+  scanStatus       String   @default("pending")
+  uploadedAt       DateTime @default(now())
+  attachedAt       DateTime?
+  expiresAt        DateTime?
+  deletedAt        DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([leadId])
+  @@index([expiresAt])
+  @@index([scanStatus, accessStatus])
+}
+
+model LeadEvent {
+  id         String   @id @default(cuid())
+  leadId     String
+  lead       Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  eventType  String
+  statusFrom String?
+  statusTo   String?
+  actor      String?
+  detail     Json?
+  createdAt  DateTime @default(now())
+
+  @@index([leadId, createdAt])
+  @@index([eventType, createdAt])
+}
+
+model NotificationLog {
+  id             String   @id @default(cuid())
+  leadId         String
+  lead           Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  eventType      String
+  channel        String
+  provider       String
+  recipient      String
+  idempotencyKey String
+  requestId      String?
+  messageId      String?
+  status         String   @default("pending")
+  attemptCount   Int      @default(0)
+  lastError      String?
+  payloadVersion String   @default("v1")
+  payloadPreview String?
+  firstAttemptAt DateTime?
+  lastAttemptAt  DateTime?
+  sentAt         DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([channel, idempotencyKey])
+  @@index([leadId, createdAt])
+  @@index([status, createdAt])
 }
 
 model MediaAsset {

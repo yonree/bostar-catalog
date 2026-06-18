@@ -21,8 +21,13 @@ export function resolveRedirectHost(host: string | null | undefined) {
 export function isPendingDownloadAsset(fileUrl: string | null | undefined) {
   if (!fileUrl) return false;
 
+  const normalized = fileUrl.trim();
+  if (!normalized || normalized === '#') {
+    return true;
+  }
+
   try {
-    const pathname = new URL(fileUrl, PRIMARY_SITE_ORIGIN).pathname;
+    const pathname = new URL(normalized, PRIMARY_SITE_ORIGIN).pathname;
     return pathname === '/sample-download.pdf';
   } catch {
     return false;
