@@ -22,8 +22,8 @@
 | Run release quality gate on unique RC | VERIFIED | `typecheck`, `lint`, `build`, and `test` all pass |
 | Implement strict SLA scheduler path | VERIFIED | `/api/cron/leads` exists and scheduler responsibility moved off Vercel cron into GitHub Actions workflow |
 | Create preview deployment from unique RC | VERIFIED | Main project preview deployment `dpl_AAC16N2PFLQjCXMrv5bpj8xdmLwt` reached `Ready` from RC `61e4c20` |
-| Preview deployment rehearsal | BLOCKED | Branch-scoped preview env pull still lacks database, admin, SMTP, webhook, SLA, and lead-routing vars required for staging migration and browser E2E |
-| GitHub Actions and remote release branch validation | BLOCKED | Local repo still has no configured git remote, and current GitHub connector scope does not expose the website repository |
+| Preview deployment rehearsal | BLOCKED | Chromium automation against the RC preview still lands on `Vercel Security Checkpoint` / `代码 21` instead of business pages, and branch-scoped preview env pull still lacks database, admin, SMTP, webhook, SLA, and lead-routing vars required for staging migration and browser E2E |
+| GitHub Actions and remote release branch validation | BLOCKED | `git remote -v` is still empty in the current clone, and current GitHub connector scope does not expose the website repository |
 | Production read-only baseline check | VERIFIED | `/` returns 200; `/en/applications` and `/support/downloads/troubleshooting-checklist` still 404 on current production, confirming redesign is not released |
 | Production deployment | BLOCKED | Production SMTP credentials, preview/staging env readiness, GitHub remote reachability, and production DB execution authorization remain external blockers |
 
@@ -31,7 +31,8 @@
 
 | Blocker | Type | Detail |
 | --- | --- | --- |
-| GitHub website repository unreachable from current environment | External dependency | Local repo still has no `remote`, and the authenticated GitHub connector does not expose the website repository, so push / remote branch verification / workflow dispatch / run log inspection cannot continue |
+| GitHub website repository unreachable from current environment | External dependency | `git remote -v` is still empty in the current clone, and the authenticated GitHub connector does not expose the website repository, so push / remote branch verification / workflow dispatch / run log inspection cannot continue |
+| Preview automation access not actually effective | External dependency | Real Chromium automation against the RC preview still lands on `Vercel Security Checkpoint` / `代码 21`, so the staging browser path cannot start |
 | Preview/Staging application env not actually present | External dependency | Branch-scoped `preview` env pull still omits `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, admin auth, SMTP, webhook, SLA, and lead routing vars required for staging migration and E2E |
 | Missing production SMTP variables | External dependency | Production env still lacks `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`, so strict SMTP delivery verification cannot complete |
 | Missing production migration execution authorization | External dependency | Cannot run production `prisma migrate deploy` or record backup ID from current environment without explicit access/approval |
@@ -58,4 +59,5 @@
 - Repository configuration now removes Vercel cron dependence and moves scheduler triggering to GitHub Actions.
 - Main project preview deployment for the unique RC is `dpl_AAC16N2PFLQjCXMrv5bpj8xdmLwt` at `https://bostar-geo-website-mowiypem0-yonree-s-projects.vercel.app`.
 - Build runtime evidence collected from the RC preview: local `node -v` is `v26.2.0`; Vercel build generated Prisma Client from `generator client { provider = "prisma-client-js" }`; Next.js build output reports `Build Completed in /vercel/output [1m]`.
+- Real browser evidence: Playwright/Chromium loading `/` and `/en/applications` on the RC preview ends at `Vercel Security Checkpoint`, including the message `无法验证您的浏览器` and `代码 21`, rather than application HTML.
 - Production release remains blocked until GitHub remote reachability, preview/staging runtime env readiness, SMTP credentials, and DB execution authorization are restored.
