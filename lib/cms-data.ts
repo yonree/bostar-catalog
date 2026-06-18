@@ -238,7 +238,7 @@ function structuredList(value: unknown, genericLabels: string[] = []) {
   return results.filter((item, index, arr) => arr.indexOf(item) === index);
 }
 
-function firstGalleryImage(value: unknown): string {
+export function firstGalleryImage(value: unknown): string {
   return collectProductImages({ gallery: value })[0] || '';
 }
 
@@ -405,7 +405,7 @@ function sanitizeProductText(value: string | null | undefined) {
   return unsuitableSceneLeakMarkers.some((marker) => content.includes(marker)) ? '' : content;
 }
 
-function sanitizeProductArray(items: string[]) {
+export function sanitizeProductArray(items: string[]) {
   return items.map((item) => sanitizeProductText(item)).filter(Boolean);
 }
 

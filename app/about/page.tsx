@@ -1,8 +1,9 @@
 import { Breadcrumb } from '@/components/layout/Breadcrumb';
+import { LocalizedLink } from '@/components/routing/LocalizedLink';
 import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { createLocalizedPageMetadata } from '@/lib/page-metadata';
 import { pickLocaleValue } from '@/lib/i18n';
+import { createLocalizedPageMetadata } from '@/lib/page-metadata';
 import { getRequestContext } from '@/lib/request-context';
 import { getSiteSettings } from '@/lib/site-settings';
 
@@ -13,7 +14,7 @@ export async function generateMetadata() {
       en: 'About BOSTAR',
     },
     description: {
-      'zh-CN': '了解博士达在工业喷涂设备、静电喷枪、自动化涂装系统和工程交付方面的能力。',
+      'zh-CN': '了解博士达在工业喷涂设备、静电喷枪、旋杯系统与工程交付方面的能力。',
       en: 'Learn about BOSTAR capabilities in industrial coating equipment, electrostatic spray systems, and engineering delivery.',
     },
   });
@@ -22,30 +23,36 @@ export async function generateMetadata() {
 const capabilities = {
   'zh-CN': [
     {
-      title: '设备选型',
-      desc: '根据工件材质、尺寸、产量和喷涂质量要求，推荐喷枪、控制器和供粉回收系统配置。',
+      title: '设备选型与工艺判断',
+      desc: '根据工件材质、尺寸、产量和喷涂质量要求，判断喷枪、控制器、供粉或供漆系统的配置方向。',
+      href: '/support/application-engineering',
     },
     {
-      title: '工艺支持',
-      desc: '覆盖上粉率优化、静电参数调试、膜厚均匀性控制和现场工艺稳定化支持。',
+      title: '制造与测试能力',
+      desc: '围绕研发、装配、样件喷涂和测试记录，建立可验证的制造与交付能力。',
+      href: '/about/research-and-manufacturing',
     },
     {
-      title: '资料沉淀',
-      desc: '把画册、操作手册、故障排查清单和维护指南组织为可检索的知识资产。',
+      title: '海外业务与支持',
+      desc: '覆盖英文询盘、出口包装、远程支持和海外备件协同的业务链路。',
+      href: '/about/global-business',
     },
   ],
   en: [
     {
-      title: 'Equipment Selection',
-      desc: 'Recommend spray guns, controllers, and powder supply or recovery configurations from part material, size, output, and finish targets.',
+      title: 'Selection & Process Decisions',
+      desc: 'Evaluate spray guns, controllers, and powder or liquid supply configurations from part material, dimensions, throughput, and finish targets.',
+      href: '/support/application-engineering',
     },
     {
-      title: 'Process Support',
-      desc: 'Support transfer-efficiency optimization, electrostatic parameter tuning, film-thickness consistency, and on-site process stabilization.',
+      title: 'Manufacturing & Testing',
+      desc: 'Support credibility through engineering, assembly, sample coating tests, and documented verification steps.',
+      href: '/about/research-and-manufacturing',
     },
     {
-      title: 'Knowledge Assets',
-      desc: 'Organize catalogs, manuals, troubleshooting checklists, and maintenance guides into searchable technical assets.',
+      title: 'Global Support',
+      desc: 'Handle English inquiries, export packaging, remote support, and overseas spare-parts coordination.',
+      href: '/about/global-business',
     },
   ],
 } as const;
@@ -69,10 +76,14 @@ export default async function AboutPage() {
         <SectionHeader headingLevel="h1" title={title} description={description} />
         <div className="grid gap-6 md:grid-cols-3">
           {capabilities[locale].map((item) => (
-            <div key={item.title} className="rounded-[24px] border border-line bg-white p-6 shadow-card">
+            <LocalizedLink
+              key={item.title}
+              href={item.href}
+              className="rounded-[24px] border border-line bg-white p-6 shadow-card transition-transform hover:-translate-y-1"
+            >
               <h2 className="text-xl font-black text-ink">{item.title}</h2>
               <p className="mt-3 leading-7 text-steel">{item.desc}</p>
-            </div>
+            </LocalizedLink>
           ))}
         </div>
       </div>

@@ -257,7 +257,7 @@ export function TechFaqSection({ locale = 'zh-CN' }: { locale?: Locale }) {
   );
 }
 
-function formatAnswer(markdown: string): string {
+export function formatAnswer(markdown: string): string {
   let html = markdown;
   // Bold → <strong>
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');

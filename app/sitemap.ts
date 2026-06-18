@@ -61,15 +61,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPaths = [
     '/',
     '/about',
+    '/about/research-and-manufacturing',
+    '/about/testing-capabilities',
+    '/about/global-business',
     '/products',
+    '/products/compare',
     '/solutions',
     '/knowledge',
     '/cases',
-    '/downloads',
-    '/videos',
-    '/service',
-    '/faq',
+    '/support',
+    '/support/sample-coating-test',
+    '/support/application-engineering',
+    '/support/after-sales',
+    '/support/downloads',
+    '/support/faq',
     '/contact',
+    '/privacy-policy',
+    '/cookie-policy',
   ];
 
   return [

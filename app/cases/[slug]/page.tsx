@@ -2,10 +2,9 @@ import Image from 'next/image';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Breadcrumb } from '@/components/layout/Breadcrumb';
-import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
 import { LeadForm } from '@/components/lead/LeadForm';
+import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
 import { Markdown } from '@/components/ui/Markdown';
-import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getCase } from '@/lib/cms-data';
 import { isEnglishLocale, localizeHref } from '@/lib/i18n';
 import { createResolvedPageMetadata } from '@/lib/page-metadata';
@@ -32,13 +31,14 @@ export async function generateMetadata({
       (isEnglish
         ? `${caseLabel} case study, source-language project summary, and inquiry entry point.`
         : item?.summary) ||
-      (isEnglish ? 'Industrial coating case study and inquiry entry point.' : '客户案例详情。'),
+      (isEnglish ? 'Industrial coating case study and inquiry entry point.' : '工业喷涂案例详情与询盘入口。'),
   });
 }
 
 export default async function CaseDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const [{ slug }, { locale }] = await Promise.all([params, getRequestContext()]);
   const item = await getCase(slug);
+
   if (!item) notFound();
 
   const isEnglish = isEnglishLocale(locale);
@@ -64,7 +64,6 @@ export default async function CaseDetailPage({ params }: { params: Promise<{ slu
           <h1 className="max-w-3xl text-[42px] font-black leading-[1.06] text-ink md:text-[56px]">
             {item.title}
           </h1>
-          {isEnglish ? <TranslationNotice className="mt-6 max-w-3xl" /> : null}
           <div className="mt-6 rounded-[22px] border border-primary/20 bg-primary-light/35 p-6">
             <Markdown className="text-lg leading-8 text-ink">{item.summary}</Markdown>
           </div>
@@ -76,7 +75,12 @@ export default async function CaseDetailPage({ params }: { params: Promise<{ slu
         </div>
         <div>
           <div className="rounded-[24px] border border-line bg-white p-6 shadow-card">
-            <LeadForm locale={locale} sourcePage={localizeHref(`/cases/${item.slug}`, locale)} />
+            <LeadForm
+              locale={locale}
+              sourcePage={localizeHref(`/cases/${item.slug}`, locale)}
+              sourceType="case"
+              defaultDemandType={isEnglish ? 'Selection Support' : '获取设备配置建议'}
+            />
           </div>
         </div>
       </div>

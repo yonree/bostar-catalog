@@ -18,6 +18,10 @@ export type SiteSettings = {
   phone: string;
   email: string;
   address: string;
+  wechat: string;
+  whatsapp: string;
+  workHours: string;
+  responsePromise: string;
   defaultTitle: string;
   description: string;
   productCenterDescription: string;
@@ -25,25 +29,30 @@ export type SiteSettings = {
 
 export const defaultSiteSettings: SiteSettings = {
   brandCn: '博士达',
-  brandEn: 'BOSTAR GEO',
+  brandEn: 'BOSTAR',
   company: '深圳市博士达机械设备有限公司',
   url: PRIMARY_SITE_ORIGIN,
   logoUrl: '',
-  aboutTitle: '关于博士达 BOSTAR',
+  aboutTitle: '关于博士达',
   aboutDescription:
-    '博士达专注粉末与液体工业涂装系统、静电喷枪、控制器、供粉回收系统与自动化产线，为制造企业提供高可靠性的表面处理解决方案。',
+    '博士达聚焦粉末与液体静电喷涂核心设备、旋杯雾化系统及自动化配套设备，为工业制造企业提供更稳定、可验证的喷涂能力。',
   homepageHeroImageUrl: '/images/product-set.png',
-  homepageHeroEyebrow: 'BOSTAR GEO INDUSTRIAL COATING EQUIPMENT',
-  homepageHeroTitle: '博士达静电喷涂设备与粉末喷涂工艺知识官网',
+  homepageHeroEyebrow: '静电喷涂核心设备制造商',
+  homepageHeroTitle: '让静电喷涂更稳定、更高效、更易控制',
   homepageHeroDescription:
-    '面向五金、铝型材、机械机柜、家具五金和自动化涂装产线，提供粉末静电喷枪、控制器、DISK 静电旋碟系统、资料下载与选型咨询。',
-  phone: '400-xxx-xxxx',
-  email: 'info@bostargeo.com',
-  address: '广东省深圳市宝安区',
-  defaultTitle: '博士达 BOSTAR GEO 静电喷涂设备品牌官网',
+    '自主研发制造粉末与液体静电喷枪、旋杯雾化器及自动化配套设备，为工业制造提供可验证、可复制的喷涂能力。',
+  phone: '400-000-0000',
+  email: 'sales@fjbosd.com',
+  address: '中国广东省深圳市',
+  wechat: 'BOSTAR-Service',
+  whatsapp: '+86 000 0000 0000',
+  workHours: '周一至周六 08:30 - 18:00 (UTC+8)',
+  responsePromise: '工作时间内 30 分钟响应',
+  defaultTitle: '博士达 BOSTAR 静电喷涂核心设备制造商',
   description:
-    '博士达专注粉末静电喷枪、自动喷涂系统、DISK 静电旋碟喷涂系统与涂装自动化设备，提供选型、工艺、资料下载与询盘服务。',
-  productCenterDescription: '博士达粉末静电喷枪、喷涂控制器、DISK静电旋碟系统、供粉回收与涂装自动化设备。',
+    '博士达官网提供静电喷涂核心设备、行业解决方案、工程案例、技术知识、寄样测试与询盘支持。',
+  productCenterDescription:
+    '围绕粉末静电喷涂设备、液体静电喷涂设备、旋杯雾化器与 DISK、自动化配套设备，建立可选型、可比较、可验证的工业产品体系。',
 };
 
 export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
@@ -78,6 +87,10 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
     phone: setting.phone || defaultSiteSettings.phone,
     email: setting.email || defaultSiteSettings.email,
     address: setting.address || defaultSiteSettings.address,
+    wechat: setting.wechat || defaultSiteSettings.wechat,
+    whatsapp: setting.whatsapp || defaultSiteSettings.whatsapp,
+    workHours: defaultSiteSettings.workHours,
+    responsePromise: defaultSiteSettings.responsePromise,
     defaultTitle: setting.defaultSeoTitle || setting.siteName || defaultSiteSettings.defaultTitle,
     description: setting.defaultSeoDesc || defaultSiteSettings.description,
     productCenterDescription:

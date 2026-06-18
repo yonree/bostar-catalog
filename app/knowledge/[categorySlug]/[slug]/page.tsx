@@ -3,12 +3,11 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Breadcrumb } from '@/components/layout/Breadcrumb';
 import { LeadForm } from '@/components/lead/LeadForm';
-import { Markdown } from '@/components/ui/Markdown';
 import { ArticleJsonLd } from '@/components/schema/ArticleJsonLd';
 import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
 import { FAQJsonLd } from '@/components/schema/FAQJsonLd';
 import { FaqSection } from '@/components/ui/FaqSection';
-import { TranslationNotice } from '@/components/ui/TranslationNotice';
+import { Markdown } from '@/components/ui/Markdown';
 import { getArticle, getArticlesByCategory, getFaqs, getProducts } from '@/lib/cms-data';
 import { isEnglishLocale, localizeHref } from '@/lib/i18n';
 import { createResolvedPageMetadata } from '@/lib/page-metadata';
@@ -35,7 +34,7 @@ export async function generateMetadata({
       (isEnglish
         ? `${articleLabel} article detail, source-language technical summary, and related inquiry entry point.`
         : article?.excerpt) ||
-      (isEnglish ? 'Technical article detail and related inquiry entry point.' : '知识文章详情。'),
+      (isEnglish ? 'Technical article detail and related inquiry entry point.' : '知识文章详情与相关询盘入口。'),
   });
 }
 
@@ -74,17 +73,10 @@ export default async function ArticleDetailPage({
           <Breadcrumb items={[{ label: knowledgeLabel, href: '/knowledge' }, { label: article.title }]} />
           {article.coverImage ? (
             <div className="relative mb-8 aspect-[16/9] overflow-hidden rounded-[24px] border border-line bg-bg-soft shadow-card">
-              <Image
-                src={article.coverImage}
-                alt={article.title}
-                fill
-                className="object-cover"
-                unoptimized
-              />
+              <Image src={article.coverImage} alt={article.title} fill className="object-cover" unoptimized />
             </div>
           ) : null}
           <h1 className="text-[42px] font-black leading-[1.06] text-ink md:text-[56px]">{article.title}</h1>
-          {isEnglish ? <TranslationNotice className="mt-6 max-w-3xl" /> : null}
           <div className="mt-6 rounded-[22px] border border-primary/20 bg-primary-light/35 p-6">
             <Markdown className="leading-8 text-ink">{article.aiSummary}</Markdown>
           </div>
@@ -118,6 +110,8 @@ export default async function ArticleDetailPage({
           <LeadForm
             locale={locale}
             sourcePage={localizeHref(`/knowledge/${article.categorySlug}/${article.slug}`, locale)}
+            sourceType="knowledge"
+            defaultDemandType={isEnglish ? 'Selection Support' : '获取设备配置建议'}
           />
         </div>
       </section>

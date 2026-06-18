@@ -3,14 +3,14 @@ import { LeadForm } from '@/components/lead/LeadForm';
 import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
 import { JsonLd } from '@/components/schema/JsonLd';
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { localizeHref, pickLocaleValue } from '@/lib/i18n';
 import { createLocalizedPageMetadata } from '@/lib/page-metadata';
 import { getRequestContext } from '@/lib/request-context';
 import { getSiteSettings } from '@/lib/site-settings';
-import { pickLocaleValue, localizeHref } from '@/lib/i18n';
 
 export async function generateMetadata() {
   return createLocalizedPageMetadata({
-    title: { 'zh-CN': '联系我们', en: 'Contact BOSTAR' },
+    title: { 'zh-CN': '联系博士达', en: 'Contact BOSTAR' },
     description: {
       'zh-CN': '提交静电喷涂设备选型、报价、资料下载和售后维护需求。',
       en: 'Submit equipment selection, quotation, resource, and support requests for BOSTAR coating systems.',
@@ -48,18 +48,18 @@ export default async function ContactPage() {
       <BreadcrumbJsonLd
         items={[
           { name: pickLocaleValue(locale, { 'zh-CN': '首页', en: 'Home' }), path: '/' },
-          { name: pickLocaleValue(locale, { 'zh-CN': '联系我们', en: 'Contact' }), path: '/contact' },
+          { name: pickLocaleValue(locale, { 'zh-CN': '联系博士达', en: 'Contact' }), path: '/contact' },
         ]}
       />
       <section className="section">
         <div className="container grid gap-10 md:grid-cols-[0.8fr_1.2fr]">
           <div>
-            <Breadcrumb items={[{ label: pickLocaleValue(locale, { 'zh-CN': '联系我们', en: 'Contact' }) }]} />
+            <Breadcrumb items={[{ label: pickLocaleValue(locale, { 'zh-CN': '联系博士达', en: 'Contact' }) }]} />
             <SectionHeader
               headingLevel="h1"
               title={pickLocaleValue(locale, { 'zh-CN': '联系博士达', en: 'Contact BOSTAR' })}
               description={pickLocaleValue(locale, {
-                'zh-CN': '请填写工件、产量、材料、现场问题或关注产品，便于快速判断设备配置。',
+                'zh-CN': '请填写工件、产量、材料、当前问题或关注产品，便于工程团队快速判断配置方向。',
                 en: 'Share parts, output, material, current issues, or target products so the engineering team can evaluate the right configuration quickly.',
               })}
             />
@@ -70,7 +70,15 @@ export default async function ContactPage() {
               <p><span className="mr-2 text-primary">&#9873;</span>{isEnglish ? 'Address' : '地址'}: {site.address}</p>
             </div>
           </div>
-          <LeadForm locale={locale} sourcePage={localizeHref('/contact', locale)} />
+          <LeadForm
+            locale={locale}
+            sourcePage={localizeHref('/contact', locale)}
+            sourceType="contact"
+            defaultDemandType={pickLocaleValue(locale, {
+              'zh-CN': '获取设备配置建议',
+              en: 'Request a Quotation',
+            })}
+          />
         </div>
       </section>
     </>

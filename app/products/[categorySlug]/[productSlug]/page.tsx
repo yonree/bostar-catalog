@@ -2,60 +2,25 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Breadcrumb } from '@/components/layout/Breadcrumb';
 import { LeadForm } from '@/components/lead/LeadForm';
+import { LocalizedLink } from '@/components/routing/LocalizedLink';
 import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
 import { FAQJsonLd } from '@/components/schema/FAQJsonLd';
-import { HowToJsonLd } from '@/components/schema/HowToJsonLd';
 import { ProductJsonLd } from '@/components/schema/ProductJsonLd';
 import { FaqSection } from '@/components/ui/FaqSection';
 import { Markdown } from '@/components/ui/Markdown';
 import { ProductImage } from '@/components/ui/ProductImage';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { TechFaqSection } from '@/components/ui/TechFaqSection';
-import { TranslationNotice } from '@/components/ui/TranslationNotice';
-import type { ProductView } from '@/lib/cms-data';
-import { getProduct } from '@/lib/cms-data';
-import { isEnglishLocale, localizeHref } from '@/lib/i18n';
+import { getArticles, getDownloads, getProduct, getSolutions } from '@/lib/cms-data';
 import { createResolvedPageMetadata } from '@/lib/page-metadata';
 import { getRequestContext } from '@/lib/request-context';
+import { isEnglishLocale, localizeHref } from '@/lib/i18n';
 
 export const dynamic = 'force-dynamic';
 
 const panelClass = 'rounded-[24px] border border-line bg-white p-6 shadow-card';
-const chipClass = 'rounded-full border border-line bg-white px-3 py-2 text-sm text-steel';
 
-function toPlainText(value: string) {
-  return value
-    .replace(/\[cite_start\]/gi, '')
-    .replace(/\[cite:\s*[\d,\s]+\]/gi, '')
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '$1')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1')
-    .replace(/`([^`]+)`/g, '$1')
-    .replace(/\*\*([^*]+)\*\*/g, '$1')
-    .replace(/__([^_]+)__/g, '$1')
-    .replace(/~~([^~]+)~~/g, '$1')
-    .replace(/(^|[^\*])\*([^\*].*?[^\*])\*(?!\*)/g, '$1$2')
-    .replace(/(^|[^_])_([^_].*?[^_])_(?!_)/g, '$1$2')
-    .replace(/\s*\n+\s*/g, ' ')
-    .trim();
-}
-
-function buildDetailRows(product: ProductView, isEnglish: boolean) {
-  const rows = new Map<string, string>();
-  const put = (label: string, value?: string | null) => {
-    const key = label.trim();
-    const val = (value || '').trim();
-    if (!key || !val || rows.has(key)) return;
-    rows.set(key, val);
-  };
-
-  for (const [key, value] of Object.entries(product.specs)) {
-    put(key, value);
-  }
-
-  put(isEnglish ? 'Applicable Craft' : '适用工艺', product.applicableCraft);
-  put(isEnglish ? 'Application Scope' : '应用边界', toPlainText(product.application || ''));
-
-  return Array.from(rows.entries());
+function keyParameterRows(specs: Record<string, string>) {
+  return Object.entries(specs).slice(0, 8);
 }
 
 export async function generateMetadata({
@@ -66,20 +31,17 @@ export async function generateMetadata({
   const [{ categorySlug, productSlug }, { locale }] = await Promise.all([params, getRequestContext()]);
   const product = await getProduct(categorySlug, productSlug);
   const isEnglish = isEnglishLocale(locale);
-  const productLabel = product?.model || product?.name || 'BOSTAR';
 
   return createResolvedPageMetadata({
     title:
-      product?.name && isEnglish
-        ? `${product.name} Product Details`
+      product?.model && product?.name
+        ? `${product.model} ${product.name}`
         : product?.name || (isEnglish ? 'Product Detail' : '产品详情'),
     description:
+      product?.summary ||
       (isEnglish
-        ? `${productLabel} product detail, source-language specifications, and quotation inquiry entry point.`
-        : toPlainText(product?.summary || '')) ||
-      (isEnglish
-        ? 'Industrial coating product detail, specification overview, and inquiry entry point.'
-        : '工业喷涂产品详情、参数总览与询盘入口。'),
+        ? 'Product detail, application fit, technical parameters, and inquiry entry point.'
+        : '产品详情、适用边界、技术参数与询盘入口。'),
   });
 }
 
@@ -89,72 +51,27 @@ export default async function ProductDetailPage({
   params: Promise<{ categorySlug: string; productSlug: string }>;
 }) {
   const [{ categorySlug, productSlug }, { locale }] = await Promise.all([params, getRequestContext()]);
-  const product = await getProduct(categorySlug, productSlug);
+  const [product, articles, solutions, downloads] = await Promise.all([
+    getProduct(categorySlug, productSlug),
+    getArticles(3),
+    getSolutions(3),
+    getDownloads(),
+  ]);
+
   if (!product) notFound();
 
   const isEnglish = isEnglishLocale(locale);
-  const faqs = product.faqs;
-  const detailRows = buildDetailRows(product, isEnglish);
-  const hasDetailRows = detailRows.length > 0;
-  const sourcePage = localizeHref(`/products/${product.categorySlug}/${product.slug}`, locale);
-
-  const copy = isEnglish
-    ? {
-        home: 'Home',
-        products: 'Products',
-        highlights: 'Product Highlights',
-        details: 'Product Details',
-        specs: 'Technical Parameters and Application Scope',
-        inquiryTitle: 'Get a Quote / Selection Support',
-        inquiryDescription:
-          'Share the workpiece, output target, and current issue so the team can review the right spray gun, controller, and powder-feed configuration.',
-        unsuitableScenes: 'Unsuitable Scenarios',
-        functions: 'Product Functions',
-        structure: 'Structure Overview',
-        principle: 'Working Principle',
-        operationSteps: 'Operating Steps',
-        standardConfig: 'Standard Configuration',
-        optionalParts: 'Optional Parts',
-        maintenance: 'Maintenance',
-        troubleshooting: 'Troubleshooting',
-        faqTitle: 'Common Questions',
-        faqDescription: `Questions and answers related to ${product.name}.`,
-      }
-    : {
-        home: '首页',
-        products: '产品中心',
-        highlights: '产品卖点',
-        details: '产品详情',
-        specs: '技术参数与应用边界',
-        inquiryTitle: '获取报价 / 选型咨询',
-        inquiryDescription: '提交工件、产量和现场问题，便于判断喷枪、控制器和供粉系统配置。',
-        unsuitableScenes: '不适用场景',
-        functions: '产品功能',
-        structure: '结构说明',
-        principle: '工作原理',
-        operationSteps: '操作步骤',
-        standardConfig: '标准配置',
-        optionalParts: '选配件',
-        maintenance: '维护保养',
-        troubleshooting: '故障处理',
-        faqTitle: '常见问题',
-        faqDescription: `关于 ${product.name} 的常见疑问与解答。`,
-      };
+  const rows = keyParameterRows(product.specs);
 
   return (
     <>
       <ProductJsonLd product={product} />
-      <FAQJsonLd faqs={faqs} />
-      {product.operationSteps.length > 0 ? (
-        <HowToJsonLd
-          name={`${product.name}${isEnglish ? ' Operating Steps' : '操作步骤'}`}
-          steps={product.operationSteps}
-        />
-      ) : null}
+      {!isEnglish && <FAQJsonLd faqs={product.faqs} />}
       <BreadcrumbJsonLd
         items={[
-          { name: copy.home, path: '/' },
-          { name: copy.products, path: '/products' },
+          { name: isEnglish ? 'Home' : '首页', path: '/' },
+          { name: isEnglish ? 'Products' : '产品中心', path: '/products' },
+          { name: product.categoryName || product.categorySlug, path: `/products/${product.categorySlug}` },
           { name: product.name, path: `/products/${product.categorySlug}/${product.slug}` },
         ]}
       />
@@ -163,241 +80,160 @@ export default async function ProductDetailPage({
         <div className="container">
           <Breadcrumb
             items={[
-              { label: copy.products, href: '/products' },
+              { label: isEnglish ? 'Products' : '产品中心', href: '/products' },
               { label: product.categoryName || product.categorySlug, href: `/products/${product.categorySlug}` },
               { label: product.name },
             ]}
           />
-          <div className="grid gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:items-start">
+          <div className="grid gap-10 lg:grid-cols-[1fr_0.92fr]">
             <div className={`${panelClass} p-8`}>
               <div className="relative aspect-[4/3] overflow-hidden rounded-[20px] bg-bg-soft">
-                <ProductImage
-                  alt={product.name}
-                  candidates={product.imageCandidates}
-                  className="object-contain p-8"
-                />
+                <ProductImage alt={product.name} candidates={product.imageCandidates} className="object-contain p-8" />
               </div>
             </div>
-            <div className="pt-2 lg:pt-10">
+            <div className="pt-2 lg:pt-8">
               {product.model ? (
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
-                  {product.model}
-                </p>
+                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">{product.model}</p>
               ) : null}
-              <h1 className="mt-3 max-w-2xl text-[42px] font-black leading-[1.02] text-ink md:text-[56px]">
-                {product.name}
-              </h1>
-              {isEnglish ? <TranslationNotice className="mt-6 max-w-3xl" /> : null}
-              {product.summary ? (
-                <Markdown className="mt-6 max-w-2xl text-base leading-8 text-steel">
-                  {product.summary}
-                </Markdown>
-              ) : null}
-              {product.aiSummary ? (
-                <div className="mt-7 rounded-[22px] border border-primary/20 bg-primary-light/40 p-6">
-                  <Markdown className="leading-8 text-ink">{product.aiSummary}</Markdown>
-                </div>
-              ) : null}
+              <h1 className="mt-3 text-[42px] font-black leading-[1.04] text-ink md:text-[56px]">{product.name}</h1>
+              <p className="mt-6 text-lg leading-8 text-steel">{product.summary || product.aiSummary}</p>
               {product.applications.length > 0 ? (
-                <div className="mt-7 flex flex-wrap gap-2.5">
-                  {product.applications.map((item) => (
-                    <span key={item} className={chipClass}>
+                <div className="mt-6 flex flex-wrap gap-2.5">
+                  {product.applications.slice(0, 4).map((item) => (
+                    <span key={item} className="rounded-full border border-line bg-white px-3 py-2 text-sm text-steel">
                       {item}
                     </span>
                   ))}
                 </div>
               ) : null}
+              <div className="mt-8 grid gap-3 sm:grid-cols-2">
+                {rows.slice(0, 4).map(([label, value]) => (
+                  <div key={label} className="rounded-[20px] border border-line bg-bg-soft p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-steel">{label}</p>
+                    <p className="mt-2 text-sm font-semibold text-ink">{value}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <LocalizedLink href="/contact" className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white">
+                  {isEnglish ? 'Request a Quotation' : '获取该型号报价'}
+                </LocalizedLink>
+                <LocalizedLink href="/support/sample-coating-test" className="rounded-full border border-line px-5 py-3 text-sm font-semibold text-ink">
+                  {isEnglish ? 'Request a Sample Test' : '预约工件测试'}
+                </LocalizedLink>
+              </div>
             </div>
           </div>
         </div>
       </section>
-
-      {product.sellingPoints.length > 0 ? (
-        <section className="section section-alt border-y border-line">
-          <div className="container">
-            <SectionHeader title={copy.highlights} />
-            <div className="grid gap-4 md:grid-cols-2">
-              {product.sellingPoints.map((point) => (
-                <div key={point} className={`${panelClass} flex items-start gap-3`}>
-                  <span className="mt-0.5 text-primary">•</span>
-                  <span className="text-steel">{point}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : null}
-
-      {product.description ? (
-        <section className="section">
-          <div className="container">
-            <SectionHeader title={copy.details} />
-            <div className={panelClass}>
-              <Markdown className="leading-8 text-steel">{product.description}</Markdown>
-            </div>
-          </div>
-        </section>
-      ) : null}
 
       <section className="section section-alt border-y border-line">
-        <div className={`container grid gap-10 ${hasDetailRows ? 'lg:grid-cols-[1fr_0.9fr]' : ''}`}>
-          {hasDetailRows ? (
-            <div>
-              <SectionHeader title={copy.specs} />
-              <div className={`${panelClass} overflow-hidden p-0`}>
-                <table className="w-full text-left text-sm">
-                  <tbody>
-                    {detailRows.map(([key, value]) => (
-                      <tr key={key} className="border-b border-line last:border-0">
-                        <th className="w-[300px] bg-bg-soft px-6 py-4 font-semibold text-ink">
-                          {key}
-                        </th>
-                        <td className="px-6 py-4 text-steel">{value}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          ) : null}
+        <div className="container grid gap-10 lg:grid-cols-[1fr_0.94fr]">
           <div>
-            <SectionHeader title={copy.inquiryTitle} description={copy.inquiryDescription} />
-            <LeadForm locale={locale} sourcePage={sourcePage} interestedProduct={product.name} />
+            <SectionHeader
+              title={isEnglish ? 'Technical Parameters and Application Fit' : '技术参数与适用边界'}
+              description={isEnglish ? 'Publish only visible and verifiable parameters. Boundary conditions stay explicit instead of being hidden in sales language.' : '参数、场景和边界条件明确展示，避免把判断逻辑隐藏在营销措辞里。'}
+            />
+            <div className={`${panelClass} overflow-hidden p-0`}>
+              <table className="w-full text-left text-sm">
+                <tbody>
+                  {rows.map(([key, value]) => (
+                    <tr key={key} className="border-b border-line last:border-0">
+                      <th className="w-[260px] bg-bg-soft px-6 py-4 font-semibold text-ink">{key}</th>
+                      <td className="px-6 py-4 text-steel">{value}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {(product.application || product.unsuitableScenes) && (
+              <div className="mt-8 grid gap-5 lg:grid-cols-2">
+                <div className={panelClass}>
+                  <h2 className="text-xl font-black text-ink">{isEnglish ? 'Recommended Use' : '推荐使用'}</h2>
+                  <Markdown className="mt-4 leading-8 text-steel">{product.application || product.applicableCraft}</Markdown>
+                </div>
+                <div className={panelClass}>
+                  <h2 className="text-xl font-black text-ink">{isEnglish ? 'Needs Extra Evaluation' : '需要额外评估'}</h2>
+                  <Markdown className="mt-4 leading-8 text-steel">{product.unsuitableScenes || (isEnglish ? 'Review special coating materials, hazardous environments, and automation constraints before release.' : '特殊涂料、危险环境和自动化接口要求需在正式配置前单独评估。')}</Markdown>
+                </div>
+              </div>
+            )}
+
+            {product.sellingPoints.length > 0 && (
+              <div className="mt-8">
+                <SectionHeader title={isEnglish ? 'Core Advantages' : '核心优势'} />
+                <div className="grid gap-4 md:grid-cols-2">
+                  {product.sellingPoints.map((point) => (
+                    <div key={point} className={panelClass}>
+                      <p className="text-sm leading-7 text-steel">{point}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <SectionHeader
+              title={isEnglish ? 'Consult This Model' : '咨询该型号'}
+              description={isEnglish ? 'Submit part, material, target, and current issue for quotation or sample-test evaluation.' : '提交工件、材料、目标需求与当前问题，进入报价或寄样测试评估流程。'}
+            />
+            <LeadForm
+              locale={locale}
+              sourcePage={localizeHref(`/products/${product.categorySlug}/${product.slug}`, locale)}
+              sourceType="product"
+              interestedProduct={product.model || product.name}
+              defaultDemandType={isEnglish ? 'Request a Quotation' : '获取报价'}
+            />
           </div>
         </div>
       </section>
 
-      {product.unsuitableScenes ? (
-        <section className="section">
-          <div className="container">
-            <SectionHeader title={copy.unsuitableScenes} />
-            <div className="rounded-[24px] border border-red-500/20 bg-white p-6 shadow-card">
-              <Markdown className="leading-8 text-steel">{product.unsuitableScenes}</Markdown>
-            </div>
-          </div>
-        </section>
-      ) : null}
-
-      {product.functions.length > 0 ? (
-        <section className="section section-alt border-y border-line">
-          <div className="container">
-            <SectionHeader title={copy.functions} />
-            <div className="grid gap-3 md:grid-cols-2">
-              {product.functions.map((item) => (
-                <div key={item} className={`${panelClass} text-sm text-steel`}>
-                  {item}
-                </div>
+      <section className="section">
+        <div className="container grid gap-10 lg:grid-cols-3">
+          <div>
+            <SectionHeader title={isEnglish ? 'Documents' : '下载资料'} />
+            <div className="grid gap-3">
+              {downloads.slice(0, 3).map((item) => (
+                <LocalizedLink key={item.id} href={`/downloads/${item.slug}`} className={panelClass}>
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">{item.fileType} · {item.version}</p>
+                  <h3 className="mt-2 text-lg font-black text-ink">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-steel">{item.summary}</p>
+                </LocalizedLink>
               ))}
             </div>
           </div>
-        </section>
-      ) : null}
-
-      {product.structure || product.workingPrinciple ? (
-        <section className="section">
-          <div className="container grid gap-10 lg:grid-cols-2">
-            {product.structure ? (
-              <div>
-                <SectionHeader title={copy.structure} />
-                <div className={panelClass}>
-                  <Markdown className="leading-8 text-steel">{product.structure}</Markdown>
-                </div>
-              </div>
-            ) : null}
-            {product.workingPrinciple ? (
-              <div>
-                <SectionHeader title={copy.principle} />
-                <div className={panelClass}>
-                  <Markdown className="leading-8 text-steel">{product.workingPrinciple}</Markdown>
-                </div>
-              </div>
-            ) : null}
-          </div>
-        </section>
-      ) : null}
-
-      {product.operationSteps.length > 0 ? (
-        <section className="section section-alt border-y border-line">
-          <div className="container">
-            <SectionHeader title={copy.operationSteps} />
-            <div className="space-y-4">
-              {product.operationSteps.map((step, index) => (
-                <div key={step} className={`${panelClass} flex items-start gap-4`}>
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
-                    {index + 1}
-                  </span>
-                  <span className="pt-1 text-steel">{step}</span>
-                </div>
+          <div>
+            <SectionHeader title={isEnglish ? 'Related Solutions' : '相关解决方案'} />
+            <div className="grid gap-3">
+              {solutions.map((item) => (
+                <LocalizedLink key={item.id} href={`/solutions/${item.slug}`} className={panelClass}>
+                  <h3 className="text-lg font-black text-ink">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-steel">{item.aiSummary}</p>
+                </LocalizedLink>
               ))}
             </div>
           </div>
-        </section>
-      ) : null}
-
-      {product.standardConfig.length > 0 || product.optionalParts.length > 0 ? (
-        <section className="section">
-          <div className="container grid gap-10 lg:grid-cols-2">
-            {product.standardConfig.length > 0 ? (
-              <div>
-                <SectionHeader title={copy.standardConfig} />
-                <ul className="space-y-2">
-                  {product.standardConfig.map((item) => (
-                    <li
-                      key={item}
-                      className={`${panelClass} flex items-center gap-2 p-4 text-sm text-steel`}
-                    >
-                      <span className="text-primary">•</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
-            {product.optionalParts.length > 0 ? (
-              <div>
-                <SectionHeader title={copy.optionalParts} />
-                <ul className="space-y-2">
-                  {product.optionalParts.map((item) => (
-                    <li
-                      key={item}
-                      className={`${panelClass} flex items-center gap-2 p-4 text-sm text-steel`}
-                    >
-                      <span className="text-primary">•</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
+          <div>
+            <SectionHeader title={isEnglish ? 'Related Knowledge' : '相关知识'} />
+            <div className="grid gap-3">
+              {articles.map((item) => (
+                <LocalizedLink key={item.id} href={`/knowledge/${item.categorySlug}/${item.slug}`} className={panelClass}>
+                  <h3 className="text-lg font-black text-ink">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-steel">{item.excerpt || item.aiSummary}</p>
+                </LocalizedLink>
+              ))}
+            </div>
           </div>
-        </section>
-      ) : null}
+        </div>
+      </section>
 
-      {product.maintenance || product.troubleshooting ? (
-        <section className="section section-alt border-y border-line">
-          <div className="container grid gap-10 lg:grid-cols-2">
-            {product.maintenance ? (
-              <div>
-                <SectionHeader title={copy.maintenance} />
-                <div className={panelClass}>
-                  <Markdown className="leading-8 text-steel">{product.maintenance}</Markdown>
-                </div>
-              </div>
-            ) : null}
-            {product.troubleshooting ? (
-              <div>
-                <SectionHeader title={copy.troubleshooting} />
-                <div className={panelClass}>
-                  <Markdown className="leading-8 text-steel">{product.troubleshooting}</Markdown>
-                </div>
-              </div>
-            ) : null}
-          </div>
-        </section>
-      ) : null}
-
-      <FaqSection title={copy.faqTitle} faqs={faqs} description={copy.faqDescription} />
-      {isEnglish ? null : <TechFaqSection />}
+      <FaqSection
+        faqs={product.faqs}
+        title={isEnglish ? 'Frequently Asked Questions' : '常见问题'}
+        description={isEnglish ? 'Reusable answers for engineers, buyers, and operators.' : '面向采购、工程和操作人员的常见问题回答。'}
+      />
     </>
   );
 }

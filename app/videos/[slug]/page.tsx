@@ -5,7 +5,6 @@ import { Breadcrumb } from '@/components/layout/Breadcrumb';
 import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
 import { VideoJsonLd } from '@/components/schema/VideoJsonLd';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getVideo } from '@/lib/cms-data';
 import { isEnglishLocale } from '@/lib/i18n';
 import { createResolvedPageMetadata } from '@/lib/page-metadata';
@@ -32,7 +31,7 @@ export async function generateMetadata({
       (isEnglish
         ? `${videoLabel} video summary, source-language technical context, and related viewing reference.`
         : video?.summary) ||
-      (isEnglish ? 'Video summary and related technical context.' : '视频摘要。'),
+      (isEnglish ? 'Video summary and related technical context.' : '视频摘要与相关技术背景。'),
   });
 }
 
@@ -59,16 +58,9 @@ export default async function VideoDetailPage({ params }: { params: Promise<{ sl
         <div className="container max-w-4xl">
           <Breadcrumb items={[{ label: videosLabel, href: '/videos' }, { label: video.title }]} />
           <h1 className="text-[42px] font-black leading-[1.06] text-ink md:text-[56px]">{video.title}</h1>
-          {isEnglish ? <TranslationNotice className="mt-6 max-w-3xl" /> : null}
           {video.coverImage ? (
             <div className="relative mt-8 aspect-video overflow-hidden rounded-[24px] border border-line bg-bg-soft shadow-card">
-              <Image
-                src={video.coverImage}
-                alt={video.title}
-                fill
-                className="object-cover"
-                unoptimized
-              />
+              <Image src={video.coverImage} alt={video.title} fill className="object-cover" unoptimized />
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="flex h-16 w-16 items-center justify-center rounded-full bg-ink/70 text-3xl text-white">
                   &#9654;

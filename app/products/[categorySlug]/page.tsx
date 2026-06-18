@@ -4,7 +4,6 @@ import { Breadcrumb } from '@/components/layout/Breadcrumb';
 import { ProductCard } from '@/components/product/ProductCard';
 import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getProductsByCategory } from '@/lib/cms-data';
 import { isEnglishLocale } from '@/lib/i18n';
 import { createResolvedPageMetadata } from '@/lib/page-metadata';
@@ -24,8 +23,8 @@ export async function generateMetadata({
   return createResolvedPageMetadata({
     title: category?.name || (isEnglish ? 'Product Category' : '产品分类'),
     description: isEnglish
-      ? 'Product category overview and related product list.'
-      : category?.summary || '产品分类与产品列表。',
+      ? 'Category overview, equipment list, and comparison entry for this product family.'
+      : category?.summary || '该产品族的分类说明、设备列表与对比入口。',
   });
 }
 
@@ -40,9 +39,6 @@ export default async function ProductCategoryPage({
 
   const isEnglish = isEnglishLocale(locale);
   const productsLabel = isEnglish ? 'Products' : '产品中心';
-  const description = isEnglish
-    ? 'Products filed under this category. Source-language specifications may still appear below.'
-    : category.summary;
 
   return (
     <section className="section">
@@ -55,9 +51,23 @@ export default async function ProductCategoryPage({
             { name: category.name, path: `/products/${category.slug}` },
           ]}
         />
-        <SectionHeader headingLevel="h1" title={category.name} description={description} />
-        {isEnglish ? <TranslationNotice className="mb-8" /> : null}
-        <div className="grid gap-6 md:grid-cols-3">
+        <SectionHeader
+          headingLevel="h1"
+          title={category.name}
+          description={
+            isEnglish
+              ? 'Review the current published models, then enter detail pages to compare parameters, application fit, and inquiry paths.'
+              : category.summary
+          }
+        />
+        <div className="mb-10 rounded-[24px] border border-line bg-white p-6 shadow-card">
+          <p className="text-sm leading-7 text-steel">
+            {isEnglish
+              ? 'This category keeps the decision path focused on use case, process, and model-level comparison instead of forcing all details into one listing page.'
+              : '该分类页先帮助客户判断工艺与场景，再进入具体型号页完成参数、边界与询盘判断。'}
+          </p>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

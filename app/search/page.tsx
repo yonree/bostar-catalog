@@ -1,6 +1,5 @@
 import { LocalizedLink } from '@/components/routing/LocalizedLink';
 import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
-import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getSearchResults } from '@/lib/cms-data';
 import { isEnglishLocale } from '@/lib/i18n';
 import { createLocalizedPageMetadata } from '@/lib/page-metadata';
@@ -90,8 +89,6 @@ export default async function SearchPage({
           <button className="rounded bg-primary px-5 py-3 font-bold text-white transition-colors">{copy.button}</button>
         </form>
 
-        {isEnglish && q && <TranslationNotice className="mt-6 max-w-3xl" />}
-
         {!q ? (
           <p className="mt-10 text-sm text-steel">{copy.emptyQuery}</p>
         ) : !hasResults ? (
@@ -124,7 +121,7 @@ export default async function SearchPage({
             />
             <ResultGroup
               title={copy.groups.faq}
-              items={faqs.map((item) => ({ href: '/faq', title: item.question, desc: item.answer }))}
+              items={faqs.map((item) => ({ href: '/support/faq', title: item.question, desc: item.answer }))}
             />
           </div>
         )}

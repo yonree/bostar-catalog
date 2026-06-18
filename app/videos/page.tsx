@@ -4,7 +4,6 @@ import { Breadcrumb } from '@/components/layout/Breadcrumb';
 import { LocalizedLink } from '@/components/routing/LocalizedLink';
 import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getVideos } from '@/lib/cms-data';
 import { pickLocaleValue } from '@/lib/i18n';
 import { createLocalizedPageMetadata } from '@/lib/page-metadata';
@@ -16,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return createLocalizedPageMetadata({
     title: { 'zh-CN': '视频中心', en: 'Video Center' },
     description: {
-      'zh-CN': '粉末静电喷枪操作、控制器参数设置和喷枪维护视频内容。',
+      'zh-CN': '喷枪操作、控制器参数设置、维护保养与故障排查的视频内容。',
       en: 'Video entries for spray-gun operation, controller setup, and maintenance topics.',
     },
   });
@@ -24,6 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function VideosPage() {
   const [videos, { locale }] = await Promise.all([getVideos(), getRequestContext()]);
+
   return (
     <section className="section">
       <div className="container">
@@ -38,11 +38,10 @@ export default async function VideosPage() {
           headingLevel="h1"
           title={pickLocaleValue(locale, { 'zh-CN': '视频中心', en: 'Video Center' })}
           description={pickLocaleValue(locale, {
-            'zh-CN': '喷枪操作教程、控制器参数设置、维护保养与故障排查视频内容。',
+            'zh-CN': '围绕喷枪操作、控制器参数设置、维护保养和故障排查整理视频内容。',
             en: 'Video guidance for spray-gun operation, controller parameters, maintenance, and troubleshooting.',
           })}
         />
-        {locale === 'en' ? <TranslationNotice className="mb-8" /> : null}
         <div className="grid gap-5 md:grid-cols-3">
           {videos.map((video) => (
             <LocalizedLink

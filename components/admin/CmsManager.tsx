@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMarkdownPaste } from '@/lib/rich-paste';
 
 type MediaItem = {
@@ -67,7 +67,7 @@ export function CmsManager({
     }
   }, [blankRecord, editing, fields]);
 
-  async function load() {
+  const load = useCallback(async () => {
     setLoading(true);
     const response = await fetch(endpoint, { cache: 'no-store' });
     const result = await response.json();
@@ -100,7 +100,7 @@ export function CmsManager({
     }
 
     setLoading(false);
-  }
+  }, [endpoint, fields]);
 
   async function loadMedia() {
     setMediaLoading(true);
@@ -112,7 +112,7 @@ export function CmsManager({
 
   useEffect(() => {
     void load();
-  }, [endpoint, reloadKey]);
+  }, [endpoint, load, reloadKey]);
 
   function startEditing(record: CmsRecord) {
     setEditing(record);

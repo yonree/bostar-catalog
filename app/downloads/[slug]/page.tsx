@@ -1,13 +1,12 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { LeadForm } from '@/components/lead/LeadForm';
 import { Breadcrumb } from '@/components/layout/Breadcrumb';
+import { LeadForm } from '@/components/lead/LeadForm';
 import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getDownload, getProducts } from '@/lib/cms-data';
-import { createResolvedPageMetadata } from '@/lib/page-metadata';
 import { isEnglishLocale, localizeHref } from '@/lib/i18n';
+import { createResolvedPageMetadata } from '@/lib/page-metadata';
 import { getRequestContext } from '@/lib/request-context';
 import { isPendingDownloadAsset } from '@/lib/site-origin';
 
@@ -32,7 +31,7 @@ export async function generateMetadata({
       (isEnglish
         ? `${downloadLabel} download detail, source-language resource summary, and access method.`
         : download?.summary) ||
-      (isEnglish ? 'Technical download detail and acquisition method.' : '下载资料详情。'),
+      (isEnglish ? 'Technical download detail and acquisition method.' : '下载资料详情与获取方式。'),
   });
 }
 
@@ -65,18 +64,17 @@ export default async function DownloadDetailPage({
     <section className="section">
       <div className="container grid gap-10 lg:grid-cols-[1fr_0.85fr]">
         <div>
-          <Breadcrumb items={[{ label: downloadsLabel, href: '/downloads' }, { label: download.title }]} />
+          <Breadcrumb items={[{ label: downloadsLabel, href: '/support/downloads' }, { label: download.title }]} />
           <BreadcrumbJsonLd
             items={[
               { name: isEnglish ? 'Home' : '首页', path: '/' },
-              { name: downloadsLabel, path: '/downloads' },
-              { name: download.title, path: `/downloads/${download.slug}` },
+              { name: downloadsLabel, path: '/support/downloads' },
+              { name: download.title, path: `/support/downloads/${download.slug}` },
             ]}
           />
           <h1 className="max-w-3xl text-[42px] font-black leading-[1.06] text-ink md:text-[56px]">
             {download.title}
           </h1>
-          {isEnglish ? <TranslationNotice className="mt-6 max-w-3xl" /> : null}
           <p className="mt-6 max-w-3xl text-lg leading-8 text-steel">{download.summary}</p>
 
           <dl className="mt-8 grid gap-4 rounded-[24px] border border-line bg-white p-6 shadow-card md:grid-cols-2">
@@ -90,7 +88,7 @@ export default async function DownloadDetailPage({
               <dt className="font-semibold uppercase tracking-[0.14em] text-steel">
                 {isEnglish ? 'Version' : '版本'}
               </dt>
-              <dd className="mt-2 text-ink">{download.version}</dd>
+              <dd className="mt-2 text-ink">{download.version || '-'}</dd>
             </div>
             <div>
               <dt className="font-semibold uppercase tracking-[0.14em] text-steel">
@@ -116,7 +114,12 @@ export default async function DownloadDetailPage({
           {download.requireLeadForm ? (
             <>
               <SectionHeader title={isEnglish ? 'Submit Information to Access This File' : '填写信息获取资料'} />
-              <LeadForm locale={locale} sourcePage={localizeHref(`/downloads/${download.slug}`, locale)} />
+              <LeadForm
+                locale={locale}
+                sourcePage={localizeHref(`/support/downloads/${download.slug}`, locale)}
+                sourceType="download"
+                defaultDemandType={isEnglish ? 'Download Resources' : '下载资料'}
+              />
             </>
           ) : pendingAsset ? (
             <div className="rounded-[24px] border border-dashed border-line bg-white p-6 shadow-card">
@@ -127,7 +130,12 @@ export default async function DownloadDetailPage({
                   : '当前资料正在更新，请通过联系表单索取最新核定版本。'}
               </p>
               <div className="mt-6">
-                <LeadForm locale={locale} sourcePage={localizeHref(`/downloads/${download.slug}`, locale)} />
+                <LeadForm
+                  locale={locale}
+                  sourcePage={localizeHref(`/support/downloads/${download.slug}`, locale)}
+                  sourceType="download"
+                  defaultDemandType={isEnglish ? 'Download Resources' : '下载资料'}
+                />
               </div>
             </div>
           ) : (

@@ -4,22 +4,22 @@ import { headers } from 'next/headers';
 import {
   buildLocaleAlternates,
   getLocaleConfig,
-  getLocaleFromPathname,
   localizeHref,
-  stripLocalePrefix,
+  resolvePathRouting,
 } from '@/lib/i18n';
 
 export async function getRequestContext() {
   const requestHeaders = await headers();
   const pathname = requestHeaders.get('x-bostar-pathname') || '/';
-  const locale = getLocaleFromPathname(pathname);
-  const contentPathname = stripLocalePrefix(pathname);
+  const internalPathname =
+    requestHeaders.get('x-bostar-internal-pathname') || resolvePathRouting(pathname).internalPathname;
+  const routing = resolvePathRouting(pathname);
 
   return {
-    pathname,
-    contentPathname,
-    locale,
-    localeConfig: getLocaleConfig(locale),
+    pathname: routing.canonicalPublicPath,
+    contentPathname: internalPathname,
+    locale: routing.locale,
+    localeConfig: getLocaleConfig(routing.locale),
   };
 }
 

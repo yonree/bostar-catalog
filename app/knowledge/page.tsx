@@ -4,7 +4,6 @@ import { Breadcrumb } from '@/components/layout/Breadcrumb';
 import { LocalizedLink } from '@/components/routing/LocalizedLink';
 import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getArticleCategories, getArticles } from '@/lib/cms-data';
 import { pickLocaleValue } from '@/lib/i18n';
 import { createLocalizedPageMetadata } from '@/lib/page-metadata';
@@ -16,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return createLocalizedPageMetadata({
     title: { 'zh-CN': '知识中心', en: 'Knowledge Center' },
     description: {
-      'zh-CN': '静电喷枪选型、粉末喷涂工艺、故障排查、操作维护和安全规范知识库。',
+      'zh-CN': '围绕设备选型、喷涂工艺、故障排查、维护和安全规范组织的技术知识库。',
       en: 'Technical knowledge entries covering equipment selection, powder-coating process control, troubleshooting, operation, and safety.',
     },
   });
@@ -28,6 +27,7 @@ export default async function KnowledgePage() {
     getArticles(),
     getRequestContext(),
   ]);
+
   return (
     <section className="section">
       <div className="container">
@@ -46,7 +46,6 @@ export default async function KnowledgePage() {
             en: 'A knowledge base organized around electrostatic coating selection, process tuning, troubleshooting, safety rules, and industry standards.',
           })}
         />
-        {locale === 'en' ? <TranslationNotice className="mb-8" /> : null}
         <div className="mb-10 grid gap-4 md:grid-cols-4">
           {articleCategories.map((category) => (
             <LocalizedLink

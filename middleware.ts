@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { getLocaleFromPathname, stripLocalePrefix } from '@/lib/i18n';
+import { resolvePathRouting } from '@/lib/i18n';
 import { PRIMARY_SITE_ORIGIN, resolveRedirectHost } from '@/lib/site-origin';
 
 const cookieName = 'bostar_admin_session';
@@ -27,16 +27,14 @@ function shouldCanonicalizeHost(request: NextRequest) {
 
 function withRequestHeaders(request: NextRequest) {
   const existingHeaders = request.headers;
-  const pathname = existingHeaders.get('x-bostar-pathname') || request.nextUrl.pathname;
-  const locale = getLocaleFromPathname(pathname);
-  const internalPathname = stripLocalePrefix(pathname);
+  const routing = resolvePathRouting(request.nextUrl.pathname);
   const requestHeaders = new Headers(existingHeaders);
 
-  requestHeaders.set('x-bostar-pathname', pathname);
-  requestHeaders.set('x-bostar-locale', locale);
-  requestHeaders.set('x-bostar-internal-pathname', internalPathname);
+  requestHeaders.set('x-bostar-pathname', routing.canonicalPublicPath);
+  requestHeaders.set('x-bostar-locale', routing.locale);
+  requestHeaders.set('x-bostar-internal-pathname', routing.internalPathname);
 
-  return { locale, internalPathname, requestHeaders };
+  return { routing, requestHeaders };
 }
 
 function isPublicFile(pathname: string) {
@@ -54,16 +52,23 @@ export async function middleware(request: NextRequest) {
   }
 
   const { pathname } = request.nextUrl;
-  const { internalPathname, requestHeaders } = withRequestHeaders(request);
+  const { routing, requestHeaders } = withRequestHeaders(request);
 
-  if (isPublicFile(pathname) && internalPathname !== '/api/upload') {
+  if (pathname !== routing.canonicalPublicPath && !isPublicFile(pathname)) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = routing.canonicalPublicPath;
+    return NextResponse.redirect(redirectUrl, 301);
+  }
+
+  if (isPublicFile(pathname) && routing.internalPathname !== '/api/upload') {
     return NextResponse.next();
   }
 
-  const isAdminPage = internalPathname.startsWith('/admin') && internalPathname !== '/admin/login';
+  const isAdminPage =
+    routing.internalPathname.startsWith('/admin') && routing.internalPathname !== '/admin/login';
   const isAdminApi =
-    internalPathname.startsWith('/api/admin') && internalPathname !== '/api/admin/login';
-  const isUploadApi = internalPathname === '/api/upload';
+    routing.internalPathname.startsWith('/api/admin') && routing.internalPathname !== '/api/admin/login';
+  const isUploadApi = routing.internalPathname === '/api/upload';
 
   if (isAdminPage || isAdminApi || isUploadApi) {
     const expected = await sha256(`${adminEmail}:${passwordHash}:${sessionSecret}`);
@@ -71,7 +76,7 @@ export async function middleware(request: NextRequest) {
 
     if (actual !== expected) {
       if (isAdminApi || isUploadApi) {
-        return NextResponse.json({ success: false, message: '未登录。' }, { status: 401 });
+        return NextResponse.json({ success: false, message: '未登录或登录已失效。' }, { status: 401 });
       }
 
       const loginUrl = request.nextUrl.clone();
@@ -81,15 +86,17 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const response =
-    pathname === internalPathname
-      ? NextResponse.next({ request: { headers: requestHeaders } })
-      : NextResponse.rewrite(
-          new URL(`${internalPathname}${request.nextUrl.search}`, request.url),
-          { request: { headers: requestHeaders } }
-        );
+  const shouldRewrite = routing.internalPathname !== routing.canonicalPublicPath.replace(/^\/en(?=\/|$)/, '') &&
+    pathname !== routing.internalPathname;
 
-  return response;
+  if (shouldRewrite) {
+    return NextResponse.rewrite(
+      new URL(`${routing.internalPathname}${request.nextUrl.search}`, request.url),
+      { request: { headers: requestHeaders } }
+    );
+  }
+
+  return NextResponse.next({ request: { headers: requestHeaders } });
 }
 
 export const config = {

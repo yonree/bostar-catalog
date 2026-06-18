@@ -4,7 +4,6 @@ import { ArticleCard } from '@/components/article/ArticleCard';
 import { Breadcrumb } from '@/components/layout/Breadcrumb';
 import { BreadcrumbJsonLd } from '@/components/schema/BreadcrumbJsonLd';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { TranslationNotice } from '@/components/ui/TranslationNotice';
 import { getArticlesByCategory } from '@/lib/cms-data';
 import { isEnglishLocale } from '@/lib/i18n';
 import { createResolvedPageMetadata } from '@/lib/page-metadata';
@@ -57,11 +56,10 @@ export default async function ArticleCategoryPage({
           title={category.name}
           description={
             isEnglish
-              ? 'Technical articles grouped by this topic. Source-language article content may still appear below.'
+              ? 'Technical articles grouped by this topic.'
               : '围绕真实喷涂问题组织文章，优先输出结论、原因、排查方法和适用产品。'
           }
         />
-        {isEnglish ? <TranslationNotice className="mb-8" /> : null}
         <div className="grid gap-5 md:grid-cols-3">
           {articles.map((article) => (
             <ArticleCard key={article.id} article={article} />

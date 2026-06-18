@@ -5,6 +5,19 @@ import { getRequestContext } from '@/lib/request-context';
 import { getLocalizedSiteDescription } from '@/lib/site-copy';
 import { getSiteSettings } from '@/lib/site-settings';
 
+const supportLinks = [
+  '/support',
+  '/support/sample-coating-test',
+  '/support/downloads',
+  '/privacy-policy',
+  '/cookie-policy',
+];
+
+const supportLabels = {
+  'zh-CN': ['服务与支持', '寄样喷涂测试', '资料下载', '隐私政策', 'Cookie 政策'],
+  en: ['Service & Support', 'Sample Coating Test', 'Downloads', 'Privacy Policy', 'Cookie Policy'],
+} as const;
+
 export async function SiteFooter() {
   const [site, productCategories, requestContext] = await Promise.all([
     getSiteSettings(),
@@ -16,7 +29,7 @@ export async function SiteFooter() {
 
   return (
     <footer className="border-t border-line bg-white">
-      <div className="container grid gap-12 py-16 md:grid-cols-[1.2fr_0.85fr_0.95fr]">
+      <div className="container grid gap-12 py-16 lg:grid-cols-[1.2fr_0.8fr_0.9fr_0.8fr]">
         <div>
           <p className="text-2xl font-black text-ink">{site.brandCn}</p>
           <p className="mt-2 text-[11px] uppercase tracking-[0.22em] text-steel">{site.brandEn}</p>
@@ -25,6 +38,7 @@ export async function SiteFooter() {
             <p>{copy.footerContactLabels.phone}: {site.phone}</p>
             <p>{copy.footerContactLabels.email}: {site.email}</p>
             <p>{copy.footerContactLabels.address}: {site.address}</p>
+            <p>{site.responsePromise}</p>
           </div>
         </div>
 
@@ -49,9 +63,22 @@ export async function SiteFooter() {
             ))}
           </div>
         </div>
+
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-ink">
+            {requestContext.locale === 'en' ? 'Policies & Support' : '支持与合规'}
+          </p>
+          <div className="mt-6 grid gap-3 text-sm text-steel">
+            {supportLinks.map((href, index) => (
+              <LocalizedLink key={href} href={href} className="transition-colors hover:text-ink">
+                {supportLabels[requestContext.locale][index]}
+              </LocalizedLink>
+            ))}
+          </div>
+        </div>
       </div>
       <div className="border-t border-line py-5 text-center text-xs text-steel">
-        {'©'} {new Date().getFullYear()} {site.company}. {copy.copyrightSuffix}.
+        Copyright {new Date().getFullYear()} {site.company}. {copy.copyrightSuffix}.
       </div>
     </footer>
   );
