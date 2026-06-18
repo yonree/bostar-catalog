@@ -1,31 +1,244 @@
-# BOSTAR Execution Agents
+# AGENTS.md — 博士达官网持续执行规范
 
-## Current mode
+## 1. 总体执行原则
 
-- Execution branch: `feat/gate2-implementation`
-- Orchestrator: Codex main agent
-- Subagents: not started
-- Planning archive: `planning/gate1a/**`
-- Live execution control plane: root-level files in this repository
+本仓库中的开发任务默认采用持续执行模式。
 
-## Active roles
+接到实施任务后：
 
-- Orchestrator: coordinates Gate status, branch discipline, verification, rollback notes, and cross-file sequencing.
-- Frontend architecture: owns locale routing, middleware, metadata, sitemap, robots, and public shell wiring.
-- Content and SEO: owns canonical/hreflang behavior, metadata policy application, and sitemap coverage.
-- QA and release: owns lint/build/typecheck execution, local preview checks, and evidence capture.
+1. 先检查仓库、现有代码、数据库结构、文档和当前Git状态。
+2. 制定内部执行顺序后立即开始实施，不要仅输出计划。
+3. 完成一个阶段后自动进入下一阶段，不要等待用户回复“继续”。
+4. 除非遇到本文件定义的硬阻塞，否则不得因为局部不确定、单项测试失败、缺少非关键内容或存在多个可行实现而暂停。
+5. 优先遵循仓库现有架构、命名、依赖和编码惯例。
+6. 对非关键选择自行做出保守、可逆、兼容现有系统的决定，并记录假设。
+7. 不要把“后续可以做”作为结果。凡是当前环境内可以实施和验证的工作，应当直接完成。
+8. 不要在每个阶段请求确认。
+9. 不要反复复述需求。
+10. 最终只在全部可执行事项完成、验证通过或确实存在硬阻塞时停止。
 
-## File ownership
+## 2. 唯一允许暂停的硬阻塞
 
-- Root control files: Orchestrator only
-- `app/**`, `components/**`, `lib/**`, `public/**`: implementation phase owners under orchestrator control
-- `planning/gate1a/**`: archive only; use as approved source input, do not overwrite for live status
-- `agent-file-ownership.csv`: canonical file-level ownership seed promoted from Gate 1A
+只有以下情况可以暂停并向用户提问：
 
-## Execution rules
+1. 操作不可逆，可能删除生产数据、覆盖生产配置或破坏线上环境。
+2. 两项明确需求互相冲突，且任一选择都可能造成数据丢失或公开接口破坏。
+3. 必须使用用户未提供的生产凭据，且无法通过适配器、Mock、测试服务或环境变量占位完成开发和验证。
+4. 仓库关键文件缺失或损坏，无法构建、无法恢复，也没有可推断的替代实现。
+5. 需要付费、生产部署、域名切换或向真实客户发送消息，而用户尚未授权。
 
-- Preserve production URLs or provide rewrite/redirect behavior before route changes.
-- Chinese remains default locale at root paths; English uses `/en`.
-- Do not remove admin or data paths while public refactor is in progress.
-- Do not install new runtime dependencies without recording the reason in `DECISIONS.md` and `CHANGELOG_EXECUTION.md`.
-- Treat build-breaking issues as Gate blockers; treat lint warnings as tracked debt unless they affect correctness.
+以下情况不是硬阻塞，不得因此停止：
+
+* SMTP凭据未提供；
+* Webhook目标未提供；
+* 生产数据库不可访问；
+* 测试数据不足；
+* 某个非核心页面内容缺失；
+* lint存在可修复warning；
+* 单个测试失败；
+* 第三方服务暂时不可用；
+* 没有真实客户附件；
+* 缺少正式工作时间配置；
+* 某个字段名称存在多种合理选择。
+
+遇到这些情况时，应使用接口适配、环境变量、Mock、测试夹具、兼容默认值或明确的TODO继续完成其他工作。
+
+## 3. 长任务状态管理
+
+开始工作时检查并维护：
+
+* `docs/EXECUTION_PLAN.md`
+* `docs/TASK_STATE.md`
+* `docs/DECISIONS.md`
+* `docs/MIGRATION_RUNBOOK.md`
+
+不存在时创建。
+
+### EXECUTION_PLAN.md
+
+记录：
+
+* 阶段；
+* 任务；
+* 前置依赖；
+* 验收标准；
+* 当前状态；
+* 测试命令。
+
+### TASK_STATE.md
+
+使用以下状态：
+
+* `TODO`
+* `IN_PROGRESS`
+* `BLOCKED`
+* `DONE`
+* `VERIFIED`
+
+每完成一个可验证任务立即更新。
+
+### DECISIONS.md
+
+记录：
+
+* 技术决策；
+* 选择原因；
+* 放弃的方案；
+* 兼容性影响；
+* 后续迁移注意事项。
+
+### MIGRATION_RUNBOOK.md
+
+记录：
+
+* 数据库迁移步骤；
+* 备份要求；
+* 演练命令；
+* 回滚步骤；
+* 数据校验；
+* 上线顺序。
+
+长任务中即使上下文被压缩，也应通过这些文件恢复状态并继续工作。
+
+## 4. 执行循环
+
+每个阶段持续执行以下循环：
+
+1. 检查现状。
+2. 选择最小、可回滚的实现。
+3. 修改代码。
+4. 增加或更新测试。
+5. 运行相关测试。
+6. 修复失败。
+7. 运行typecheck、lint和build。
+8. 更新任务状态和决策记录。
+9. 自动进入下一阶段。
+
+测试失败时：
+
+1. 阅读完整错误输出；
+2. 定位根因；
+3. 修复后重新运行；
+4. 如果第一种方法失败，尝试替代方案；
+5. 至少尝试三种合理方法后，才可以将该单项标记为阻塞；
+6. 单项阻塞后继续执行不依赖该项的其他任务。
+
+## 5. 安全边界
+
+未经明确授权，不得：
+
+* 部署到生产环境；
+* 对生产数据库运行迁移；
+* 删除生产数据；
+  -发送真实客户邮件；
+* 调用真实客户Webhook；
+* 修改DNS；
+* 推送到受保护分支；
+* 暴露密钥、个人信息或客户附件；
+* 关闭现有安全检查；
+* 使用破坏性Git命令清除用户工作。
+
+允许：
+
+* 在本地或测试环境创建迁移；
+* 使用临时数据库演练；
+* 使用Mock SMTP和Mock Webhook；
+* 创建`.env.example`；
+* 编写部署和迁移Runbook；
+* 部署到已经明确配置且非生产的预览或测试环境；
+* 创建本地原子提交，但不得未经授权push。
+
+## 6. 数据库变更原则
+
+1. 先新增，再迁移，再切换，最后才考虑清理旧字段。
+2. 不在第一步删除旧字段。
+3. 迁移必须支持现有数据。
+4. 优先使用双读或双写兼容窗口。
+5. 每个迁移必须包含：
+
+   * migration；
+   * backfill或兼容逻辑；
+   * 数据校验；
+   * 索引；
+   * 回滚说明；
+   * 空库测试；
+   * 带旧数据测试。
+6. 不得直接在生产数据库试错。
+
+## 7. 外部服务原则
+
+邮件、Webhook、文件存储和未来CRM必须通过接口或适配器实现。
+
+外部凭据缺失时：
+
+* 完成接口；
+* 完成真实Provider实现；
+* 完成Mock Provider；
+* 完成配置校验；
+* 完成失败日志；
+* 完成重试和幂等；
+* 使用测试环境验证；
+* 在最终报告中列出生产启用所需环境变量。
+
+不得因为没有生产凭据而停止整个任务。
+
+## 8.测试与质量门禁
+
+每次重要变更后运行相关测试。
+
+最终至少运行：
+
+```bash
+npm run typecheck
+npm run lint
+npm run build
+```
+
+同时运行仓库中存在的：
+
+* 单元测试；
+* 集成测试；
+* E2E测试；
+* Prisma校验；
+* 数据库迁移测试；
+* SEO或路由测试。
+
+若缺少必要测试框架，可以在不破坏现有架构的前提下增加最小可维护测试能力。
+
+最终交付不得新增未说明的warning或失败测试。
+
+## 9.提交原则
+
+若仓库允许本地Git提交：
+
+* 每个独立阶段创建原子提交；
+* 使用清晰的Conventional Commit信息；
+* 不把数据库迁移、视觉调整和无关清理混在一个提交中；
+* 不push；
+* 不改写用户已有提交历史。
+
+工作区存在用户未提交修改时：
+
+* 不覆盖；
+* 不删除；
+* 先识别修改归属；
+* 仅编辑任务必要文件；
+* 在最终报告中说明。
+
+## 10.最终报告
+
+全部完成后输出：
+
+1. 已完成事项；
+2. 关键架构决策；
+3. 数据库迁移状态；
+4. 测试结果；
+5. 构建结果；
+6. 新增环境变量；
+7. 需要用户在生产环境执行的步骤；
+8. 尚未完成且确实受阻的事项；
+9. 已知风险；
+10. 本地提交列表；
+11. 建议的生产发布顺序。
+
+不要用“基本完成”代替明确状态。
