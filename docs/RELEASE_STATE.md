@@ -4,7 +4,7 @@
 
 - Status: `BLOCKED_BY_EXTERNAL_DEPENDENCIES`
 - Release branch: `release/bostar-uiux-v1`
-- Frozen commit: `61e4c20`
+- Frozen commit: `b3281f2`
 - Public production URL: `https://www.fjbosd.com`
 - Current production deployment ID: `dpl_789JmQSfhJTTCqWo9Qmz2udPYVaN`
 - Current preview deployment ID: `dpl_2EMefAUr6777GJRTSsL3bYX7ujzh`
@@ -20,7 +20,7 @@
 | Inspect current production deployment | VERIFIED | `vercel inspect https://www.fjbosd.com` returns `Ready` deployment `dpl_789JmQSfhJTTCqWo9Qmz2udPYVaN` |
 | Inspect Git remotes | VERIFIED | No git remote configured in local repository |
 | Build initial env matrix from local / preview / production | VERIFIED | Production vars narrowed to SMTP-only gap; preview runtime gap persists |
-| Freeze releasable branch and commit | VERIFIED | Release branch `release/bostar-uiux-v1`; frozen commits `77941b9`, `6129cae`, `59bc418`, `61e4c20` |
+| Freeze releasable branch and commit | VERIFIED | Release branch `release/bostar-uiux-v1`; frozen commits `77941b9`, `6129cae`, `59bc418`, `61e4c20`, `b3281f2` |
 | Implement strict SLA scheduler path | VERIFIED | Added `/api/cron/leads` automation path and repository-level scheduler workflow |
 | Create preview deployment from frozen commit | VERIFIED | Preview deployment `dpl_2EMefAUr6777GJRTSsL3bYX7ujzh` reached `Ready` on commit `61e4c20` |
 | Preview deployment rehearsal | BLOCKED | Deployment Protection blocks non-interactive smoke; preview runtime envs still cannot be fully proven from current environment |
@@ -37,7 +37,6 @@
 | Missing preview database/admin runtime | External dependency | Preview env still lacks verifiable `DATABASE_URL` / `DATABASE_URL_UNPOOLED` and admin runtime for rehearsal |
 | Preview deployment protection bypass unavailable | External dependency | Current environment can create preview deployments, but cannot run non-interactive authenticated smoke against protected preview without Trusted Source / bypass configuration |
 | Missing production migration execution authorization | External dependency | Cannot run production `prisma migrate deploy` or record backup ID from current environment without explicit access/approval |
-| Missing git remote | Repo | Local release branch exists but cannot be pushed from this clone because no remote is configured |
 
 ## Environment Matrix
 
