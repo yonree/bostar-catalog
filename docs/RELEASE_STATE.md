@@ -4,7 +4,7 @@
 
 - Status: `BLOCKED_BY_EXTERNAL_DEPENDENCIES`
 - Release branch: `release/bostar-uiux-v1`
-- Frozen commit: `b3281f2`
+- Frozen commit: `3557414`
 - Public production URL: `https://www.fjbosd.com`
 - Current production deployment ID: `dpl_789JmQSfhJTTCqWo9Qmz2udPYVaN`
 - Current preview deployment ID: `dpl_2EMefAUr6777GJRTSsL3bYX7ujzh`
@@ -20,7 +20,7 @@
 | Inspect current production deployment | VERIFIED | `vercel inspect https://www.fjbosd.com` returns `Ready` deployment `dpl_789JmQSfhJTTCqWo9Qmz2udPYVaN` |
 | Inspect Git remotes | VERIFIED | No git remote configured in local repository |
 | Build initial env matrix from local / preview / production | VERIFIED | Production vars narrowed to SMTP-only gap; preview runtime gap persists |
-| Freeze releasable branch and commit | VERIFIED | Release branch `release/bostar-uiux-v1`; frozen commits `77941b9`, `6129cae`, `59bc418`, `61e4c20`, `b3281f2` |
+| Freeze releasable branch and commit | VERIFIED | Release branch `release/bostar-uiux-v1`; frozen commits `77941b9`, `6129cae`, `59bc418`, `61e4c20`, `b3281f2`, `3557414` |
 | Implement strict SLA scheduler path | VERIFIED | Added `/api/cron/leads` automation path and repository-level scheduler workflow |
 | Create preview deployment from frozen commit | VERIFIED | Preview deployment `dpl_2EMefAUr6777GJRTSsL3bYX7ujzh` reached `Ready` on commit `61e4c20` |
 | Preview deployment rehearsal | BLOCKED | Deployment Protection blocks non-interactive smoke; preview runtime envs still cannot be fully proven from current environment |
