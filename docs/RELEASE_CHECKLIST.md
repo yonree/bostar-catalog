@@ -6,10 +6,10 @@
 - [x] Current production deployment identified
 - [x] Dirty worktree confirmed
 - [x] Git remote presence checked
-- [ ] Release branch created
-- [ ] Atomic commits created
-- [ ] Frozen release commit hash recorded
-- [ ] Worktree clean after freeze
+- [x] Release branch created
+- [x] Atomic commits created
+- [x] Frozen release commit hash recorded
+- [x] Worktree clean after freeze
 
 ## Environment Gates
 
@@ -19,8 +19,9 @@
 - [ ] Preview admin runtime complete
 - [ ] Preview lead submission runtime complete
 - [ ] Production SMTP runtime complete
-- [ ] Production webhook runtime complete
-- [ ] Production lead routing and SLA runtime complete
+- [x] Production webhook runtime complete
+- [x] Production lead routing and SLA runtime complete
+- [ ] Repository scheduler secrets configured (`CRON_TARGET_URL`, `CRON_SECRET`)
 
 ## Prisma and Database
 
@@ -46,6 +47,7 @@
 - [x] Local `lint`
 - [x] Local `build`
 - [x] Local `test`
+- [x] Scheduler implementation exists outside localhost
 - [ ] Real-browser preview Chinese lead path
 - [ ] Real-browser preview English lead path
 - [ ] Preview attachment private access path
@@ -60,4 +62,3 @@
 - [ ] Production admin verification
 - [ ] Production SEO/canonical/hreflang verification
 - [ ] Production cookie verification
-

@@ -21,6 +21,7 @@
 - Admin lead view failure
 - Attachment authorization failure
 - SMTP or webhook failures that break the strict release gate
+- Scheduler workflow failure causing SLA timeout notifications to stop
 - Large-scale `500` errors or redirect loops
 
 ## Recovery Data To Record
@@ -28,5 +29,6 @@
 - Previous stable deployment ID
 - Previous stable commit hash
 - Backup identifier for the production database
+- Last successful `Lead Automation Scheduler` run ID and failure log
 - Exact rollback command or Vercel promotion action
 - Post-rollback smoke evidence
