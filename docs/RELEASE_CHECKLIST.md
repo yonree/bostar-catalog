@@ -36,8 +36,8 @@
 ## Deployments
 
 - [x] Current production deployment inspected
-- [ ] New preview deployment created from frozen commit
-- [ ] Preview deployment ID recorded
+- [x] New preview deployment created from frozen commit
+- [x] Preview deployment ID recorded
 - [ ] New production deployment created from frozen commit
 - [ ] Production deployment ID recorded
 
@@ -48,6 +48,7 @@
 - [x] Local `build`
 - [x] Local `test`
 - [x] Scheduler implementation exists outside localhost
+- [x] Current production read-only baseline captured
 - [ ] Real-browser preview Chinese lead path
 - [ ] Real-browser preview English lead path
 - [ ] Preview attachment private access path
@@ -55,7 +56,7 @@
 - [ ] Preview SMTP delivery verification
 - [ ] Preview webhook delivery verification
 - [ ] Preview SLA reminder/scheduling verification
-- [ ] Production read-only smoke
+- [ ] Protected preview bypass or trusted-source verification path
 - [ ] Production Chinese inquiry smoke
 - [ ] Production English inquiry smoke
 - [ ] Production attachment verification

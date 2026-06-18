@@ -21,7 +21,7 @@
 | B | Audit working tree, classify changes, create release branch, freeze releasable commit | DONE | Release branch `release/bostar-uiux-v1` and frozen commits recorded |
 | C | Build environment matrix for local / preview / production without exposing secret values | IN_PROGRESS | Required vars marked present or missing per environment |
 | D | Verify Prisma runtime mode, migration path, and CRUD behavior against production-like execution | IN_PROGRESS | Client mode, migration order, and CRUD checks recorded |
-| E | Rehearse migration and preview deployment with controlled verification | BLOCKED | Preview deploy currently blocked by missing preview DB/runtime envs and external scheduler secrets |
+| E | Rehearse migration and preview deployment with controlled verification | IN_PROGRESS | Preview deployment created, but protected preview verification is blocked by deployment protection and missing preview runtime proof |
 | F | Run staging-style E2E, SEO, cookie, upload, notification, and admin verification | TODO | Release gates either pass or are blocked by external dependencies |
 | G | Execute production release only if all strict gates pass | TODO | Production deployment ID, commit hash, and verification evidence recorded |
 
@@ -39,9 +39,11 @@
   - `77941b9` `feat(leads): harden workflow automation and delivery`
   - `6129cae` `feat(site): ship ia refresh and support routes`
   - `59bc418` `docs(release): add control plane and runbooks`
+  - `61e4c20` `build(release): move lead scheduler off vercel cron`
 - Git remote: none configured
 - Linked deployment project exists via `.vercel/project.json`
 - Production environment now still lacks strict SMTP connection variables only: `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`
 - Preview environment currently lacks verifiable database/admin runtime and cannot complete release rehearsal
 - High-frequency lead SLA scheduling is implemented in code and exposed at `/api/cron/leads`
 - Vercel project plan rejected 10-minute `vercel.json` cron, so scheduler responsibility is moved to GitHub Actions with repository secrets `CRON_TARGET_URL` and `CRON_SECRET`
+- Preview deployment rehearsal produced deployment `dpl_2EMefAUr6777GJRTSsL3bYX7ujzh` at `https://bostar-geo-website-42z5y9rss-yonree-s-projects.vercel.app`
